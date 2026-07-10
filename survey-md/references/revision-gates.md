@@ -9,6 +9,7 @@ Use these gates whenever the task begins from a manuscript draft. Audit before r
 1. Thesis and reader payoff
 1. Concept and dependency order
 1. Taxonomy validity
+1. Architecture unit and sibling hierarchy
 1. Explanatory sufficiency
 1. Synthesis and evidence-bound judgment
 1. Manuscript surface
@@ -84,7 +85,27 @@ Block and repair an axis when:
 
 Do not preserve a weak taxonomy merely because it already structures the draft. Compare alternative organizations and record why the retained one explains the literature better. Repair by clarifying criteria, relabeling, merging, splitting, or replacing the axis. Remove it only when it contributes nothing necessary to the thesis; otherwise rehome its valid content before the gate can pass.
 
-## Gate 4: Explanatory Sufficiency
+## Gate 4: Architecture Unit And Sibling Hierarchy
+
+Separate taxonomy validity from article hierarchy validity. For each main-synthesis block, record its organization unit and complete:
+
+`These sections are parallel because each represents a ____.`
+
+Block the outline when:
+
+- no single precise noun phrase with stable membership criteria covers every sibling;
+- siblings mix a field-level design axis, mechanism family, or controversy with a concrete method or paper;
+- an explanatory question about one method is promoted beside field-level routes;
+- evaluation dimensions, applications, deployment settings, and research routes are presented as one classification level;
+- the intended parallel block exists only in the writer's explanation and is not visible in the heading hierarchy.
+
+Do not accept generic completions such as `topic`, `aspect`, `section`, or `part of the field`. Conventional article-role sections may differ, but headings presented as parallel answers to one synthesis question must share a unit.
+
+Repair the hierarchy before revising prose or balancing length. Demote representative methods into the field-level section they exemplify, move cross-route explanations into a cross-cutting analysis, split blocks that answer different questions, or add a parent heading that exposes the block boundary. Record the disposition of displaced evidence and preserve required coverage.
+
+Only after this gate passes, compare depth across the retained units: their core question and assumptions, objects or equations, relationships among representative approaches, evidence, failure conditions, and practical significance where applicable. Prefer completing thin units over deleting valid depth from a strong unit.
+
+## Gate 5: Explanatory Sufficiency
 
 For every major approach, method family, theory, or empirical line, ensure the prose lets a field-aware reader answer:
 
@@ -101,7 +122,7 @@ Block the section when the reader would need to open the cited paper merely to u
 
 Also block paper-internal shorthand that substitutes for an explanation. Phrases such as `under a unified protocol`, `the factors are isolated`, `the modules are aligned`, `the method is end-to-end`, or `the ablation verifies` pass only when nearby prose identifies the concrete data/conditions held fixed, the component or signal changed, the outcome compared, and the inference licensed by that comparison. Apply the same test to unexplained acronyms and named modules.
 
-## Gate 5: Synthesis And Evidence-Bound Judgment
+## Gate 6: Synthesis And Evidence-Bound Judgment
 
 For each paragraph, identify the field-level claim, the evidence units supporting it, the relationship among sources, the author's inference, and the boundary on that inference.
 
@@ -113,7 +134,7 @@ Block the paragraph when:
 - the authorial judgment is stronger than the cited evidence;
 - a future direction is not earned by a demonstrated unresolved boundary.
 
-## Gate 6: Manuscript Surface
+## Gate 7: Manuscript Surface
 
 After structural gates pass, remove working-process residue. Check every heading, opening paragraph, transition, table lead-in, and conclusion.
 
@@ -127,7 +148,7 @@ Block the draft when:
 - headings, topic sentences, the abstract, or the conclusion repeatedly use correction templates (`not X but Y`, `X is not equal to Y`, `not only X`, `X cannot represent Y`) where the underlying relation can be stated directly; isolated evidence-backed negation is allowed, but recurring reversal cadence is a surface and argument-design failure.
 - a work's first substantive mention is a bare title/link or author ledger entry when verified institution and year metadata are available; repair it as `institution/team + linked Work(Year) + evidence role`, while leaving later mentions compact.
 
-## Gate 7: Reader Reconstruction Test
+## Gate 8: Reader Reconstruction Test
 
 Read each taxonomy axis and each major synthesis section without consulting the internal workspace. Write a two-to-four sentence reconstruction containing the shared problem, the distinguishing mechanism or claim, how any intermediate product connects to the broader phenomenon or outcome, the evidence, and the boundary.
 

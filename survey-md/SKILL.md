@@ -72,7 +72,9 @@ Treat a taxonomy as a substantive claim. For every axis, specify the classificat
 
 Choose an organizing logic that answers the review question: taxonomy, turning-point chronology, controversy map, evidence ladder, problem decomposition, process anatomy, cross-domain transfer, or another justified structure.
 
-Give every major section a field-level claim. Make early concepts and examples pay off later; prepare every late conclusion and future direction in the body. State the survey's evidence-bound position early and carry it through selection, comparison, critique, and conclusion.
+Before assigning main-synthesis sections, freeze their organization unit in one precise sentence, such as a design problem, mechanism family, historical turning point, controversy, or evidence level. For every parallel synthesis group, complete `These sections are parallel because each represents a ____`. Block drafting when one noun phrase with stable membership criteria cannot cover every sibling, or when the siblings mix a field-level axis, concrete method, explanatory question about that method, evaluation dimension, or deployment setting. A representative method belongs inside the field-level section it exemplifies unless the review question and the entire synthesis architecture are explicitly method-specific. Keep conventional article-role sections such as the introduction, review method, cross-cutting discussion, and conclusion distinct from this synthesis-unit test.
+
+Give every major section a field-level claim. Only after the organization unit and sibling headings pass should you assign coverage and draft prose. Make early concepts and examples pay off later; prepare every late conclusion and future direction in the body. State the survey's evidence-bound position early and carry it through selection, comparison, critique, and conclusion.
 
 ### 6. Draft Or Repair Scholarly Prose
 
@@ -110,6 +112,7 @@ Reuse an existing project environment when it is valid. If a required Python int
 - Do not call a review systematic unless its protocol supports that term.
 - Do not use a paper's claimed contribution or limitations section as the final survey judgment.
 - Do not let tables, taxonomies, or internal note fields dictate the prose without an explanatory argument.
+- Do not draft a main synthesis whose sibling sections use different organization units. Freeze and test the unit first; treat coverage or word-count imbalance as a downstream symptom until the hierarchy is valid.
 - Do not present working notes, checklists, audit statuses, or organizational decisions as manuscript content.
 - Do not replace missing explanation with names, labels, equations, performance numbers, or citation piles.
 - Do not export a paper's compressed labels as explanation. Expand phrases such as `under a unified protocol`, `we isolate factors`, `through alignment`, or `the ablation shows` into the concrete held-fixed conditions, changed variables, compared outcomes, and inferential consequence needed by the intended reader.

@@ -8,6 +8,7 @@ Use this reference when a survey defines technical concepts, compares approaches
 1. Term definitions
 1. Approach explanations
 1. Taxonomy validity
+1. Architecture unit freeze
 1. Multi-axis taxonomies
 1. Reader reconstruction
 1. Repair patterns
@@ -84,7 +85,39 @@ If an axis names something generated, predicted, estimated, measured, represente
 
 Prefer labels that state analytical role or distinguishing relation over loose nouns that readers could mistake for the entire task.
 
-## 5. Multi-Axis Taxonomies
+## 5. Architecture Unit Freeze
+
+Do not treat a valid taxonomy as sufficient proof of a valid article hierarchy. Before assigning or preserving main-synthesis sections, write one sentence that names their organization unit. Valid units include field-level design problems, mechanism families, historical turning points, controversies, evidence levels, or another unit justified by the review question.
+
+For every group of parallel synthesis headings, complete:
+
+`These sections are parallel because each represents a ____.`
+
+The completion must be one precise noun phrase with stable membership criteria. Reject generic completions such as `topic`, `aspect`, `section`, or `part of the field`, because they conceal rather than test the classification.
+
+Block the outline when siblings mix units such as:
+
+- a field-level design axis;
+- a concrete method, system, or paper;
+- an explanatory question about one method;
+- an evaluation dimension;
+- an application or deployment setting.
+
+A concrete method belongs beneath the field-level axis, family, controversy, or turning point it exemplifies unless the review question is explicitly method-specific and every sibling uses the same method-centered unit. Move a genuinely cross-cutting explanation into a cross-cutting analysis section; do not promote it into a peer category merely because it is evidence-rich.
+
+Apply the test within each intended synthesis block. The outer article sequence may contain different functional roles such as introduction, review method, main synthesis, cross-cutting discussion, and conclusion; record those as article roles rather than pretending they are taxonomy categories. If the hierarchy does not visually reveal where the parallel synthesis block begins and ends, add or rename a parent heading instead of relying on hidden author intent.
+
+Persist in `06-taxonomy-and-outline.md`:
+
+- the organization unit sentence;
+- the headings governed by it;
+- the completed sibling sentence;
+- membership criteria and any permitted overlap;
+- the disposition of methods or questions moved to a lower or cross-cutting level.
+
+Do not begin synthesis prose until every parallel group passes. After the hierarchy passes, audit coverage depth across its units: core question and assumptions, mathematical or conceptual objects, representative relationships, evidence, failure conditions, and system or practical significance where relevant. Repair thin units before trimming a well-supported unit merely for visual symmetry.
+
+## 6. Multi-Axis Taxonomies
 
 Make each axis answer one distinct explanatory question. Treat axes as coordinates unless the evidence justifies exclusive families: one work may take a value on several axes.
 
@@ -94,7 +127,7 @@ Test each axis against representative, boundary, and hybrid cases. A useful axis
 
 Do not turn the number of axes or rejection of an older label into a manuscript heading. Name the scholarly subject or distinction that the classification illuminates.
 
-## 6. Reader Reconstruction
+## 7. Reader Reconstruction
 
 Test each major family and taxonomy axis without consulting internal notes. Reconstruct it in two to four sentences containing:
 
@@ -115,7 +148,7 @@ Run a paper-shorthand expansion check. Highlight phrases inherited from abstract
 
 If any answer is absent, replace or immediately unpack the shorthand. Keep the field's useful vocabulary after explaining it; do not flatten technical content into generic prose.
 
-## 7. Repair Patterns
+## 8. Repair Patterns
 
 Repair the smallest broken dependency that restores understanding:
 
@@ -129,6 +162,9 @@ Repair the smallest broken dependency that restores understanding:
 - clarify overlap or represent a work on multiple axes;
 - merge categories with no explanatory consequence;
 - split an axis that mixes classification questions;
+- demote a representative method beneath the field-level unit it exemplifies;
+- move a method-specific explanatory question into the method subsection or a justified cross-cutting analysis;
+- add a parent heading that makes the boundary of a parallel synthesis block explicit;
 - replace a weak taxonomy with another organizing logic;
 - narrow a claim when evidence cannot support the full explanation.
 

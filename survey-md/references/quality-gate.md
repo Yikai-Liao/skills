@@ -47,11 +47,15 @@ Require:
 - an explicit, contestable review thesis;
 - a clear reader payoff;
 - a section sequence that advances the thesis;
+- a frozen organization unit for every main-synthesis block;
+- a successful sibling-heading test in which every parallel synthesis section represents one precise unit with stable membership criteria;
 - one field-level claim per major section;
 - body support for the conclusion and future directions;
 - no abandoned early setups or unsupported late payoffs.
 
-Fail an architecture that remains a chronology or method-name inventory without field-level movement.
+Fail an architecture that remains a chronology or method-name inventory without field-level movement. Also fail one that mixes field-level design axes, concrete methods or papers, method-specific explanatory questions, evaluation dimensions, and deployment settings as peer synthesis sections. Treat a representative method as a member of its field-level unit unless the review question and the complete synthesis architecture are explicitly method-specific. Do not use `topic`, `aspect`, `section`, or `part of the field` to force a false sibling match.
+
+Apply this unit test within parallel synthesis blocks, not as a claim that introduction, review method, synthesis, discussion, and conclusion share one taxonomy unit. Require the visible heading hierarchy to expose each block boundary. Repair organization before using coverage or word-count balancing as the primary intervention.
 
 ## 4. Concepts And Explanation
 
@@ -80,6 +84,7 @@ Require:
 - consensus, controversy, missing evidence, and field drift separated;
 - an evidence-bound authorial position maintained throughout;
 - future directions tied to demonstrated gaps and required evidence.
+- each parallel synthesis unit covers the question and assumptions, core objects or mechanisms, representative relationships, evidence, failure conditions, and practical significance needed by the review; thin units are completed before strong units are cut merely for symmetry.
 
 Fail citation piles, inert source lists, generic criticism, and conclusions stronger than the corpus.
 

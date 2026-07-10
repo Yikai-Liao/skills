@@ -47,7 +47,7 @@ Create artifacts only when relevant, but never keep an expensive decision solely
 | `03-paper-notes/KEY.md` | one structured note per important source |
 | `04-evidence-matrix.md` | cross-source comparison and evidence units |
 | `05-concepts-and-explanations.md` | definitions, shared frames, mechanism or reasoning maps |
-| `06-taxonomy-and-outline.md` | taxonomy tests, article architecture, section claims |
+| `06-taxonomy-and-outline.md` | taxonomy tests, frozen organization unit, sibling-heading tests, article architecture, section claims |
 | `07-consensus-controversies-gaps.md` | synthesis, disagreements, weak evidence, authorial position |
 | `08-figures-and-tables.md` | each visual artifact and the claim it supports |
 | `09-decision-log.md` | dated changes to scope, terms, inclusion, structure, interpretation |
@@ -114,15 +114,16 @@ Follow dependency order rather than sentence order:
 3. Write paper notes and cross-paper evidence units.
 4. Define central concepts and reconstruct explanations.
 5. Test alternative taxonomies or organizing logics.
-6. Assign a field-level claim and evidence role to each section.
-7. Draft synthesis sections before abstract and conclusion.
-8. Integrate critique, boundaries, consensus, controversy, and gaps.
-9. Design only figures and tables that make an argument inspectable.
-10. Audit citations, cross-section setup/payoff, and manuscript quality.
+6. Freeze the organization unit for each main-synthesis block and run the sibling-heading test.
+7. Assign a field-level claim and evidence role to each section.
+8. Draft synthesis sections before abstract and conclusion.
+9. Integrate critique, boundaries, consensus, controversy, and gaps.
+10. Design only figures and tables that make an argument inspectable.
+11. Audit citations, cross-section setup/payoff, and manuscript quality.
 
 For revision, replace steps 1–2 with an initial whole-manuscript audit, then repair in dependency order:
 
-`thesis and scope -> concepts -> explanations -> taxonomy -> section claims -> evidence synthesis -> prose surface -> abstract and conclusion`
+`thesis and scope -> concepts -> explanations -> taxonomy -> organization unit and sibling hierarchy -> section claims -> evidence synthesis -> prose surface -> abstract and conclusion`
 
 Do not start with sentence polishing when a higher dependency is broken.
 

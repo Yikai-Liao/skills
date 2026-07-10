@@ -37,6 +37,8 @@ Write an architecture contract before drafting:
 - central thesis;
 - reader starting point and intended payoff;
 - section sequence and its rationale;
+- the organization unit for each main-synthesis block;
+- a completed sibling-heading sentence for every parallel synthesis group;
 - field-level claim for every major section;
 - role of foundational, representative, contradictory, and boundary sources;
 - cross-cutting threads that must recur;
@@ -57,6 +59,18 @@ Use this default arc only when it fits:
 1. Conclusion
 
 Combine, rename, or reorder sections when another path better serves the argument.
+
+### Architecture Unit Freeze
+
+Freeze the unit of organization before assigning main-synthesis sections. State it in one sentence, then test every parallel group with:
+
+`These sections are parallel because each represents a ____.`
+
+Require one precise noun phrase and stable membership criteria for every sibling. Block drafting if the headings mix a field-level design problem or mechanism family with a concrete method, a paper, an explanatory question about one method, an evaluation dimension, or a deployment setting. A method may receive substantial depth without becoming a peer of the field-level unit that contains it. Put its definition and mathematics inside that unit; place only genuinely cross-route conclusions in cross-cutting analysis.
+
+Do not apply the taxonomy test indiscriminately to the conventional outer article sequence. Introduction, review method, main synthesis, cross-cutting discussion, and conclusion are different article roles. Apply the shared-unit test to headings presented as parallel answers to the same synthesis question, and make synthesis-block boundaries explicit in the visible hierarchy.
+
+Do not allocate word counts or polish headings until this freeze passes. Once it passes, compare coverage depth across the parallel units and fill missing explanation, evidence, boundary conditions, and practical consequence before cutting a well-supported section for symmetry.
 
 ## 3. Section Contracts
 
