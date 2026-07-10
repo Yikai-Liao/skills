@@ -27,16 +27,18 @@ Do not create a citation from model memory or a search-result snippet. Fetch a s
 
 Respect access controls and rate limits. Follow openly exposed links; do not bypass authentication or guess private download URLs.
 
+When the `huggingface-papers` skill is available in the current environment, read that skill and use it as the first route for two operations: discovering candidate papers and obtaining a specified paper's readable Markdown. This priority applies even to arXiv papers: do not start with an arXiv search, Atom query, HTML request, or local arXiv conversion while `huggingface-papers` can perform the requested discovery or Markdown-acquisition operation. Fall back to the arXiv workflow only when `huggingface-papers` is unavailable, fails to complete that operation, or does not cover the paper. Record the fallback reason in the source manifest. This routing preference does not replace the requirement to confirm manuscript-critical metadata against a primary paper, proceedings, repository, DOI, or publisher record.
+
 ## 2. Search, Triage, Fetch, And Persist
 
 For each query family:
 
-1. **WebSearch** the review's problem, mechanism, evidence type, application, controversy, or time window.
+1. **Discover** candidates with `huggingface-papers` when it is available. Otherwise, **WebSearch** the review's problem, mechanism, evidence type, application, controversy, or time window.
 2. **Triage** the results. Keep peer-reviewed venue pages, authoritative preprints, prior surveys, benchmarks, datasets, and relevant critiques. Reject duplicate, off-scope, marketing, blog, slide, and unsupported pages.
 3. **WebFetch** or open the most authoritative landing page for each retained candidate.
 4. Extract title, ordered authors, year, venue, work type, DOI or repository ID, abstract, canonical URL, and available artifact links.
 5. Append the paper ledger, citation record, and source manifest immediately rather than waiting for the whole query batch.
-6. Fetch the full text or supplements only when deeper evidence is needed.
+6. Fetch the full text or supplements only when deeper evidence is needed. For a requested readable Markdown version, try `huggingface-papers` first when available, then use the source-specific fallback below.
 
 For known DOI or arXiv inputs, resolve the identifier directly instead of searching by title. For recency-led work, use date-sorted feeds rather than relevance search alone.
 
@@ -91,9 +93,11 @@ DOI landing page: https://doi.org/<doi>
 
 Normalize the DOI by removing `doi:` or a `doi.org` prefix and trailing citation punctuation. Resolve it to the publisher landing page, then extract canonical metadata, correction or retraction status, license, PDF, and supplementary links. For venues without a DOI, use the official journal, conference, proceedings, or discipline-repository page.
 
-## 4. arXiv HTML-First Full-Text Cache
+## 4. arXiv HTML-First Full-Text Cache (Fallback)
 
-For reading, use this order:
+If `huggingface-papers` is available, use it first to obtain a readable Markdown version of an arXiv paper. Use this arXiv route only after the conditional fallback rule above is met.
+
+For the arXiv fallback route, use this order:
 
 1. an already cached Markdown reading copy and its raw HTML;
 2. official `https://arxiv.org/html/<id-or-version>`;

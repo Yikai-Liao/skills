@@ -106,7 +106,7 @@ Check mechanically and visually:
 - terminology, names, citation keys, and numerical values are consistent;
 - no defensive opening, meta-taxonomy heading, author-list rhythm, or generic AI scaffolding remains.
 - negation and binary-reversal phrases are not used as recurring rhetorical scaffolding. Search headings, abstract openings, topic sentences, and conclusion claims for patterns equivalent to `not X but Y`, `X is not equal to Y`, `not only X`, and `X cannot represent Y`; inspect every hit and retain only evidence-bearing contradiction or necessary scope limitation.
-- every cited work's first substantive mention uses verified leading-institution/team attribution and one Markdown link over the complete `Work(Year)` label when that metadata is available; later mentions avoid repetitive affiliation bookkeeping. Unresolved institutions are labeled as unresolved rather than inferred.
+- every cited work's first substantive mention uses verified leading-institution/team attribution and one Markdown link over the complete `Work(Year)` label when that metadata is available; the year uses ASCII English parentheses `(` and `)`, never full-width Chinese parentheses `（` and `）`; later mentions avoid repetitive affiliation bookkeeping. Unresolved institutions are labeled as unresolved rather than inferred.
 - preprint version changes are not hidden behind combined aliases: title, method name, author-list, or substantive changes are represented with the exact supporting version and documented in the workspace.
 
 Use available repository checks or renderers when present. A syntax pass does not replace reading the rendered manuscript.
