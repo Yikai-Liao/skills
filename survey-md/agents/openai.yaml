@@ -1,0 +1,4 @@
+interface:
+  display_name: "Survey MD"
+  short_description: "Write and revise scholarly surveys in Markdown"
+  default_prompt: "Use $survey-md to build or revise a source-grounded scholarly survey in Markdown."
