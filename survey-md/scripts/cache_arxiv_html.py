@@ -4,20 +4,23 @@
 # dependencies = [
 #   "beautifulsoup4>=4.12,<5",
 #   "markdownify>=1.2,<2",
+#   "pypdf>=5,<7",
 # ]
 # ///
-"""Cache official arXiv HTML and make a cleaner Markdown reading copy."""
+"""Cache official arXiv HTML, with a validated PDF fallback."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from html import unescape
 from pathlib import Path
 from typing import Iterable
@@ -27,6 +30,8 @@ from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 from markdownify import markdownify
+from pypdf import PdfReader
+from pypdf.errors import PdfReadError
 
 
 ARXIV_ID_RE = re.compile(
@@ -34,6 +39,9 @@ ARXIV_ID_RE = re.compile(
 )
 DEFAULT_OUTPUT = Path("survey-workspace/sources/arxiv-html")
 MINIMUM_INTERVAL_SECONDS = 3.0
+RETRYABLE_HTTP_STATUSES = {429, 500, 502, 503, 504}
+EMAIL_RE = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I)
+CONTROL_CHAR_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
 
 
 @dataclass
@@ -52,6 +60,8 @@ class CacheRecord:
     etag: str | None = None
     last_modified: str | None = None
     retry_after: str | None = None
+    derived_text_file: str | None = None
+    extracted_pages: int | None = None
     note: str | None = None
 
 
@@ -100,6 +110,26 @@ def write_record(path: Path, record: CacheRecord) -> None:
         json.dumps(asdict(record), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def author_metadata(authors: Tag) -> tuple[list[str], list[str]]:
+    names: list[str] = []
+    details: list[str] = []
+    for creator in authors.select(".ltx_creator.ltx_role_author"):
+        person = creator.select_one(".ltx_personname")
+        name = person.get_text(" ", strip=True) if person else ""
+        if name:
+            names.append(name)
+        notes = [
+            node.get_text(" ", strip=True)
+            for node in creator.select(".ltx_author_notes")
+        ]
+        for note in notes:
+            cleaned = EMAIL_RE.sub("", note)
+            cleaned = re.sub(r"\s+,", ",", cleaned).strip(" ,;\u00a0")
+            if cleaned:
+                details.append(f"{name}: {cleaned}" if name else cleaned)
+    return names, list(dict.fromkeys(details))
 
 
 def negative_cache_is_fresh(record: dict[str, object] | None, days: int) -> bool:
@@ -202,7 +232,6 @@ def convert_html_to_markdown(html: str, source_url: str, retrieved_at: str) -> s
     for selector in [
         "script",
         "style",
-        ".ltx_author_notes",
         ".ltx_note_frontmatter",
         ".ltx_tag_item",
     ]:
@@ -211,13 +240,14 @@ def convert_html_to_markdown(html: str, source_url: str, retrieved_at: str) -> s
 
     authors = root.select_one(".ltx_authors")
     if authors is not None:
-        names = [
-            node.get_text(" ", strip=True) for node in authors.select(".ltx_personname")
-        ]
-        names = [name for name in names if name]
+        names, details = author_metadata(authors)
         if names:
             authors.clear()
             authors.append(NavigableString("Authors: " + ", ".join(names)))
+            if details:
+                authors.append(
+                    NavigableString("\n\nAuthor details:\n\n- " + "\n- ".join(details))
+                )
 
     keywords = root.select_one(".ltx_keywords")
     if keywords is not None:
@@ -255,6 +285,104 @@ def validate_html(payload: bytes, content_type: str | None) -> str:
     return text
 
 
+def validate_pdf(payload: bytes, content_type: str | None) -> None:
+    if not payload.startswith(b"%PDF-"):
+        raise ValueError("response is not a PDF")
+    if content_type and "pdf" not in content_type.lower():
+        raise ValueError(f"unexpected content type: {content_type}")
+
+
+def extract_pdf_text(payload: bytes) -> tuple[str, int]:
+    reader = PdfReader(io.BytesIO(payload))
+    pages = [
+        CONTROL_CHAR_RE.sub("", page.extract_text() or "") for page in reader.pages
+    ]
+    text = "\n\n".join(page.strip() for page in pages).strip()
+    if not text:
+        raise ValueError("PDF text extraction produced no text")
+    return text + "\n", len(pages)
+
+
+def fetch_pdf_one(arxiv_id: str, output: Path, user_agent: str) -> tuple[str, bool]:
+    stem = safe_name(arxiv_id)
+    pdf_path = output / f"{stem}.pdf"
+    text_path = output / f"{stem}.pdf.txt"
+    record_path = output / f"{stem}.pdf.json"
+    if pdf_path.exists():
+        try:
+            payload = pdf_path.read_bytes()
+            validate_pdf(payload, "application/pdf")
+            if not text_path.exists():
+                text, _ = extract_pdf_text(payload)
+                text_path.write_text(text, encoding="utf-8")
+            return f"cached-pdf {arxiv_id}: {pdf_path}", False
+        except (OSError, ValueError, PdfReadError):
+            pass
+
+    requested_url = f"https://arxiv.org/pdf/{arxiv_id}"
+    request = Request(
+        requested_url,
+        headers={"User-Agent": user_agent, "Accept": "application/pdf"},
+    )
+    checked_at = iso_now()
+    try:
+        with urlopen(request, timeout=45) as response:
+            payload = response.read()
+            content_type = response.headers.get("Content-Type")
+            validate_pdf(payload, content_type)
+            text, page_count = extract_pdf_text(payload)
+            pdf_path.write_bytes(payload)
+            text_path.write_text(text, encoding="utf-8")
+            result = CacheRecord(
+                arxiv_id=arxiv_id,
+                requested_url=requested_url,
+                final_url=response.geturl(),
+                document_base=None,
+                resolved_arxiv_id=None,
+                checked_at=checked_at,
+                status="pdf-cached",
+                http_status=response.status,
+                content_type=content_type,
+                byte_size=len(payload),
+                sha256=hashlib.sha256(payload).hexdigest(),
+                etag=response.headers.get("ETag"),
+                last_modified=response.headers.get("Last-Modified"),
+                derived_text_file=text_path.name,
+                extracted_pages=page_count,
+            )
+            write_record(record_path, result)
+            return f"pdf-fetched {arxiv_id}: {pdf_path}", True
+    except HTTPError as exc:
+        result = CacheRecord(
+            arxiv_id=arxiv_id,
+            requested_url=requested_url,
+            final_url=exc.geturl(),
+            document_base=None,
+            resolved_arxiv_id=None,
+            checked_at=checked_at,
+            status="pdf-http-error",
+            http_status=exc.code,
+            content_type=exc.headers.get("Content-Type"),
+            retry_after=exc.headers.get("Retry-After"),
+            note=str(exc.reason),
+        )
+        write_record(record_path, result)
+        return f"pdf-http-error {arxiv_id}: HTTP {exc.code}", True
+    except (URLError, TimeoutError, ValueError, PdfReadError) as exc:
+        result = CacheRecord(
+            arxiv_id=arxiv_id,
+            requested_url=requested_url,
+            final_url=None,
+            document_base=None,
+            resolved_arxiv_id=None,
+            checked_at=checked_at,
+            status="pdf-fetch-error",
+            note=str(exc),
+        )
+        write_record(record_path, result)
+        return f"pdf-fetch-error {arxiv_id}: {exc}", True
+
+
 def fetch_one(
     arxiv_id: str,
     output: Path,
@@ -268,8 +396,6 @@ def fetch_one(
     record_path = output / f"{stem}.json"
     record = read_json(record_path)
 
-    if html_path.exists() and md_path.exists() and not refresh:
-        return f"cached {arxiv_id}: {md_path}", False
     if html_path.exists() and not refresh:
         checked_at = str(record.get("checked_at") or iso_now()) if record else iso_now()
         source_url = (
@@ -415,7 +541,7 @@ def fetch_one(
 def run_selftest() -> None:
     fixture = """<!doctype html><html><head><base href="/html/2401.00001v2/"></head><body>
     <nav>outside</nav><article class="ltx_document"><h1>Fixture Paper</h1>
-    <div class="ltx_authors"><span class="ltx_personname">A. Author</span><span class="ltx_author_notes">author-noise</span></div>
+    <div class="ltx_authors"><span class="ltx_creator ltx_role_author"><span class="ltx_personname">A. Author</span><span class="ltx_author_notes">Example University, author@example.edu</span></span></div>
     <div class="ltx_abstract"><h6 class="ltx_title_abstract">Abstract.</h6><p>Body
     <math display="inline" alttext="x_i"><annotation encoding="application/x-tex">x_i</annotation></math>.</p></div>
     <span class="ltx_note_frontmatter">noise</span>
@@ -428,6 +554,8 @@ def run_selftest() -> None:
     required = [
         "# Fixture Paper",
         "Authors: A. Author",
+        "Author details:",
+        "A. Author: Example University",
         "## Abstract",
         "$x_i$",
         "$$\ny=x^2\n$$",
@@ -437,9 +565,52 @@ def run_selftest() -> None:
     ]
     for value in required:
         assert value in result, value
-    for forbidden in ["outside", "noise", "author-noise", "start_POSTSUBSCRIPT"]:
+    for forbidden in ["outside", "noise", "author@example.edu", "start_POSTSUBSCRIPT"]:
         assert forbidden not in result, forbidden
+    validate_pdf(b"%PDF-1.7\nfixture", "application/pdf")
+    try:
+        validate_pdf(b"<html>not a pdf</html>", "text/html")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("HTML payload accepted as PDF")
+    assert retry_wait_seconds("7", 0, 5.0, 60.0) == 7.0
+    assert retry_wait_seconds(None, 1, 5.0, 60.0) == 10.0
+    assert retry_wait_seconds("120", 0, 5.0, 60.0) is None
+    assert record_is_retryable({"status": "fetch-error"})
+    assert record_is_retryable({"http_status": 503})
+    assert not record_is_retryable({"http_status": 404})
     print("selftest ok")
+
+
+def retry_wait_seconds(
+    retry_after: object, attempt: int, interval: float, maximum: float
+) -> float | None:
+    wait = interval * (2**attempt)
+    if isinstance(retry_after, str) and retry_after.strip():
+        value = retry_after.strip()
+        try:
+            wait = float(value)
+        except ValueError:
+            try:
+                retry_at = parsedate_to_datetime(value)
+                if retry_at.tzinfo is None:
+                    retry_at = retry_at.replace(tzinfo=timezone.utc)
+                wait = max(0.0, (retry_at - utc_now()).total_seconds())
+            except (TypeError, ValueError, OverflowError):
+                pass
+    return wait if wait <= maximum else None
+
+
+def record_is_retryable(record: dict[str, object] | None) -> bool:
+    if not record:
+        return False
+    status = record.get("status")
+    http_status = record.get("http_status")
+    return (
+        status in {"fetch-error", "pdf-fetch-error"}
+        or http_status in RETRYABLE_HTTP_STATUSES
+    )
 
 
 def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
@@ -452,6 +623,23 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
         "--refresh", action="store_true", help="conditionally refresh cached HTML"
     )
     parser.add_argument("--negative-cache-days", type=int, default=30)
+    parser.add_argument(
+        "--no-pdf-fallback",
+        action="store_true",
+        help="do not fetch the official PDF when arXiv HTML is unavailable",
+    )
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=2,
+        help="bounded retries for transient network and HTTP failures",
+    )
+    parser.add_argument(
+        "--max-retry-wait",
+        type=float,
+        default=60.0,
+        help="stop instead of sleeping longer than this Retry-After value",
+    )
     parser.add_argument(
         "--min-interval",
         type=float,
@@ -474,6 +662,9 @@ def main(argv: Iterable[str] | None = None) -> int:
     if args.negative_cache_days < 0:
         print("--negative-cache-days must be non-negative", file=sys.stderr)
         return 2
+    if args.max_retries < 0 or args.max_retry_wait < 0:
+        print("retry values must be non-negative", file=sys.stderr)
+        return 2
 
     try:
         identifiers = [normalize_arxiv_id(value) for value in args.identifiers]
@@ -485,25 +676,88 @@ def main(argv: Iterable[str] | None = None) -> int:
     interval = max(MINIMUM_INTERVAL_SECONDS, args.min_interval)
     last_request_finished: float | None = None
     exit_code = 0
+
+    def pace() -> None:
+        nonlocal last_request_finished
+        if last_request_finished is None:
+            return
+        remaining = interval - (time.monotonic() - last_request_finished)
+        if remaining > 0:
+            time.sleep(remaining)
+
+    def run_with_retries(
+        fetch, record_path: Path
+    ) -> tuple[str, dict[str, object] | None]:
+        nonlocal last_request_finished
+        message = ""
+        record: dict[str, object] | None = None
+        for attempt in range(args.max_retries + 1):
+            pace()
+            message, used_network = fetch()
+            print(message)
+            if used_network:
+                last_request_finished = time.monotonic()
+            record = read_json(record_path)
+            if not used_network or not record_is_retryable(record):
+                break
+            if attempt >= args.max_retries:
+                break
+            wait = retry_wait_seconds(
+                record.get("retry_after") if record else None,
+                attempt,
+                interval,
+                args.max_retry_wait,
+            )
+            if wait is None:
+                print(
+                    f"Retry-After exceeds {args.max_retry_wait:g}s; stopping retries",
+                    file=sys.stderr,
+                )
+                break
+            elapsed = (
+                time.monotonic() - last_request_finished
+                if last_request_finished is not None
+                else 0.0
+            )
+            if wait > elapsed:
+                time.sleep(wait - elapsed)
+        return message, record
+
     for arxiv_id in dict.fromkeys(identifiers):
-        if last_request_finished is not None:
-            remaining = interval - (time.monotonic() - last_request_finished)
-            if remaining > 0:
-                time.sleep(remaining)
-        message, used_network = fetch_one(
-            arxiv_id=arxiv_id,
-            output=args.output,
-            user_agent=args.user_agent,
-            refresh=args.refresh,
-            negative_cache_days=args.negative_cache_days,
+        stem = safe_name(arxiv_id)
+        pdf_record: dict[str, object] | None = None
+        message, html_record = run_with_retries(
+            lambda: fetch_one(
+                arxiv_id=arxiv_id,
+                output=args.output,
+                user_agent=args.user_agent,
+                refresh=args.refresh,
+                negative_cache_days=args.negative_cache_days,
+            ),
+            args.output / f"{stem}.json",
         )
-        print(message)
-        if used_network:
-            last_request_finished = time.monotonic()
-        if message.startswith(("http-error", "fetch-error")):
+        html_status = html_record.get("status") if html_record else None
+        needs_pdf = message.startswith(("html-unavailable", "negative-cache")) or (
+            html_status == "html-unavailable"
+        )
+        if needs_pdf and not args.no_pdf_fallback:
+            pdf_message, pdf_record = run_with_retries(
+                lambda: fetch_pdf_one(arxiv_id, args.output, args.user_agent),
+                args.output / f"{stem}.pdf.json",
+            )
+            if pdf_record and pdf_record.get("status") != "pdf-cached":
+                exit_code = 1
+            elif pdf_message.startswith(("pdf-http-error", "pdf-fetch-error")):
+                exit_code = 1
+        elif message.startswith(("http-error", "fetch-error")):
             exit_code = 1
-        if "HTTP 429" in message or "HTTP 503" in message:
-            print("server asked to slow down; stopping this batch", file=sys.stderr)
+        if (html_record and html_record.get("http_status") in {429, 503}) or (
+            pdf_record and pdf_record.get("http_status") in {429, 503}
+        ):
+            print(
+                "server asked to slow down; retries exhausted, stopping this batch",
+                file=sys.stderr,
+            )
             break
     return exit_code
 

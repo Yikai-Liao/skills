@@ -36,7 +36,7 @@ For each query family:
 1. **Discover** candidates with `huggingface-papers` when it is available. Otherwise, **WebSearch** the review's problem, mechanism, evidence type, application, controversy, or time window.
 2. **Triage** the results. Keep peer-reviewed venue pages, authoritative preprints, prior surveys, benchmarks, datasets, and relevant critiques. Reject duplicate, off-scope, marketing, blog, slide, and unsupported pages.
 3. **WebFetch** or open the most authoritative landing page for each retained candidate.
-4. Extract title, ordered authors, year, venue, work type, DOI or repository ID, abstract, canonical URL, and available artifact links.
+4. Extract title, ordered authors, author affiliations or leading-team attribution with its exact evidence surface, year, venue, work type, DOI or repository ID, abstract, canonical URL, and available artifact links.
 5. Append the paper ledger, citation record, and source manifest immediately rather than waiting for the whole query batch.
 6. Fetch the full text or supplements only when deeper evidence is needed. For a requested readable Markdown version, try `huggingface-papers` first when available, then use the source-specific fallback below.
 
@@ -123,6 +123,7 @@ The cache contains, per identifier:
 - `.html`: untouched official response;
 - `.md`: local reading copy;
 - `.json`: requested and final URL, retrieval time, status, type, size, checksum, validators, and failure state.
+- `.pdf`, `.pdf.txt`, and `.pdf.json`: a validated official PDF, a `pypdf`-derived reading copy, and their separate acquisition record when HTML is unavailable.
 
 The converter extracts only `article.ltx_document`, reconstructs mathematics from LaTeXML's `application/x-tex` annotations, removes conversion-only front matter, and resolves relative links against the document's `<base>` URL. It deliberately leaves figure URLs remote instead of downloading every image. Download only figures needed for an evidence claim, observing the same request pacing.
 
@@ -135,10 +136,12 @@ Do not use a generic HTML-to-Markdown conversion without checking the result. Na
 - Use Atom `id_list` or a query response for metadata rather than opening one abstract page per paper solely to recover metadata.
 - Negative-cache a 404 or structurally invalid HTML response. Fall back to PDF immediately and do not probe the same HTML URL again in the current run; the bundled tool defaults to a 30-day negative cache.
 - Refresh only deliberately, using `ETag` or `Last-Modified` validators when present. A conditional request is still a request and must be paced.
-- On `429` or a server-unavailable response, honor `Retry-After` when present, stop the batch, and resume later. Do not add parallel workers or aggressive automatic retries.
+- On transient network failures, `429`, or server-unavailable responses, use only bounded serialized retries. Honor `Retry-After` when present; stop the batch instead of waiting beyond the configured ceiling or continuing after retries are exhausted. Do not add parallel workers or aggressive retries. The bundled tool defaults to two retries and a 60-second maximum retry wait.
 - Use an identifiable user agent for scripted retrieval. If the workflow will run repeatedly or at scale, include a real contact route supplied by the operator.
 
 Record HTML success as `html-fulltext`, a derived Markdown copy as `html-derived-markdown`, and a negative probe as `html-unavailable` in the source manifest. A cached Markdown file never upgrades the evidence depth beyond what the underlying HTML actually contains.
+
+The bundled command automatically retrieves and validates the official PDF after an HTML 404, structurally invalid HTML response, or fresh negative-cache hit, then uses `pypdf` to persist a text reading copy. A successful PDF fallback must leave the `.pdf`, `.pdf.txt`, and `.pdf.json` artifacts. Do not write “PDF fallback succeeded” in the manifest unless all three exist and the record reports `pdf-cached`.
 
 ## 5. Recency-Led arXiv Retrieval
 
@@ -158,6 +161,7 @@ For every retained paper, record:
 
 - exact title from the fetched record;
 - full ordered author list;
+- author affiliations and the verified leading institution or team used at first substantive mention, including the exact byline, PDF page, proceedings record, repository record, or authoritative project page that supports it;
 - publication or preprint year and the meaning of that year;
 - venue or repository status;
 - DOI, arXiv ID, OpenReview ID, or another stable identifier;
@@ -228,14 +232,17 @@ Maintain `01a-source-manifest.md` with one row per successful or failed retrieva
 
 Keep failed attempts. They document access boundaries and prevent repeated dead ends. Link every included ledger row and paper note to its metadata record and deepest available evidence surface.
 
+Treat the manifest as an artifact inventory, not a narrative claim. Before marking a retrieval successful, verify that the referenced local artifact exists, opens as the recorded type, and has the matching acquisition record. A failed HTML route and successful PDF route are two rows or two explicitly linked records, never one ambiguous “fallback” note.
+
 ## 10. Failure Handling
 
 - **No result**: vary the exact title, author, identifier, venue, and query vocabulary; record attempted variants.
 - **Metadata conflict**: preserve both records, prefer the primary paper or venue record, and document the choice.
-- **Rate limit**: reduce batch size, serialize requests, respect server guidance, and retry later.
+- **Rate limit**: reduce batch size, serialize requests, respect server guidance, and use only bounded retries; leave the last failure record when the batch must resume later.
 - **arXiv HTML unavailable**: negative-cache the result, fall back to the PDF, and do not mistake HTML absence for paper absence.
 - **arXiv Markdown corruption**: retain the raw HTML, repair the structural conversion or read the relevant HTML section directly, and cross-check exact equations or tables against the PDF.
 - **Authentication or subscription gate**: record the gap and try openly linked repository, landing-page, correction, or supplement routes; do not bypass controls.
 - **HTML saved as PDF**: reject it as full text, retain the landing HTML as a limited source, and mark the access depth honestly.
 - **JavaScript-only page**: use an available browser renderer or another authoritative landing page.
 - **Unavailable supplement**: name the missing artifact and avoid claims that require it.
+- **Affiliation missing from a derived reading copy**: inspect the retained raw HTML author block and PDF first page, then the official proceedings, repository, or authoritative project page. Treat this as a conversion or retrieval gap, not an unresolved institution, until those surfaces are exhausted and recorded.

@@ -57,6 +57,7 @@ Do not give every source equal space. Allocate depth according to its role in th
 Give each important source a dedicated note with the fields that apply:
 
 - canonical citation and access path;
+- verified affiliations or leading-team attribution, its exact evidence surface, and the authoritative surfaces checked if still unresolved;
 - problem formulation and setting;
 - main objects, assumptions, or population;
 - mechanism, method, theory, or study design;
@@ -67,7 +68,7 @@ Give each important source a dedicated note with the fields that apply:
 - survey-inferred strengths and limitations;
 - relation to earlier and later work;
 - role in this survey;
-- unresolved verification needs.
+- unresolved verification needs, distinguishing source unavailability from local parsing or conversion failure.
 
 Write `none identified yet` with a reason when no survey-inferred limitation is visible. Do not silently copy the paper's own limitation section as the review's complete judgment.
 

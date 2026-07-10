@@ -18,6 +18,7 @@ Run this gate before declaring a survey manuscript or audit complete. Treat fail
 Require all of the following:
 
 - every cited source resolves to a verified ledger entry or supplied reference;
+- every successful retrieval claimed in the source manifest resolves to a present, type-valid local artifact and its acquisition record;
 - author, title, year, venue, identifier, quotation, and numerical facts are not invented;
 - claims that depend on methods or results are based on sufficient source depth;
 - quantitative statements and data-bearing visuals have recorded provenance;
@@ -111,7 +112,7 @@ Check mechanically and visually:
 - terminology, names, citation keys, and numerical values are consistent;
 - no defensive opening, meta-taxonomy heading, author-list rhythm, or generic AI scaffolding remains.
 - negation and binary-reversal phrases are not used as recurring rhetorical scaffolding. Search headings, abstract openings, topic sentences, and conclusion claims for patterns equivalent to `not X but Y`, `X is not equal to Y`, `not only X`, and `X cannot represent Y`; inspect every hit and retain only evidence-bearing contradiction or necessary scope limitation.
-- every cited work's first substantive mention uses verified leading-institution/team attribution and one Markdown link over the complete `Work(Year)` label when that metadata is available; the year uses ASCII English parentheses `(` and `)`, never full-width Chinese parentheses `（` and `）`; later mentions avoid repetitive affiliation bookkeeping. Unresolved institutions are labeled as unresolved rather than inferred.
+- every cited work's first substantive mention uses verified leading-institution/team attribution and one Markdown link over the complete `Work(Year)` label when that metadata is available; the year uses ASCII English parentheses `(` and `)`, never full-width Chinese parentheses `（` and `）`; later mentions avoid repetitive affiliation bookkeeping. An unresolved label is blocking unless the workspace records the authoritative byline, PDF first page, proceedings or repository record, and authoritative project page checked as applicable, with the exact access failure or ambiguity for each. A missing field in a cache, parser, Markdown conversion, or secondary index never satisfies this condition.
 - preprint version changes are not hidden behind combined aliases: title, method name, author-list, or substantive changes are represented with the exact supporting version and documented in the workspace.
 
 Use available repository checks or renderers when present. A syntax pass does not replace reading the rendered manuscript.
@@ -130,3 +131,5 @@ Report:
 - files changed and any validation limitations.
 
 Declare readiness only when all blocking gates pass. If a hard evidence limit remains, deliver the best bounded manuscript and state why it is not fully ready; do not pad, fabricate, or soften the gate.
+
+Do not pass this gate by searching only for institution-shaped wording in the manuscript. Reconcile every first-mention attribution and every unresolved label against the corresponding paper note and persisted source evidence. Fail the audit when a note says unresolved while an acquired authoritative artifact contains a clear affiliation, or when the manifest claims a fallback artifact that is absent from disk.
