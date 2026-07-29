@@ -1,0 +1,241 @@
+{
+  "skill": "software-design-philosophy",
+  "version": "0.1.0",
+  "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-diagnose",
+      "type": "should_trigger",
+      "prompt": "团队说仓库越来越难改，但有人怪微服务，有人怪 ORM，有人怪命名。我只有两天调查，应该先看哪里？",
+      "expected_behavior": "应触发 software-design-philosophy，以 diagnose-software-complexity.md 为唯一主 reference，从近期真实修改任务诊断并加权复杂性。",
+      "notes": "正例：根因未知的复杂性诊断。"
+    },
+    {
+      "id": "should-trigger-evolve",
+      "type": "should_trigger",
+      "prompt": "这次缺陷一行就能绕过，但根因是订单状态在两个地方维护。怎样在本周发布修复，同时把状态权威逐步收回来？",
+      "expected_behavior": "应触发，以 evolve-design-strategically.md 为主 reference，先定义目标权威、最小结构切口和分期退出条件。",
+      "notes": "正例：受交付约束的结构演化。"
+    },
+    {
+      "id": "should-trigger-deep-module",
+      "type": "should_trigger",
+      "prompt": "文档编辑器暴露了二十多个 delete/move 动作。请设计少量核心原语，证明常见操作覆盖，并说明没覆盖的插件需求去哪。",
+      "expected_behavior": "应触发，以 design-deep-modules.md 为主 reference，建立加权用例、知识、覆盖和逃逸表。",
+      "notes": "正例：有限接口覆盖与受控逃逸。"
+    },
+    {
+      "id": "should-trigger-leakage",
+      "type": "should_trigger",
+      "prompt": "同一消息格式的字段偏移和校验规则在 producer、consumer、监控解析器中各解释一次，每次升级都要同步改。",
+      "expected_behavior": "应触发，以 audit-information-leakage.md 为主 reference，按设计知识画依赖图并寻找唯一权威。",
+      "notes": "正例：共享知识跨模块泄露。"
+    },
+    {
+      "id": "should-trigger-combine-split",
+      "type": "should_trigger",
+      "prompt": "一个 Service 只把同参同返回值转发给 Repository；该删掉合并，还是它仍值得作为边界？",
+      "expected_behavior": "应触发，以 decide-combine-or-split.md 为主 reference，比较知识、变化轴和接口成本，而不按层名裁决。",
+      "notes": "正例：组合或拆分决策。"
+    },
+    {
+      "id": "should-trigger-exception",
+      "type": "should_trigger",
+      "prompt": "接口总体稳定，只需决定删除不存在对象是否成功、超时由哪层重试、哪些错误必须让调用者知道。",
+      "expected_behavior": "应触发，以 reduce-exception-surface.md 为主 reference，沿定义消除、恢复、聚合和明确失败的阶梯处理。",
+      "notes": "正例：错误语义与恢复责任。"
+    },
+    {
+      "id": "should-trigger-twice",
+      "type": "should_trigger",
+      "prompt": "团队已经接受第一个分区方案，但还没比较其他结构。请产生真正不同的候选并统一评估。",
+      "expected_behavior": "应触发，以 design-it-twice.md 为主 reference，固定真实用例与评分维度后产生结构不同的候选。",
+      "notes": "正例：重要方案缺少备选。"
+    },
+    {
+      "id": "should-trigger-comment-first",
+      "type": "should_trigger",
+      "prompt": "我准备实现 beginTransaction，但无法简短写清重入、提交时点、隔离保证和回调副作用。",
+      "expected_behavior": "应触发，以 design-abstractions-comment-first.md 为主 reference，暂停实现并先写调用者契约。",
+      "notes": "正例：实现前无法表达抽象。"
+    },
+    {
+      "id": "should-trigger-obvious",
+      "type": "should_trigger",
+      "prompt": "核心业务能力已经选定，契约也明确；可新人总被 handler/manager 之类名字和五层跳转误导。",
+      "expected_behavior": "应触发，以 make-code-obvious-to-readers.md 为主 reference，用首次读者任务记录误解路径。",
+      "notes": "正例：核心已定但代码表面不明显。"
+    },
+    {
+      "id": "should-trigger-performance",
+      "type": "should_trigger",
+      "prompt": "搜索接口 p95 已有基线，火焰图显示排序占 71%。缓存、预计算和并行三种优化怎么裁决？",
+      "expected_behavior": "应触发，以 design-measured-critical-paths.md 为主 reference，用同一负载和正确性条件做对照实验。",
+      "notes": "正例：有目标、有基线、有热点的性能设计。"
+    },
+    {
+      "id": "should-trigger-importance",
+      "type": "should_trigger",
+      "prompt": "这个支付系统有几十个参数和概念，我们还不知道哪些信息是调用者必须决定、哪些应由模块隐藏。",
+      "expected_behavior": "应触发，以 design-around-what-matters.md 为主 reference，先建立概念与真实任务的杠杆关系。",
+      "notes": "正例：系统中心与重要信息尚未确定。"
+    },
+    {
+      "id": "should-not-trigger-library-api",
+      "type": "should_not_trigger",
+      "prompt": "React 现在创建 context 的 API 签名是什么？给我一个最小例子。",
+      "expected_behavior": "不应触发；这是纯库用法查询，应直接查官方文档。",
+      "notes": "诱饵：技术问题不等于设计问题。"
+    },
+    {
+      "id": "should-not-trigger-live-incident",
+      "type": "should_not_trigger",
+      "prompt": "生产 5xx 仍在快速上涨，连接池已耗尽。现在先怎么恢复服务？",
+      "expected_behavior": "不应触发设计流程；事故仍在扩大，应先止血、隔离和恢复。",
+      "notes": "诱饵：即时事故响应。"
+    },
+    {
+      "id": "should-not-trigger-mechanical-implementation",
+      "type": "should_not_trigger",
+      "prompt": "数据库迁移方案已经批准，字段、顺序和回滚命令都确定了；请严格照清单实现，不改设计。",
+      "expected_behavior": "不应触发；设计已确定，只需按清单实施和验证。",
+      "notes": "诱饵：无设计取舍的机械实现。"
+    },
+    {
+      "id": "should-not-trigger-style-rename",
+      "type": "should_not_trigger",
+      "prompt": "按本项目既有约定，把这个局部变量从 ready 改成 isReady。",
+      "expected_behavior": "不应触发；这是没有行为收益的局部风格修改。",
+      "notes": "诱饵：风格清理。"
+    },
+    {
+      "id": "should-not-trigger-product-roadmap",
+      "type": "should_not_trigger",
+      "prompt": "帮我给下季度产品功能排优先级并写路线图。",
+      "expected_behavior": "不应触发；这是产品规划，不是软件结构、接口或演化设计。",
+      "notes": "诱饵：邻近但不同的决策领域。"
+    },
+    {
+      "id": "should-not-trigger-line-threshold",
+      "type": "should_not_trigger",
+      "prompt": "这个函数有 120 行，但目前没人反馈难读、难改或出错；公司规定超过 80 行必须拆。",
+      "expected_behavior": "不应仅凭行数触发设计重组；应先寻找真实理解、修改或失败证据。",
+      "notes": "诱饵：机械结构指标。"
+    },
+    {
+      "id": "should-not-trigger-one-off-script",
+      "type": "should_not_trigger",
+      "prompt": "写一个只运行一次的数据清理脚本，带 dry-run 和回滚，不会形成长期模块。",
+      "expected_behavior": "不应展开长期设计流程；直接按一次性数据操作的安全约束实现。",
+      "notes": "诱饵：一次性、安全边界清楚的脚本。"
+    },
+    {
+      "id": "edge-importance-before-interface",
+      "type": "edge_case",
+      "prompt": "新调度模块连真正核心概念都没选出来，现在有人直接开始设计统一 execute API。第一步是什么？",
+      "expected_behavior": "应触发，以 design-around-what-matters.md 为主；先识别核心概念，不应直接进入 design-deep-modules.md。",
+      "notes": "边界：重要性设计与深模块设计。"
+    },
+    {
+      "id": "edge-leakage-before-split",
+      "type": "edge_case",
+      "prompt": "五个服务都根据同一枚举自行解释状态转移，大家提议先按团队边界重新拆服务。应该从哪种分析开始？",
+      "expected_behavior": "应以 audit-information-leakage.md 为主，先找到共享状态机的唯一权威，再把 decide-combine-or-split.md 作为辅助。",
+      "notes": "边界：知识泄露先于组织式拆分。"
+    },
+    {
+      "id": "edge-obvious-after-contract",
+      "type": "edge_case",
+      "prompt": "接口契约已经完整且正确，但返回位置型三元组让所有读者都要查实现才能知道三个值的含义。",
+      "expected_behavior": "应以 make-code-obvious-to-readers.md 为主，不应回到注释优先；先做无提示读者验证。",
+      "notes": "边界：契约表达与代码表面易理解性。"
+    },
+    {
+      "id": "edge-debug-plane-unspecified",
+      "type": "edge_case",
+      "prompt": "请设计文件服务的有限核心接口和长尾逃逸；我没有提测试或 Agent 调试入口。",
+      "expected_behavior": "应以 design-deep-modules.md 为主，并主动询问是否需要独立调试面；未获明确要求前不得创建。",
+      "notes": "边界：调试面必须主动询问、显式授权。"
+    },
+    {
+      "id": "edge-debug-plane-explicit",
+      "type": "edge_case",
+      "prompt": "我明确需要 Agent 在测试环境通过 CLI 构造状态、注入故障和清理数据，但这个入口绝不能进入生产业务 API。",
+      "expected_behavior": "应以 design-deep-modules.md 为主，设计独立且生产不可达的 CLI/API，并落实 schema、幂等、限权、审计和回收。",
+      "notes": "边界：已获设计者明确授权的调试面。"
+    },
+    {
+      "id": "edge-surface-duplication",
+      "type": "edge_case",
+      "prompt": "税务金额格式化和营销金额格式化当前代码几乎相同，却由法规与展示活动分别变化。是否应该抽成一个共享服务？",
+      "expected_behavior": "应以 decide-combine-or-split.md 为主；表面重复不等于共享知识，先验证独立变化轴。",
+      "notes": "边界：信息泄露与表面代码重复。"
+    },
+    {
+      "id": "edge-stable-interface-errors",
+      "type": "edge_case",
+      "prompt": "模块和正常接口都不准备再改，现在只想减少每层 catch/包装，并确定写入超时结果未知时的契约。",
+      "expected_behavior": "应以 reduce-exception-surface.md 为主，可辅助读取注释优先方法；不得把结果未知吞成普通失败。",
+      "notes": "边界：整体接口设计与错误面专项设计。"
+    },
+    {
+      "id": "edge-plugin-ecosystem",
+      "type": "edge_case",
+      "prompt": "这是公开插件平台。怎样既保留有限稳定核心，又允许第三方专用扩展，并防止长尾接口变成第二套生态？",
+      "expected_behavior": "应以 design-deep-modules.md 为主，用加权覆盖与逃逸账本治理类型化扩展、重新汇入和生态分叉。",
+      "notes": "边界：开放生态中的有限核心。"
+    },
+    {
+      "id": "edge-stateful-inheritance",
+      "type": "edge_case",
+      "prompt": "插件通过三个含状态基类和模板方法扩展，必须记住父类调用顺序。怎么收回这些泄露的知识？",
+      "expected_behavior": "应以 audit-information-leakage.md 为主，拒绝多基类实现继承并改用组合、接口、trait 或 concept。",
+      "notes": "边界：实现继承造成的传递性知识泄露。"
+    },
+    {
+      "id": "edge-shared-knowledge-combine",
+      "type": "edge_case",
+      "prompt": "HTTP Reader 和 Parser 总是共同理解 Content-Length，也总是一起改；现在要裁决它们究竟应合并还是分开。",
+      "expected_behavior": "应以 decide-combine-or-split.md 为主，使用共享协议知识和共同变化证据裁决，可辅助泄露审计。",
+      "notes": "边界：已知共享知识但首要问题是边界裁决。"
+    },
+    {
+      "id": "edge-low-level-no-evidence",
+      "type": "edge_case",
+      "prompt": "上层要求直接拿数据库事务对象，说这样才够快；目前没有性能目标、基线或 profile，也没检查通用接口是否漏了原语。",
+      "expected_behavior": "应以 design-around-what-matters.md 为主，先反查通用接口；不得先选性能优化或批准底层穿透。",
+      "notes": "边界：未经测量的性能理由不能抢走主路由。"
+    },
+    {
+      "id": "edge-low-level-caller-knowledge",
+      "type": "edge_case",
+      "prompt": "调用方说必须拿到底层存储句柄才能控制一致性，但还没有验证公共接口是否缺少调用方真正必须决定的语义。",
+      "expected_behavior": "应以 design-around-what-matters.md 为主，先证明调用者独有决策并定位高层语义缺口。",
+      "notes": "边界：必要显式决策与裸底层句柄。"
+    },
+    {
+      "id": "edge-low-level-measured-hotspot",
+      "type": "edge_case",
+      "prompt": "已有明确 p99 目标和可重复 profile，事务初始化占端到端耗时 68%；团队考虑开放一个窄的批量事务能力，第一步怎么走？",
+      "expected_behavior": "应以 design-measured-critical-paths.md 为主，先冻结基线并做对照实验，再用重要性方法约束暴露语义。",
+      "notes": "边界：有充分运行证据时才进入性能主路由。"
+    },
+    {
+      "id": "edge-post-incident",
+      "type": "edge_case",
+      "prompt": "事故已经恢复并稳定两周，现在要根据复盘结果消除导致重复连接泄漏的结构根因。",
+      "expected_behavior": "应触发；事故止血边界已经结束，可进入战略式演化或根因专门方法。",
+      "notes": "边界：正在止血与事后结构修复。"
+    },
+    {
+      "id": "edge-public-plugin-trigger",
+      "type": "edge_case",
+      "prompt": "我需要审查一个公开插件 API，常见扩展应开箱即用，同时不能封死第三方长尾能力。",
+      "expected_behavior": "应触发并进入深模块方法，验证常见扩展覆盖并治理长尾逃逸。",
+      "notes": "边界：扩展性产品仍可采用有限稳定核心。"
+    }
+  ],
+  "minimum_pass_rate": 1.0,
+  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法 reference 均至少有一个直接正例。"
+}
