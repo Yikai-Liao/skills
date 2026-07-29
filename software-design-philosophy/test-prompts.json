@@ -1,6 +1,6 @@
 {
   "skill": "software-design-philosophy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）；《架构设计的本质》（系统设计边界补充）",
   "darwin_compatible": true,
   "test_cases": [
@@ -239,8 +239,43 @@
       "id": "should-trigger-architecture-audit",
       "type": "should_trigger",
       "prompt": "使用这个 skill 评估当前仓库的架构设计，给出包含当前问题、对应风险和推荐改进的报告。",
-      "expected_behavior": "应触发并完整读取 audit-software-architecture.md；先建立真实压力评价基线并做架构准入，再按候选证据联合所需方法，不设置主/辅、数量上限或固定诊断前置。",
+      "expected_behavior": "应触发并完整读取 audit-software-architecture.md 与 design-deep-modules.md；先建立真实压力评价基线，完成设计细则覆盖和模块深度取样，再按信号读取其他完整方法并做架构准入。报告必须显式给出模块深度结论，不能等用户点名术语后才补查。",
       "notes": "回归正例：description 必须能触发架构评估。"
+    },
+    {
+      "id": "should-trigger-architecture-audit-implicit-module-depth",
+      "type": "should_trigger",
+      "prompt": "评估这个仓库当前实现出来的架构，只报告架构问题、风险和改进建议。我没有指定要检查哪些设计原则。",
+      "expected_behavior": "广义架构审计必须主动覆盖整套架构设计细则，并完整执行模块深度检查；不得因为用户没说“深模块、信息泄露、接口”等术语就跳过。各维度可以得出问题、候选、健康或不适用，不要求凑问题。",
+      "notes": "真实失败回归：架构审计必须主动召回从属细则。"
+    },
+    {
+      "id": "edge-architecture-intentional-shallow-adapter",
+      "type": "edge_case",
+      "prompt": "架构审计看到一个很小的协议适配器：一个方法把外部类型映射为内部类型，不拥有业务知识，也没有跨调用者胶水或共同变化证据。它不是深模块，是否应列为架构问题？",
+      "expected_behavior": "不应。模块深度检查必须按知识边界、接口负担和系统性机制判断；刻意简单的适配器、值类型、纯函数或内部辅助层可以合理地浅。没有三门准入证据时至多标为不适用，不能为追求深度强塞职责。",
+      "notes": "边界：强制检查模块深度不等于强制所有对象都做深。"
+    },
+    {
+      "id": "edge-architecture-confirmed-shallow-boundary",
+      "type": "edge_case",
+      "prompt": "一个被多个团队依赖的作业模块要求每个调用者重复执行 create、attachPolicy、registerCallbacks、start、poll、cancel、close，并各自维护相同的状态顺序和重试规则；这些是高频完整工作流。架构审计该如何判断？",
+      "expected_behavior": "应完整使用深模块方法，记录接口负担、隐藏能力缺失、加权工作流和重复胶水；若证据证明状态机知识被转嫁且修复需重设公共契约或知识权威，则作为浅边界架构问题进入主表，并设计有限原语、默认路径与受控逃逸。",
+      "notes": "正例：没有“深模块”关键词但存在结构性浅接口。"
+    },
+    {
+      "id": "edge-architecture-healthy-deep-boundary",
+      "type": "edge_case",
+      "prompt": "一个公共存储入口用少量类型化操作覆盖高频和高影响工作流，内部统一身份、重试、生命周期与观测；高级批量入口只向有权限的调用者暴露必要布局信息，结果重新汇入公共句柄。架构审计没有发现调用者重复胶水。",
+      "expected_behavior": "模块深度检查仍须执行并显式把该边界列为值得保留的架构，说明有限接口隐藏了哪些知识、工作流如何被覆盖、逃逸如何守住并重新汇入共同不变量；不能因没有问题而省略检查。",
+      "notes": "正例：强制维度允许得出有证据支持的健康设计。"
+    },
+    {
+      "id": "edge-architecture-multi-detail-reachability",
+      "type": "edge_case",
+      "prompt": "一次仓库架构审计发现：新增协议字段要在四个模块同步解释；公共入口的常见任务需要调用者重复拼接多个有顺序的方法；每个适配器自行决定重试和错误转换；团队对一个难逆的边界重组只有一个方案。请只做架构评估。",
+      "expected_behavior": "先完成设计细则覆盖，再按证据联合信息泄露、深模块、异常处理面和设计两次等完整方法；每项结果仍需通过架构准入。不得只选一个所谓主方法，也不得把读取异常或候选比较方法扩张成独立专项报告。",
+      "notes": "联合回归：蒸馏细则能从架构证据进入实际执行。"
     },
     {
       "id": "should-trigger-architecture-detail-boundary",
@@ -349,5 +384,5 @@
     }
   ],
   "minimum_pass_rate": 1.0,
-  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法 reference 均至少有一个直接正例；真实任务可联合多个方法，架构审计单独验证压力基线和分类准入。"
+  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法 reference 均至少有一个直接正例；真实任务可联合多个方法。广义架构审计必须覆盖设计细则、完整检查模块深度并显式报告，但不得机械凑问题或把所有浅对象定罪。"
 }
