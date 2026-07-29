@@ -1,6 +1,6 @@
 {
   "skill": "software-design-philosophy",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）；《架构设计的本质》（系统设计边界补充）",
   "darwin_compatible": true,
   "test_cases": [
@@ -239,7 +239,7 @@
       "id": "should-trigger-architecture-audit",
       "type": "should_trigger",
       "prompt": "使用这个 skill 评估当前仓库的架构设计，给出包含当前问题、对应风险和推荐改进的报告。",
-      "expected_behavior": "应触发并完整读取 audit-software-architecture.md 与 design-deep-modules.md；先建立真实压力评价基线，完成设计细则覆盖和模块深度取样，再按信号读取其他完整方法并做架构准入。报告必须显式给出模块深度结论，不能等用户点名术语后才补查。",
+      "expected_behavior": "应触发并完整读取 audit-software-architecture.md，再按其加载清单逐一读完全部 11 个方法 reference；先建立真实压力评价基线并完成逐方法覆盖，再按证据对命中方法执行深入产物和架构准入。完整加载不得变成固定流程、十一份手册或十一条问题。",
       "notes": "回归正例：description 必须能触发架构评估。"
     },
     {
@@ -276,6 +276,27 @@
       "prompt": "一次仓库架构审计发现：新增协议字段要在四个模块同步解释；公共入口的常见任务需要调用者重复拼接多个有顺序的方法；每个适配器自行决定重试和错误转换；团队对一个难逆的边界重组只有一个方案。请只做架构评估。",
       "expected_behavior": "先完成设计细则覆盖，再按证据联合信息泄露、深模块、异常处理面和设计两次等完整方法；每项结果仍需通过架构准入。不得只选一个所谓主方法，也不得把读取异常或候选比较方法扩张成独立专项报告。",
       "notes": "联合回归：蒸馏细则能从架构证据进入实际执行。"
+    },
+    {
+      "id": "edge-architecture-complexity-importance-boundary-reachability",
+      "type": "edge_case",
+      "prompt": "只做仓库架构审计。核心价值是稳定处理监管规则，但一次规则变化会让多个入口、模型和适配器同步修改；团队说不清规则权威，也不确定相邻职责应该组合还是拆开。请报告问题、风险和建议。",
+      "expected_behavior": "虽然用户没有点名方法，仍应在完整加载后联合复杂性加权诊断、围绕重要性设计、信息泄露和组合/拆分：用真实规则变更判断变更放大与权重，确认核心规则是否成为结构中心和唯一权威，再比较边界成本；不能只套分层模式。",
+      "notes": "联合回归：复杂性、重要性、知识与边界细则自动参与架构候选发现。"
+    },
+    {
+      "id": "edge-architecture-contract-error-reader-reachability",
+      "type": "edge_case",
+      "prompt": "只评估架构：一个跨团队公共任务接口的成功含义、幂等性和持久化保证无法简短说明，各层重复 catch、改名和重试；新人总从错误入口开始修改并猜错返回状态。请给架构问题、风险和改进。",
+      "expected_behavior": "应在完整加载后联合注释优先的抽象设计、缩减异常处理面和读者易理解性闭环：以契约压力测试发现抽象缺口，定位错误与恢复责任，并验证入口、名称和类型是否让正确边界可发现。局部措辞或单个 catch 只有通过架构准入后才进主表。",
+      "notes": "联合回归：契约、异常责任与架构可发现性不会因用户没说术语而遗漏。"
+    },
+    {
+      "id": "edge-architecture-evolution-alternatives-performance-reachability",
+      "type": "edge_case",
+      "prompt": "只做架构审计。遗留系统为赶期限形成了长期旁路，团队只有一个难逆的重组方案；已有端到端基线证明某个跨进程边界占核心工作流的大部分延迟，但我没有要求性能优化手册。请给风险和改进顺序。",
+      "expected_behavior": "应在完整加载后联合战略式演化、设计两次与关键路径判据：识别旁路的退出条件，要求至少一个结构不同的候选，并用现有测量约束边界建议。仍以架构问题和演化顺序为交付，不自动扩张成热点清单、benchmark 建设或性能专项。",
+      "notes": "联合回归：演化、候选比较和性能约束自动参与，但上下文不劫持用户目标。"
     },
     {
       "id": "should-trigger-architecture-detail-boundary",
@@ -384,5 +405,5 @@
     }
   ],
   "minimum_pass_rate": 1.0,
-  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法 reference 均至少有一个直接正例；真实任务可联合多个方法。广义架构审计必须覆盖设计细则、完整检查模块深度并显式报告，但不得机械凑问题或把所有浅对象定罪。"
+  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法 reference 均至少有直接正例和广义架构审计中的自动召回证据。广义审计必须在候选发现前完整读取全部方法并逐项覆盖，但不得机械执行全部流程、凑问题或扩张用户目标。"
 }
