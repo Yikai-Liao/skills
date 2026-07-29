@@ -1,7 +1,7 @@
 {
   "skill": "software-design-philosophy",
   "version": "0.2.0",
-  "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）",
+  "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）；《架构设计的本质》（系统设计边界补充）",
   "darwin_compatible": true,
   "test_cases": [
     {
@@ -243,6 +243,13 @@
       "notes": "回归正例：description 必须能触发架构评估。"
     },
     {
+      "id": "should-trigger-architecture-detail-boundary",
+      "type": "should_trigger",
+      "prompt": "团队把所有高层目录都叫架构、所有底层代码都叫实现。请给出可执行的架构设计与实现细节边界，并用它分类当前问题。",
+      "expected_behavior": "应触发并读取架构审计定义；先固定评价范围，再按系统构造、跨边界约束、替换半径和真实任务机制分类，不按代码层级、修改规模或严重度划线。",
+      "notes": "正例：明确请求区分架构与实现。"
+    },
+    {
       "id": "edge-architecture-admin-regression",
       "type": "edge_case",
       "prompt": "架构审计发现：仓库写死管理员密码且新库自动创建管理员；workflow 高频变更形成跨 feature 依赖簇；application/domain 引用了 presentation DTO、Prisma 和具体 adapter；认证由每个控制器主动加 Guard；HTTP、初始化和 worker 同进程；缺少应用级 smoke test。请按优先级报告。",
@@ -332,6 +339,13 @@
       "prompt": "请同时评估两种数据表示之间的架构边界，并对已测得的表示转换热点给出架构层面的性能调优方案。",
       "expected_behavior": "应按用户明确的组合目标联合架构准入、信息/边界方法与性能关键路径方法；架构问题和性能候选分别用相应证据裁决，不得人为只选一个方法。",
       "notes": "边界：用户明确要求组合目标时完整联合方法。"
+    },
+    {
+      "id": "edge-low-level-public-contract",
+      "type": "edge_case",
+      "prompt": "一个库的私有内存布局原本可随意替换；现在零拷贝公共 API 让调用者必须依赖布局、所有权和失效规则。它仍只是实现细节吗？",
+      "expected_behavior": "不能再机械称为实现细节。相对于该库边界，这些信息已成为跨边界契约和调用者责任，应进入架构接口与受控逃逸审计；具体内部算法仍可保持为实现细节。",
+      "notes": "边界：技术层级低不妨碍其因跨边界契约升级为架构决定。"
     }
   ],
   "minimum_pass_rate": 1.0,
