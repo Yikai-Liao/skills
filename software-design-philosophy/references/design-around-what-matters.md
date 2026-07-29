@@ -160,7 +160,7 @@
 
 ## 相关方法
 
-- depends-on: `diagnose-software-complexity` — 真实任务的频率、影响和缺失信息用于验证什么真正重要。
+- uses-evidence-from: `diagnose-software-complexity` — 用真实任务的频率、影响和缺失信息验证重要性；当前任务已有这些证据时不要求先执行完整诊断。
 - composes-with: `design-measured-critical-paths` — 性能重要性必须由测量确认，再围绕关键路径重组。
 
 ---

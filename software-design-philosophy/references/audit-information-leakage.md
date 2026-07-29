@@ -159,7 +159,7 @@
 
 ## 相关方法
 
-- depends-on: `diagnose-software-complexity` — 先证明散落知识造成真实变更放大或未知依赖。
+- uses-evidence-from: `diagnose-software-complexity` — 若已有真实任务的变更放大或未知依赖证据就直接复用；根因已明确时不要求先执行完整诊断。
 - composes-with: `decide-combine-or-split` — 审计指出共享知识，组合/拆分矩阵再判断最合适的结构动作。
 - composes-with: `design-deep-modules` — 重组后的知识所有者需要一个覆盖真实用例且受控逃逸的深接口。
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "软件设计哲学"
-  short_description: "用证据诊断复杂性并设计深模块、边界、接口和演化路径"
-  default_prompt: "使用 $software-design-philosophy 诊断这个设计问题，并选择最合适的方法给出可执行方案。"
+  short_description: "基于证据评估架构并改进模块、边界、接口、性能逃逸与演化路径"
+  default_prompt: "使用 $software-design-philosophy 从真实任务、约束和压力建立评价基线，再联合所需方法评估架构，区分架构问题与相邻风险并给出改进建议。"

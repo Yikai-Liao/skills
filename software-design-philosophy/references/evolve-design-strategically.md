@@ -150,7 +150,7 @@
 
 ## 相关方法
 
-- depends-on: `diagnose-software-complexity` — 先证明当前改动中的复杂性根因和权重，避免无目标重构。
+- uses-evidence-from: `diagnose-software-complexity` — 根因尚不清楚时借其建立权重；当前改动已给出具体根因和证据时不要求先执行完整诊断。
 - composes-with: `design-it-twice` — 每个演化接缝先比较至少两个候选，再切成可交付台阶。
 
 ---

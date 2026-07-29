@@ -158,7 +158,7 @@
 
 ## 相关方法
 
-- depends-on: `diagnose-software-complexity` — 组合或拆分必须使用真实任务成本，而不是大小偏好。
+- uses-evidence-from: `diagnose-software-complexity` — 裁决必须使用真实任务成本而不是大小偏好；证据可直接来自当前任务，不要求先执行完整诊断。
 - composes-with: `audit-information-leakage` — 先确认是否共享同一知识，再把它作为组合的重要证据。
 
 ---
