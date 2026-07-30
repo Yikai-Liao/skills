@@ -1,7 +1,7 @@
 {
   "skill": "software-design-philosophy",
-  "version": "0.4.0",
-  "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）；《架构设计的本质》（系统设计边界补充）",
+  "version": "0.5.0",
+  "source_book": "《软件设计的哲学（第二版）》 — John Ousterhout；《架构整洁之道》 — Robert C. Martin（辅助）；《架构设计的本质》（系统设计边界补充）；System Design 101（具体 pattern 与案例补充）",
   "darwin_compatible": true,
   "test_cases": [
     {
@@ -402,8 +402,120 @@
       "prompt": "一个库的私有内存布局原本可随意替换；现在零拷贝公共 API 让调用者必须依赖布局、所有权和失效规则。它仍只是实现细节吗？",
       "expected_behavior": "不能再机械称为实现细节。相对于该库边界，这些信息已成为跨边界契约和调用者责任，应进入架构接口与受控逃逸审计；具体内部算法仍可保持为实现细节。",
       "notes": "边界：技术层级低不妨碍其因跨边界契约升级为架构决定。"
+    },
+    {
+      "id": "should-trigger-system-pattern-selection",
+      "type": "should_trigger",
+      "prompt": "我们要给现有系统增加长任务处理、读扩展和跨服务状态同步。请不要给标准组件清单，结合真实约束比较可以采用的系统设计 pattern、风险和验证方式。",
+      "expected_behavior": "应触发 software-design-philosophy，先读 select-system-design-patterns.md，再联合通信与工作流、数据与一致性等命中家族；每个候选必须从完整工作流、压力和契约准入，并与更简单结构比较，不得直接罗列队列、缓存、分片或微服务。",
+      "notes": "正例：明确要求条件化选择具体系统设计 pattern。"
+    },
+    {
+      "id": "edge-architecture-pattern-family-reachability",
+      "type": "edge_case",
+      "prompt": "评估整个仓库实现出来的架构，但我没有点名缓存、消息、服务边界或韧性模式。报告只要架构问题、风险和建议。",
+      "expected_behavior": "广义架构审计必须在候选发现前完整读取 11 个方法、模式选择器及结构/通信/数据/韧性四个 pattern 家族，并逐家族给出问题、候选、健康或不适用；完整加载不能变成组件盘点、固定流程或性能/运维专项。",
+      "notes": "召回回归：具体 pattern 细则不能要求 agent 先知道名称才可达。"
+    },
+    {
+      "id": "edge-pattern-no-standard-production-stack",
+      "type": "edge_case",
+      "prompt": "这是一个低流量内部工具，目前单进程和单数据库已满足全部任务。请按 production best practices 补齐 Gateway、Redis、Kafka、服务发现、分片和 Kubernetes。",
+      "expected_behavior": "应拒绝组件清单式设计。先要求每个 pattern 对应的真实压力、契约、成本和验证；当前没有证据时应保留简单结构，并把无法证明的未来压力列为假设，不为凑齐生产组件增加边界。",
+      "notes": "反模式回归：缺少流行组件不是架构问题。"
+    },
+    {
+      "id": "edge-pattern-cache-label-insufficient",
+      "type": "edge_case",
+      "prompt": "接口读多写少，但查询目前 p99 达标，也没有热点、命中率或数据库饱和证据。架构报告是否应建议加缓存？",
+      "expected_behavior": "不应仅凭读多写少建议缓存。应读取数据与一致性 pattern，要求热点、瓶颈、可接受陈旧度和故障退化证据；当前至多记录为无需采用或证据缺口。",
+      "notes": "边界：标签不能代替缓存准入。"
+    },
+    {
+      "id": "edge-pattern-cache-earned",
+      "type": "edge_case",
+      "prompt": "代表性负载证明同一昂贵查询形成稳定热点，p99 超目标且源库已饱和；结果可陈旧 30 秒。请比较 cache-aside、read-through 和不缓存。",
+      "expected_behavior": "应联合关键路径测量、设计两次与数据 pattern：写清权威、TTL/失效、并发 miss、冷启动和缓存全失效的源站保护，用同一负载比较三候选，并给撤销条件。",
+      "notes": "正向边界：有证据时可以进行具体缓存 pattern 设计。"
+    },
+    {
+      "id": "edge-pattern-read-replica-contract",
+      "type": "edge_case",
+      "prompt": "订单查询把所有 SELECT 都路由到读副本；用户创建订单后马上查询经常看不到。这个问题该如何从架构上处理？",
+      "expected_behavior": "应读取数据与一致性 pattern，把复制延迟、read-after-write、最大陈旧度和主库回退变成按工作流表达的读取契约；不能只调复制参数或让所有读无条件回主库。",
+      "notes": "具体 pattern：读副本必须暴露新鲜度语义。"
+    },
+    {
+      "id": "edge-pattern-sharding-gate",
+      "type": "edge_case",
+      "prompt": "一条查询很慢，团队直接建议按 tenantId 分片；目前没有查询计划、单节点 IOPS/容量证据，也没模拟大租户热点和跨租户查询。",
+      "expected_behavior": "应拒绝直接分片。先定位瓶颈并比较查询/索引、模型、归档或升配；只有单节点上限成立后才评估分片键、局部性、skew、跨片事务和重分片。",
+      "notes": "具体 pattern：分片需要准入、键和路由三段裁决。"
+    },
+    {
+      "id": "edge-pattern-async-request-reply",
+      "type": "edge_case",
+      "prompt": "导出任务通常要 8 分钟，HTTP 客户端不能一直等，但用户必须知道是否受理、何时完成、如何取消和失败后去哪查。请设计边界。",
+      "expected_behavior": "应读取通信与工作流 pattern，采用或比较异步请求—回复：区分受理/执行/终态，设计任务 ID、幂等、状态查询或通知、取消竞态、过期和 worker 崩溃恢复；不能只回答“上消息队列”。",
+      "notes": "具体 pattern：长任务的深接口与生命周期契约。"
+    },
+    {
+      "id": "edge-pattern-pubsub-contract",
+      "type": "edge_case",
+      "prompt": "团队说发布订阅天然松耦合，准备把所有同步调用改成事件。消费者需要顺序、可能离线数天，并会产生外部副作用。",
+      "expected_behavior": "应拒绝“天然解耦”。读取通信 pattern，明确事件语义所有者、schema/版本、分区顺序、重放、幂等、离线保留和副作用隔离；同步不变量或即时结果仍可能要求直接调用或本地事务。",
+      "notes": "反模式回归：事件只移动耦合，不消灭契约。"
+    },
+    {
+      "id": "edge-pattern-saga-single-database",
+      "type": "edge_case",
+      "prompt": "库存和订单在同一数据库、一个本地事务已能维护不变量。有人为了未来微服务化要求现在改成 Saga 和补偿事件。",
+      "expected_behavior": "不应采用 Saga。它只在多个自治事务边界且允许中间状态、能定义补偿时准入；当前应保留本地事务，未来边界真的出现再用战略演化重评。",
+      "notes": "边界：Saga 不是比本地事务更高级的默认结构。"
+    },
+    {
+      "id": "edge-pattern-exactly-once-scope",
+      "type": "edge_case",
+      "prompt": "消息平台打开 exactly-once 后，团队宣称第三方支付绝不会重复扣款。这个架构保证成立吗？",
+      "expected_behavior": "不能成立于未声明范围。应区分 broker 投递与最终处理效果，用有界重试、业务幂等键、原子记录、外部关联状态和必要对账覆盖第三方副作用，并通过断连/重放演练验证。",
+      "notes": "具体 pattern：exactly-once 必须是端到端契约而非产品标签。"
+    },
+    {
+      "id": "edge-pattern-retry-storm",
+      "type": "edge_case",
+      "prompt": "客户端、Gateway 和服务 SDK 各重试三次；依赖一变慢，请求量反而成倍上涨并拖垮线程池。请给结构改进。",
+      "expected_behavior": "应联合异常处理与韧性 pattern：分类暂态/永久/过载/结果未知，指定主要重试所有者，统一端到端 deadline、上限、退避和 jitter，并配合限流/卸载而非继续叠模式；验证故障下入站放大和恢复。",
+      "notes": "具体 pattern：多层重试的结构性放大。"
+    },
+    {
+      "id": "edge-pattern-service-boundary-must-pay",
+      "type": "edge_case",
+      "prompt": "两个逻辑模块共享大块内存状态、每次调用都传数百 MB 数据，必须微秒级完成；它们没有独立发布、扩缩容或团队所有权需求。是否拆成两个微服务？",
+      "expected_behavior": "不应。应读取结构与边界 pattern，区分逻辑模块与物理服务；当前通信成本和状态局部性否决网络化，而缺少自治收益。可以保持同进程深模块，并以已有性能约束验证边界。",
+      "notes": "性能约束修正架构判断，不展开优化手册。"
+    },
+    {
+      "id": "edge-pattern-api-aggregation-evolution",
+      "type": "edge_case",
+      "prompt": "三个客户端都重复拼装五个服务；中央 Gateway 又因客户端差异和领域规则成为所有团队的变更瓶颈。请比较直连、BFF、中央聚合和领域联邦。",
+      "expected_behavior": "应联合结构 pattern、信息泄露、深模块和设计两次：按客户端差异与领域规则所有权比较 fan-out、额外 hop、重复、schema 治理和团队等待，并给演化/回退条件；不得把 GraphQL Federation 当终局。",
+      "notes": "具体 pattern：API 聚合权威随真实变化轴演化。"
+    },
+    {
+      "id": "edge-pattern-ha-correlated-failure",
+      "type": "edge_case",
+      "prompt": "两个副本在同一机架、共享数据库和控制面，切换从未演练。有人把两个节点的可用率相乘，宣称已经达到四个 9。",
+      "expected_behavior": "应读取韧性 pattern，拒绝脱离独立故障的可用性算术；建立故障域、健康判定、切换、数据完整性和共同依赖模型，并用故障演练测实际结果。",
+      "notes": "具体 pattern：冗余需要独立性和切换证据。"
+    },
+    {
+      "id": "edge-pattern-performance-context-does-not-expand",
+      "type": "edge_case",
+      "prompt": "只审计一个性能取向库的架构。它没有网络服务、复制状态、异步工作流或独立部署需求；不要给性能优化方案。",
+      "expected_behavior": "广义审计仍按加载合同读取 pattern 家族以消除盲区，但应将不相关的分布式通信、复制/分片和服务交付 pattern 明确判为不适用；性能背景只保护已证实的关键路径和逃逸，不能自动输出缓存、并行、微服务或 benchmark 手册。",
+      "notes": "范围守卫：完整 pattern 加载不等于强行系统分布式化。"
     }
   ],
   "minimum_pass_rate": 1.0,
-  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法 reference 均至少有直接正例和广义架构审计中的自动召回证据。广义审计必须在候选发现前完整读取全部方法并逐项覆盖，但不得机械执行全部流程、凑问题或扩张用户目标。"
+  "notes": "合并技能必须同时通过元数据触发和内部 reference 路由。全部 should_not_trigger 必须零误触；11 个方法与四个 pattern 家族均至少有直接正例和广义架构审计中的自动召回证据。广义审计必须在候选发现前完整读取全部判据并逐项覆盖，但不得机械执行全部流程、凑模式/问题或扩张用户目标。"
 }
