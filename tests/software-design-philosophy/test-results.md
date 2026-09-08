@@ -1,0 +1,101 @@
+# software-design-philosophy 审计与验证
+
+日期：2026-09-08。基线：`1f3d992`；本轮工作树版本：0.6.0。范围仅为本 skill 的入口、references、UI 元数据及已有评估材料。
+
+依据用户指定的《GPT-6 Astra 仓库指令系统审计与重构提示词》，并实际读取了 [OpenAI 官方 Prompting Best Practices](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices)。官方提示了持久指令敏感性、用户要求与 skill 工作流冲突、不必要停顿及验证范围问题；本轮据当前文件和历史记录裁决，不将一般模型建议覆盖个人设计偏好。
+
+## 修改前的判断
+
+当前仓库及适用父目录未发现 AGENTS.md / AGENTS.override.md；未发现本 skill 的 CI、脚本或额外 agent 配置。有效入口为 description 与 agents/openai.yaml，随后加载 SKILL.md 和它引用的 20 份 references。README 只负责技能介绍与安装；另一 skill survey-md 用于学术综述，不与软件结构设计合并。
+
+没有证据表明需要新增仓库级操作规则。问题主要在 skill 自身的重复层级、跨题内容和默认流程。
+
+| 原文件与具体规则 | 原目的 / 当前副作用 | 本轮决定 |
+|---|---|---|
+| SKILL.md 的执行流程、协作、输出及完成检查；audit-software-architecture.md 的“完整方法与 pattern 加载合同” | 防止发现遗漏，却反复要求全读 11 方法、选择器、四家族；局部库也加载分布式百科 | 将具体发现问题与反证集中到审计 reference，详细设计按需读 |
+| SKILL.md 与各方法的完成标准、判停条件、固定多表产物 | 让结果可核验，却把可选分析工具变成交付义务；难以遵守简短直接回答 | 保留证据链与关键验证，取消固定表数、顺序、详细计划及普遍判停 |
+| design-deep-modules.md 与 source-decisions.md C08 的“主动询问” | 防止擅加高权限接口，却在普通 API 设计中引入无关确认 | 保留显式需求与生产隔离，只在实际设计此能力且范围缺失时澄清 |
+| design-it-twice.md 强制第二候选，make-code-obvious-to-readers.md 每轮安排读者重读 | 防止首案偏见、作者盲点，却扩大小决定并产生外部参与依赖 | 比较限定为重要/难逆决定；读者任务保留为检验方式，不强制找人或多轮审查 |
+| audit-software-architecture.md 自建 A0/A1/A2 与 P0/P1/P2 及完整报告模板 | 区分类别与严重度，却增加重复定级和输出负担 | 保留分类与因果准入，沿用目标项目等级 |
+| 11 方法重复的 R/I/A/E/B 模板、glossary.md、四模式家族及来源索引 | 书籍蒸馏和知识收集变成百科；大量案例、邻接方法和裁决重复 | 按任务合并；删除书摘、公司案例、产品/协议/部署目录与重复术语 |
+| test-prompts.json 中完整加载及固定产物的 expected_behavior、darwin_compatible | 旧评估鼓励被删除的流程，兼容标志没有当前实现依据 | 改为行为结果评估，保留代表性失败边界，删掉无对应工具的标志及虚设通过率门槛 |
+
+未发现本 skill 强制使用 subagent 或全量集成测试的要求；不新增这类运行规则。来源材料中的旧编排说明不是当前执行协议。
+
+## 保留的约束与迁移
+
+保留深模块、共同知识权威、完整工作流和逃逸治理；这些是 skill 的设计视角。特别保留有明确个人答复记录的当前简单性、不默认用 TDD 生成架构、多基类实现继承取舍、必要性能入口、调试面可用性与生产隔离。它们并非仅凭一般模型能力就应删除的常识。
+
+历史测试记录描述了严重度误分类、性能背景扩题和发现判据不可达；保留其保护目的，重做造成负担的全量加载机制。历史原始日志未复验，旧通过率不作为新版证据。没有因证据不足而继续强制保留的旧流程；个人偏好的记录依据与适用位置保存在 [来源与裁决](../../docs/software-design-philosophy/source-decisions.md)。
+
+- 复杂性诊断、信息泄露、重要性及组合/拆分合并进 design-module-boundaries.md；读者理解压缩为检验任务。
+- 注释优先的契约内容合入 design-deep-modules.md；错误处理保留独立 reference，方便正常接口已定时直接进入。
+- 设计两次合入 evolve-design-strategically.md，与迁移取舍共用证据。
+- 模式选择器及四类模式合为 design-system-boundaries.md，仅保留边界、状态与失败契约；不新建泛系统设计 skill。
+- 来源问答、书目和历史失败依据压缩后移入仓库级 docs/software-design-philosophy/source-decisions.md；通用词典、详细来源路径目录不再加载。
+- 未向 AGENTS.md 迁入方法论，也未新增脚本：结构判断无法可靠编码为检查器；文件格式等确定性部分使用已有 skill validator 和一次性链接/元数据检查。
+
+原 11 个方法的具体去向如下。它们保留为判断与验证方法，不再各自要求一套完整流程：
+
+| 原方法 | 保留的判断 | 当前位置 |
+|---|---|---|
+| 复杂性加权诊断 | 从真实任务发现变更放大、认知负荷与未知依赖，按频率和后果确定重点 | [模块与知识边界](../../software-design-philosophy/references/design-module-boundaries.md) |
+| 信息泄露审计 | 追踪必须同步解释的知识，区分单一权威、派生表示与表面重复 | 同上 |
+| 组合或拆分 | 比较共享知识、独立变化原因、接口和生命周期成本 | 同上 |
+| 围绕重要性设计 | 找能支撑多个当前用例的核心概念，区分模块可推导与调用者独有的决定 | 同上 |
+| 读者易理解性 | 以真实阅读任务检验入口、契约和修改点，先减少隐藏约定再改名称与说明 | 同上；入口显式涵盖理解成本 |
+| 深模块设计 | 用完整工作流检验有限原语、默认路径、长尾归属与受控逃逸 | [深模块与接口](../../software-design-philosophy/references/design-deep-modules.md) |
+| 注释优先的抽象设计 | 在实现前以调用者契约检验抽象，让实现反馈修正契约 | 同上 |
+| 缩减异常处理面 | 根据意图与恢复信息选择定义消除、就地恢复、聚合、上报或明确失败 | [错误处理边界](../../software-design-philosophy/references/reduce-exception-surface.md) |
+| 设计两次 | 重要决定比较结构不同的候选，用相同用例检验取舍 | [方案比较与演化](../../software-design-philosophy/references/evolve-design-strategically.md) |
+| 战略式演化设计 | 明确目标权威，切出完整工作流增量，保护行为并退出临时机制 | 同上 |
+| 证据驱动的关键路径设计 | 用目标、代表性负载和基线比较根本成本、性能入口与新增复杂性 | [性能约束下的设计](../../software-design-philosophy/references/design-measured-critical-paths.md) |
+
+skill 名称保持 software-design-philosophy，自动发现仍启用。description 缩窄到架构审计、模块间理解与变更成本、边界/API/扩展契约、结构比较及演化；排除纯用法、机械实现、局部风格、事故止血和不涉及结构取舍的性能排查。明确用户任务优先，解决固定流程与交付格式、已定方案、授权范围的冲突。
+
+## 最终层级与体量
+
+`description / UI 元数据 → SKILL.md 判断尺度与路由 → 当前任务需要的 reference`。
+
+审计 reference 自带发现判据；其余专题负责深入设计。维护评估材料放在仓库级 tests/software-design-philosophy/，来源记录放在 docs/software-design-philosophy/；它们位于可安装 skill 目录之外，入口不向外引用。
+
+| 度量 | 修改前 | 修改后 |
+|---|---:|---:|
+| SKILL.md | 165 行 / 20,311 字节 | 40 行 / 3,866 字节 |
+| references 数 | 20 | 7 |
+| SKILL.md + 全部 references | 4,425 行 / 283,615 字节 | 302 行 / 32,042 字节 |
+
+字节数为 UTF-8，运行时文本总量减少约 88.7%；不是 token 测量，也不代表每个任务的实际加载量。
+
+## 已执行验证
+
+- skill-creator 的 quick_validate.py：通过。
+- 运行时 Markdown 的 17 条本地链接：目标全部存在；所有 reference 均可从入口到达。
+- 收尾核对补足“模块间理解成本”的触发与路由，保留局部风格修改负例；新增对应理解任务正例供后续评估。
+- UI YAML：字段可解析，简介长度有效，默认提示包含 skill 名，自动发现策略保持默认。
+- 评估 JSON：46 个唯一用例，11 个触发正例、6 个负例、29 个边界例；格式与字段检查通过。
+- git diff --check：通过。旧全量加载、主动询问与编排要求的搜索结果仅剩历史说明或明确否定，不再作为有效要求。
+
+按 skill-creator 对复杂 skill 的独立前向验证建议，另用一个独立 agent 仅提供当前 skill、原始任务及隔离夹具，不提供预期答案，不允许读取测试文件、历史或旧报告。实际完成三个任务：
+
+| 原始任务与材料 | 实际观察 | 判断 |
+|---|---|---|
+| 本地记录库：codec/editor/export 各解释 R1 格式，历史记载格式变更曾漏改；有批量视图基准、薄适配器和公开关闭契约 | 确认格式知识多权威；把旧记录兼容列缺口；运行只读演练发现视图退出后仍可读，并分类为实现缺陷；保留批量边界和薄适配器。只读审计与模块边界两份 references | 满足结构发现、分类和范围边界 |
+| 本地编辑器：三种删除与插件范围替换，要求共用 undo/通知，只要签名与必要契约 | 给出统一 replace、版本/范围语义及 undo/通知契约；未询问或创建调试面。只读深模块 reference | 满足直接交付与扩展不变量 |
+| 几分钟文件转换任务：可断线查询/取消，已有 SQLite 和扫描 worker | 以事务记录受理，worker 认领；覆盖幂等、取消竞态、租约恢复、产物与索引提交、终态和清理，没有强加消息队列。只读系统边界与错误处理两份 references | 满足具体方案与失败契约 |
+
+三个执行样例没有因 skill 要求产生额外澄清或停止，也没有加载全部 references。它们支持当前结构可用，但不等于 46 个用例全部经过独立执行，更不证明与旧版全面等价。
+
+## 暂不扩大处理的事项
+
+- 尚无自动运行整套行为用例的评估 harness；当前不为这次文档重构引入模型调用平台或 CI。
+- 有限样例不能证明所有领域的召回率。后续真实使用如出现遗漏，应补相应发现判据或边界示例，不直接恢复全量阅读。
+- 原书与上游材料、历史测试原始证据未重新审计；保留来源角色和不可变快照线索，不宣称已验证其当前内容。
+
+## 安装边界修正
+
+原目录虽未默认加载测试材料，但它们仍会作为安装内容分发：核对 [skills 安装器源码](https://github.com/vercel-labs/skills/blob/main/src/installer.ts) 的 copyDirectory，发现它递归复制目录，只排除少数固定文件/缓存目录；本机已安装旧副本也确实包含 test-results.md 与 test-prompts.json。
+
+现将测试用例和报告移入仓库级 tests/software-design-philosophy/，来源裁决移入 docs/software-design-philosophy/，同步修复维护文档链接并移除入口的来源记录链接。必要个人取舍已保留在执行文件中。安装目录只含 SKILL.md、agents/ 与按需方法 references/；不依赖未验证的忽略文件规则。
+
+隔离安装实测：使用 npm 当前发布的 skills@1.5.24，在临时项目中执行 `skills add <仓库路径> --skill software-design-philosophy --agent codex --copy --yes`。工具发现 2 个 skill，仅安装指定的 1 个；安装目录共 9 个文件，与当前 skill 目录逐文件字节一致，不含测试、报告或来源裁决。全仓相关本地链接有效，7 份运行时 reference 均可从入口到达，17 条运行时链接全部留在安装目录内。

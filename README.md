@@ -26,3 +26,10 @@ npx skills add Yikai-Liao/skills --all
 
 - `survey-md` — create, revise, or audit source-grounded scholarly survey articles and literature reviews in Markdown.
 - `software-design-philosophy` — diagnose software complexity and design clearer modules, interfaces, boundaries, and evolution paths.
+
+## Repository layout
+
+Each top-level skill directory contains its installable files: `SKILL.md` and any runtime metadata, references, scripts, or assets. Keep development-only material outside these directories so it is not distributed with a skill.
+
+- [`tests/software-design-philosophy/`](tests/software-design-philosophy/) — evaluation prompts and audit/validation results.
+- [`docs/software-design-philosophy/`](docs/software-design-philosophy/) — source provenance and design decision history.

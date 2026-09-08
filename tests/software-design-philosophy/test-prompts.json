@@ -1,0 +1,283 @@
+{
+  "skill": "software-design-philosophy",
+  "version": "0.6.0",
+  "test_cases": [
+    {
+      "id": "should-trigger-diagnose",
+      "type": "should_trigger",
+      "prompt": "团队说仓库越来越难改，但有人怪微服务，有人怪 ORM，有人怪命名。我只有两天调查，应该先看哪里？",
+      "expected_behavior": "从实际修改与调用工作流追踪变更放大、认知负荷和未知依赖，按影响确定调查重点；不要求全系统方法加载或先让用户重复目标。"
+    },
+    {
+      "id": "should-trigger-evolve",
+      "type": "should_trigger",
+      "prompt": "这次缺陷一行就能绕过，但根因是订单状态在两个地方维护。怎样在本周发布修复，同时把状态权威逐步收回来？",
+      "expected_behavior": "明确目标状态权威，选能在期限内交付的完整切片，给行为保护与旧旁路退出条件；不把设计报告当实施终点。"
+    },
+    {
+      "id": "should-trigger-deep-module",
+      "type": "should_trigger",
+      "prompt": "文档编辑器暴露了二十多个 delete/move 动作。请设计少量核心原语，证明常见操作覆盖，并说明没覆盖的插件需求去哪。",
+      "expected_behavior": "用共同对象和范围原语覆盖真实编辑工作流，明确长尾归属及共同不变量；不强制四张表或询问调试面。"
+    },
+    {
+      "id": "should-trigger-leakage",
+      "type": "should_trigger",
+      "prompt": "同一消息格式的字段偏移和校验规则在 producer、consumer、监控解析器中各解释一次，每次升级都要同步改。",
+      "expected_behavior": "追踪共享格式知识及同步变化，指定权威和必要适配，区分手工解释与同源生成。"
+    },
+    {
+      "id": "should-trigger-combine-split",
+      "type": "should_trigger",
+      "prompt": "一个 Service 只把同参同返回值转发给 Repository；该删掉合并，还是它仍值得作为边界？",
+      "expected_behavior": "比较边界的实际隔离收益与调用成本，可合并也可保留；层名和方法数不决定结论。"
+    },
+    {
+      "id": "should-trigger-exception",
+      "type": "should_trigger",
+      "prompt": "接口总体稳定，只需决定删除不存在对象是否成功、超时由哪层重试、哪些错误必须让调用者知道。",
+      "expected_behavior": "按意图定义正常边界，明确恢复所有者及结果未知，保留调用者需要的错误语义。"
+    },
+    {
+      "id": "should-trigger-twice",
+      "type": "should_trigger",
+      "prompt": "团队已经接受第一个分区方案，但还没比较其他结构。请产生真正不同的候选并统一评估。",
+      "expected_behavior": "比较改变状态归属或边界取舍的可行候选，用相同用例评价代价和可逆性，不只改名。"
+    },
+    {
+      "id": "should-trigger-comment-first",
+      "type": "should_trigger",
+      "prompt": "我准备实现 beginTransaction，但无法简短写清重入、提交时点、隔离保证和回调副作用。",
+      "expected_behavior": "用调用者视角厘清成功、状态和副作用，说明契约无法表达反映的责任问题；不要求先写整套文档。"
+    },
+    {
+      "id": "should-not-trigger-library-api",
+      "type": "should_not_trigger",
+      "prompt": "React 现在创建 context 的 API 签名是什么？给我一个最小例子。",
+      "expected_behavior": "不加载该 skill，直接按任务回答库用法。"
+    },
+    {
+      "id": "should-not-trigger-live-incident",
+      "type": "should_not_trigger",
+      "prompt": "生产 5xx 仍在快速上涨，连接池已耗尽。现在先怎么恢复服务？",
+      "expected_behavior": "不展开长期架构设计流程，先处理恢复任务。"
+    },
+    {
+      "id": "should-not-trigger-mechanical-implementation",
+      "type": "should_not_trigger",
+      "prompt": "数据库迁移方案已经批准，字段、顺序和回滚命令都确定了；请严格照清单实现，不改设计。",
+      "expected_behavior": "沿既定方案实施，不自行重做架构选型或新增审批。"
+    },
+    {
+      "id": "should-not-trigger-style-rename",
+      "type": "should_not_trigger",
+      "prompt": "按本项目既有约定，把这个局部变量从 ready 改成 isReady。",
+      "expected_behavior": "直接做局部改名，不做读者实验、设计报告或额外测试。"
+    },
+    {
+      "id": "should-not-trigger-product-roadmap",
+      "type": "should_not_trigger",
+      "prompt": "帮我给下季度产品功能排优先级并写路线图。",
+      "expected_behavior": "不将产品优先级问题转成软件模块设计。"
+    },
+    {
+      "id": "edge-debug-plane-unspecified",
+      "type": "edge_case",
+      "prompt": "请设计文件服务的有限核心接口和长尾逃逸；我没有提测试或 Agent 调试入口。",
+      "expected_behavior": "直接完成接口与逃逸设计，不新增高权限入口，不询问并不存在的调试面需求。"
+    },
+    {
+      "id": "edge-debug-plane-explicit",
+      "type": "edge_case",
+      "prompt": "我明确需要 Agent 在测试环境通过 CLI 构造状态、注入故障和清理数据，但这个入口绝不能进入生产业务 API。",
+      "expected_behavior": "沿明确需求设计方便自动调用的 CLI/API，包含限环境限能力凭据、schema、幂等、审计、清理与生产不可达验证，不重复询问是否需要该能力。"
+    },
+    {
+      "id": "edge-surface-duplication",
+      "type": "edge_case",
+      "prompt": "税务金额格式化和营销金额格式化当前代码几乎相同，却由法规与展示活动分别变化。是否应该抽成一个共享服务？",
+      "expected_behavior": "分别按语义与变化原因判断，不能仅凭相似代码集中权威。"
+    },
+    {
+      "id": "edge-plugin-ecosystem",
+      "type": "edge_case",
+      "prompt": "这是公开插件平台。怎样既保留有限稳定核心，又允许第三方专用扩展，并防止长尾接口变成第二套生态？",
+      "expected_behavior": "保留有限核心与专用扩展；共同身份、生命周期和权限不被重造，高频逃逸重评核心能力，不封死真实长尾。"
+    },
+    {
+      "id": "edge-stateful-inheritance",
+      "type": "edge_case",
+      "prompt": "插件通过三个含状态基类和模板方法扩展，必须记住父类调用顺序。怎么收回这些泄露的知识？",
+      "expected_behavior": "按现有个人设计取舍用组合与稳定能力契约替代多基类实现继承，收回状态与调用顺序的所有权。"
+    },
+    {
+      "id": "edge-low-level-no-evidence",
+      "type": "edge_case",
+      "prompt": "上层要求直接拿数据库事务对象，说这样才够快；目前没有性能目标、基线或 profile，也没检查通用接口是否漏了原语。",
+      "expected_behavior": "先反查核心接口的事务或批量原语缺口；性能标签不能批准裸底层对象，给当前取舍所需的证据缺口。"
+    },
+    {
+      "id": "edge-architecture-intentional-shallow-adapter",
+      "type": "edge_case",
+      "prompt": "架构审计看到一个很小的协议适配器：一个方法把外部类型映射为内部类型，不拥有业务知识，也没有跨调用者胶水或共同变化证据。它不是深模块，是否应列为架构问题？",
+      "expected_behavior": "没有真实跨边界负担时保留薄适配器，不要求为了深度增加职责。"
+    },
+    {
+      "id": "edge-architecture-confirmed-shallow-boundary",
+      "type": "edge_case",
+      "prompt": "一个被多个团队依赖的作业模块要求每个调用者重复执行 create、attachPolicy、registerCallbacks、start、poll、cancel、close，并各自维护相同的状态顺序和重试规则；这些是高频完整工作流。架构审计该如何判断？",
+      "expected_behavior": "从实际重复顺序、状态与恢复责任确认接口负担，说明把共同工作流收回模块的结构改进。"
+    },
+    {
+      "id": "edge-architecture-multi-detail-reachability",
+      "type": "edge_case",
+      "prompt": "一次仓库架构审计发现：新增协议字段要在四个模块同步解释；公共入口的常见任务需要调用者重复拼接多个有顺序的方法；每个适配器自行决定重试和错误转换；团队对一个难逆的边界重组只有一个方案。请只做架构评估。",
+      "expected_behavior": "未点名方法时也使用审计中的具体发现判据识别知识、接口、错误责任与候选风险；不全读所有专题或凑齐方法报告。"
+    },
+    {
+      "id": "edge-architecture-hardcoded-password-only",
+      "type": "edge_case",
+      "prompt": "我只发现 production 配置里写死 admin@example.com / 123456，没有其他边界、依赖或生命周期证据。它是不是当前最高优先级的架构问题？",
+      "expected_behavior": "作为紧急相邻安全/配置风险说明，不仅凭严重度称为架构问题。"
+    },
+    {
+      "id": "edge-architecture-static-signals",
+      "type": "edge_case",
+      "prompt": "扫描得到 7 个 forwardRef、19 条 domain 到 Prisma 的 import、一个强连通分量，但没有提交历史、任务演练或调用方证据。请直接列为 P1 架构缺陷。",
+      "expected_behavior": "说明静态拓扑只支持候选，用具体变更推演寻找结构因果链；不虚构已发生故障或照要求强行定级。"
+    },
+    {
+      "id": "edge-architecture-tests-only",
+      "type": "edge_case",
+      "prompt": "仓库没有应用启动 smoke test，也没有默认认证验收测试。仅凭这一点能否定为 P1/P2 架构问题？",
+      "expected_behavior": "把它作为验证缺口，不凭测试缺失反推架构缺陷。"
+    },
+    {
+      "id": "edge-architecture-performance-context-regression",
+      "type": "edge_case",
+      "prompt": "只做一个高性能原生库的架构审计。背景：它采用薄跨语言绑定、静态分派、少复制和多种数据表示。证据：一次领域概念迁移联动了多个模型、转换、持久化和绑定位置；相邻解析组件与领域层可能共同解释部分协议规则；不同表示之间可能存在随输入增长的转换；当前没有持续性能基线。请给问题、风险和建议。",
+      "expected_behavior": "交付保持架构审计，验证知识迁移与协议权威的因果链；未测转换和缺基线保留为缺口，性能背景不扩张为优化路线。"
+    },
+    {
+      "id": "edge-architecture-performance-escape",
+      "type": "edge_case",
+      "prompt": "基准证明逐元素 Python/C++ 往返占关键工作流 74%，批量 span/view API 可降低一个数量级，但调用方必须遵守对象生命周期和引用失效规则。为了封装是否应该拒绝？",
+      "expected_behavior": "保留有证据的批量能力或类型化高级接口，明确所有权、失效、线程安全和回退，不能以封装强制复制。"
+    },
+    {
+      "id": "edge-explicit-performance-followup",
+      "type": "edge_case",
+      "prompt": "架构审计已经完成。现在请继续针对其中确认的 Python/C++ 边界热点做性能优化设计；已有端到端基线和 profile。",
+      "expected_behavior": "用户已扩展目标，继续完成当前热点的性能设计与相称测量，不再以背景限制拒绝展开。"
+    },
+    {
+      "id": "edge-low-level-public-contract",
+      "type": "edge_case",
+      "prompt": "一个库的私有内存布局原本可随意替换；现在零拷贝公共 API 让调用者必须依赖布局、所有权和失效规则。它仍只是实现细节吗？",
+      "expected_behavior": "相对于库边界，调用者依赖的布局与生命周期是公共契约，不能继续当作可自由替换的内部细节。"
+    },
+    {
+      "id": "edge-pattern-cache-label-insufficient",
+      "type": "edge_case",
+      "prompt": "接口读多写少，但查询目前 p99 达标，也没有热点、命中率或数据库饱和证据。架构报告是否应建议加缓存？",
+      "expected_behavior": "没有当前压力时不以读多写少推荐缓存，也不为了否决候选而自行建设基准体系。"
+    },
+    {
+      "id": "edge-pattern-read-replica-contract",
+      "type": "edge_case",
+      "prompt": "订单查询把所有 SELECT 都路由到读副本；用户创建订单后马上查询经常看不到。这个问题该如何从架构上处理？",
+      "expected_behavior": "使写后读、允许陈旧度和回退由工作流契约表达；避免按所有 SELECT 一刀切路由。"
+    },
+    {
+      "id": "edge-pattern-async-request-reply",
+      "type": "edge_case",
+      "prompt": "导出任务通常要 8 分钟，HTTP 客户端不能一直等，但用户必须知道是否受理、何时完成、如何取消和失败后去哪查。请设计边界。",
+      "expected_behavior": "区分受理、执行与终态，涵盖可靠调度交接、幂等、查询、取消竞态、过期和恢复；不只说增加队列。"
+    },
+    {
+      "id": "edge-pattern-pubsub-contract",
+      "type": "edge_case",
+      "prompt": "团队说发布订阅天然松耦合，准备把所有同步调用改成事件。消费者需要顺序、可能离线数天，并会产生外部副作用。",
+      "expected_behavior": "比较事件语义、顺序、重放与副作用的责任，不把异步当天然解耦，也不忽略需要同步维护的不变量。"
+    },
+    {
+      "id": "edge-pattern-saga-single-database",
+      "type": "edge_case",
+      "prompt": "库存和订单在同一数据库、一个本地事务已能维护不变量。有人为了未来微服务化要求现在改成 Saga 和补偿事件。",
+      "expected_behavior": "保留能维护不变量的本地事务，不因未确定的未来服务化预建补偿工作流。"
+    },
+    {
+      "id": "edge-pattern-exactly-once-scope",
+      "type": "edge_case",
+      "prompt": "消息平台打开 exactly-once 后，团队宣称第三方支付绝不会重复扣款。这个架构保证成立吗？",
+      "expected_behavior": "区分消息交付与最终效果，指出稳定操作身份、下游幂等保留期、未知状态和恢复/对账责任。"
+    },
+    {
+      "id": "edge-pattern-retry-storm",
+      "type": "edge_case",
+      "prompt": "客户端、Gateway 和服务 SDK 各重试三次；依赖一变慢，请求量反而成倍上涨并拖垮线程池。请给结构改进。",
+      "expected_behavior": "集中主要重试责任与端到端预算，处理过载和恢复，不继续叠加各层独立重试。"
+    },
+    {
+      "id": "edge-pattern-service-boundary-must-pay",
+      "type": "edge_case",
+      "prompt": "两个逻辑模块共享大块内存状态、每次调用都传数百 MB 数据，必须微秒级完成；它们没有独立发布、扩缩容或团队所有权需求。是否拆成两个微服务？",
+      "expected_behavior": "比较自治收益与通信、复制和状态成本，没有收益时支持同进程模块。"
+    },
+    {
+      "id": "edge-pattern-ha-correlated-failure",
+      "type": "edge_case",
+      "prompt": "两个副本在同一机架、共享数据库和控制面，切换从未演练。有人把两个节点的可用率相乘，宣称已经达到四个 9。",
+      "expected_behavior": "指出相关故障与切换证据缺口，不能用节点数量或独立失效假设证明可用性。"
+    },
+    {
+      "id": "edge-pattern-performance-context-does-not-expand",
+      "type": "edge_case",
+      "prompt": "只审计一个性能取向库的架构。它没有网络服务、复制状态、异步工作流或独立部署需求；不要给性能优化方案。",
+      "expected_behavior": "基于实际本地形态裁定无关领域不适用，不读取分布式专题、不输出组件目录或性能手册。"
+    },
+    {
+      "id": "should-not-trigger-local-performance",
+      "type": "should_not_trigger",
+      "prompt": "这个排序函数慢，帮我 profile 并修复实现；公共接口与模块责任保持不变。",
+      "expected_behavior": "不因性能关键词加载架构 skill；直接完成实现层性能排查。"
+    },
+    {
+      "id": "edge-user-chosen-design",
+      "type": "edge_case",
+      "prompt": "业务审计要求我们保留可重放事件，事件溯源方案已经确定。请直接完善投影重建和旧事件兼容契约，不重新选型，也不要写方案对比表。",
+      "expected_behavior": "遵循确定方案，完善实际请求的契约；不以 skill 的候选比较或简单性偏好阻止任务。"
+    },
+    {
+      "id": "edge-contract-short-answer",
+      "type": "edge_case",
+      "prompt": "设计本地编辑器的范围替换 API，插件要进入同一 undo 和通知机制。只给函数签名与必要契约，最多 200 字。",
+      "expected_behavior": "在字数和格式内完成所需签名及共同不变量，不输出方法集合、表格、计划或调试面问题。"
+    },
+    {
+      "id": "edge-data-derived-not-independent",
+      "type": "edge_case",
+      "prompt": "协议 schema 生成 Python 与 Rust 类型，两个产物总是一起变；手工维护部分只有一份 schema。这样是否就是知识泄露？",
+      "expected_behavior": "区分权威与派生表示，不因多份生成代码判定多权威；检查兼容责任而非强行删除必要表示。"
+    },
+    {
+      "id": "should-trigger-architecture-audit",
+      "type": "should_trigger",
+      "prompt": "使用这个 skill 评估当前仓库的架构设计，给出包含当前问题、对应风险和推荐改进的报告。",
+      "expected_behavior": "使用架构发现判据检查重要工作流和边界，说明结构因果链、健康项及证据缺口；不要求全量读取其他专题。"
+    },
+    {
+      "id": "should-trigger-system-pattern-selection",
+      "type": "should_trigger",
+      "prompt": "我们要给现有系统增加长任务处理、读扩展和跨服务状态同步。请不要给标准组件清单，结合真实约束比较可以采用的系统设计 pattern、风险和验证方式。",
+      "expected_behavior": "由实际压力与工作流契约比较结构动作、状态权威、失败和更简单候选，不给标准组件清单。"
+    },
+    {
+      "id": "should-trigger-obvious",
+      "type": "should_trigger",
+      "prompt": "核心业务能力已经选定，契约也明确；可新人总被 handler/manager 之类名字和五层跳转误导。",
+      "expected_behavior": "从真实读者任务定位入口、名称和跨层跳转造成的理解成本，优先减少隐藏约定；不强制安排外部读者或扩成全系统审计。"
+    }
+  ],
+  "evaluation": "行为评估素材，不由文件校验自动判通过。触发用例只看 description；执行用例仅提供用户请求、必要原始材料与当前 skill，评估者不读取 expected_behavior。检查实际判断、加载、澄清和交付范围，不匹配固定措辞。已执行范围见 test-results.md。"
+}
