@@ -1,6 +1,6 @@
 {
   "skill": "software-design-philosophy",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "test_cases": [
     {
       "id": "should-trigger-diagnose",
@@ -277,6 +277,48 @@
       "type": "should_trigger",
       "prompt": "核心业务能力已经选定，契约也明确；可新人总被 handler/manager 之类名字和五层跳转误导。",
       "expected_behavior": "从真实读者任务定位入口、名称和跨层跳转造成的理解成本，优先减少隐藏约定；不强制安排外部读者或扩成全系统审计。"
+    },
+    {
+      "id": "should-trigger-contract-knowledge",
+      "type": "should_trigger",
+      "prompt": "团队用 AI 改接口时总漏掉旧消费者依赖，领域规则在 schema、实现和两份 AGENTS.md 中各写一套。请判断边界问题并给最小改进。",
+      "expected_behavior": "追踪实际知识权威和规则漂移；把可表达不变量落实到类型/schema/现有检查，指导指向权威。缺AGENTS.md或单次模型出错本身不是架构问题。"
+    },
+    {
+      "id": "edge-implicit-contract-clean-cutover",
+      "type": "edge_case",
+      "prompt": "list_entries 类型不变但顺序从插入顺序改为按名字，消费者取第一项为最近导入项。用户要求同仓所有消费者一起切换，不留兼容入口。",
+      "expected_behavior": "识别真实隐式依赖，明确消费者需要的语义并同步迁移；类型和集合相等测试不能证明兼容，不自行保留用户拒绝的兼容层。"
+    },
+    {
+      "id": "edge-mock-fidelity-integration",
+      "type": "edge_case",
+      "prompt": "两个 Agent 分别实现库存预留和支付失败释放；测试只用字典模拟数据库和断言release被调用，两边都绿。可以认为订单幂等和库存恢复已验证吗？",
+      "expected_behavior": "区分已测调用与实际事务/约束/恢复语义；沿最终组合检查本次风险，保留真实依赖或可信契约参照；不强拆每个类或要求生产访问。"
+    },
+    {
+      "id": "edge-shared-contract-parallel",
+      "type": "edge_case",
+      "prompt": "两个 worktree 改不同文件，一个更新协议生成器，一个修改客户端重试；schema 尚未定。为了并行是不是应把它们拆成两个服务？",
+      "expected_behavior": "文件隔离不代表共享契约独立；先确定权威与依赖、收敛协议，再安排实现与组合验证，不因Agent分工引入服务边界。"
+    },
+    {
+      "id": "edge-late-result-after-steering",
+      "type": "edge_case",
+      "prompt": "用户把付款契约改为结果未知时先查询；旧需求启动的后台任务仍在运行，之前版本的审查现在返回PASS。请给后续设计与验证步骤。",
+      "expected_behavior": "保留仍有效工作；旧审查按需求/代码基线判断适用性，重验受影响契约；调整要求不证明旧工具或副作用撤销，需要核实实际状态。"
+    },
+    {
+      "id": "edge-independent-acceptance",
+      "type": "edge_case",
+      "prompt": "Agent 根据刚写的实现生成全部测试，再由第二个Agent读其总结后宣布通过；公共接口签名已改变。请判断这些验证能支持什么结论。",
+      "expected_behavior": "从用户目标、既有公共行为或可信参照确定验收依据；评估者需原始任务和实际产物，多个赞同不能替代独立证据；只指出已知验证范围，不臆造实现缺陷。"
+    },
+    {
+      "id": "edge-validation-stop",
+      "type": "edge_case",
+      "prompt": "这次边界迁移已完成约定契约检查且通过，没有新改动或未决疑点；skill习惯每轮继续全套检查。接下来该做什么？",
+      "expected_behavior": "完成交付；不为了流程重复或扩大验证，也不删除必要已有检查。"
     }
   ],
   "evaluation": "行为评估素材，不由文件校验自动判通过。触发用例只看 description；执行用例仅提供用户请求、必要原始材料与当前 skill，评估者不读取 expected_behavior。检查实际判断、加载、澄清和交付范围，不匹配固定措辞。已执行范围见 test-results.md。"
