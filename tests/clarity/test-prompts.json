@@ -1,0 +1,416 @@
+{
+  "skill": "clarity",
+  "purpose": "验收触发边界、直接写作、语义保真和按需加载；模型试跑不代表真人理解效果。",
+  "test_cases": [
+    {
+      "id": "draft-guide",
+      "type": "should_trigger",
+      "prompt": "给首次使用者写一段离线导出指南，只用这些事实：打开项目；在文件菜单选择导出；选择 ZIP 保存位置；导出包含源文件但不包含历史记录。只要正文。",
+      "expected": ["交付可用指南而非写作计划", "保留历史记录不包含的边界", "不添加不存在的菜单、联网或权限要求", "不输出审查表或另建工作区"]
+    },
+    {
+      "id": "report-limits",
+      "type": "should_trigger",
+      "prompt": "把这些事实写成给管理层的中文简报：灰度样本 200 人，7 天，错误率从 4% 降到 2%，没有对照组，尚未测大客户。不能新增事实。",
+      "expected": ["直接交付报告", "摘要保留样本、观察期和关键限制", "不声称因果成立或已可全面推广", "明确区分结果与建议"]
+    },
+    {
+      "id": "book-chapter",
+      "type": "should_trigger",
+      "prompt": "为一本面向高中生的科普书写 600 字左右的一节，解释相关性为什么不等于因果，可以使用明确标注的虚构例子，保持连续正文而非清单。",
+      "expected": ["产出实质章节而非大纲", "说明变量、关系和可能混杂因素", "不编真实研究或数字", "不强制表格和统一章首章末模板"]
+    },
+    {
+      "id": "book-resume",
+      "type": "should_trigger",
+      "prompt": "我们分三次写完一本手册，现在只做第一批：全书大纲和第一章草稿。读者是已有 Python 基础的数据分析师，主题是用标准库清洗 CSV。为下次续写保存必要信息。",
+      "expected": ["本批有第一章正文", "仅持久化必要状态", "记录读者、术语、章节状态和续写点", "不声称已完成全书或全部代码验证"]
+    },
+    {
+      "id": "english-output",
+      "type": "should_trigger",
+      "prompt": "Rewrite in English for an engineer: The tool leverages a cache. It stores parsed files. It is cleared when the schema changes. Return only the rewrite.",
+      "expected": ["输出英文", "说明被清空的是缓存", "不附中文过程或审查批注", "不编造性能效果"]
+    },
+    {
+      "id": "translation-modality",
+      "type": "should_trigger",
+      "prompt": "将以下接口说明译成自然中文，保留精度：The service may retry up to three times unless the request was cancelled. Keep retry_count unchanged as the JSON key.",
+      "expected": ["保留 may 的可能性", "保留最多重试三次和取消条件", "不混淆重试次数与总请求次数", "保持 retry_count 精确"]
+    },
+    {
+      "id": "japanese-output",
+      "type": "should_trigger",
+      "prompt": "把下面通知写成自然日语，只输出通知：维护将于 2026 年 10 月 3 日 02:00 至 03:00 UTC 进行。维护期间不能上传，已经保存的文件仍可下载。",
+      "expected": ["日语成品", "日期、UTC、时段和能力边界不变", "不擅自换成本地时间", "不宣称完成母语专家审校"]
+    },
+    {
+      "id": "expert-terms",
+      "type": "restraint",
+      "prompt": "审查这句给数据库工程师的说明是否清楚，只在有实际理解问题时提意见：事务在提交前持有行锁；发生死锁时，数据库回滚其中一个事务，调用方可重试。",
+      "expected": ["允许无发现", "不为消灭术语而替换事务、行锁或死锁", "不机械补基础课程", "不捏造特定数据库的正确性结论"]
+    },
+    {
+      "id": "distinct-entities",
+      "type": "restraint",
+      "prompt": "为读者理顺表达，但不要改变数据模型：用户上传 document；服务把原始字节保存为 file，再抽取多个 record 入库。这三个词要不要统一？",
+      "expected": ["识别三个概念不同", "说明对象与转换关系", "不全部改叫文档", "不擅自修改字段名"]
+    },
+    {
+      "id": "narrative-voice",
+      "type": "restraint",
+      "prompt": "让这段悬疑小说更顺，但保留节奏，不提前揭晓敲门者身份：灯灭了。他没动。敲门声又响了三次。直到天亮，他才认出门外那把伞。",
+      "expected": ["不按短句禁令合并全部句子", "不将揭示前置", "不编出敲门者", "可以仅微调或保留原文"]
+    },
+    {
+      "id": "code-coherent-function",
+      "type": "restraint",
+      "prompt": "评审建议把一个 60 行的单次 CSV 解析函数拆成 12 个 helper，唯一理由是函数长。没有源代码可看。请从可理解性角度判断。",
+      "expected": ["不凭行数认可拆分", "说明需要真实阅读任务和依赖证据", "保留有语义抽象的可能收益", "不捏造源代码或断言一定不能拆"]
+    },
+    {
+      "id": "code-async-semantics",
+      "type": "should_trigger",
+      "prompt": "为了让 TypeScript 更好读，可以把 async function load() { return await api.load(); } 改成 function load() { return api.load(); } 吗？api.load 可能同步 throw，load 是公开 API。",
+      "expected": ["识别 rejected Promise 与同步抛错的差异", "不自动改动公共契约", "说明语义风险而不只计行数", "不声称运行了未运行的测试"]
+    },
+    {
+      "id": "unsupported-causality",
+      "type": "restraint",
+      "prompt": "只润色，不改变结论：上线后投诉少了，所以新模型解决了全部体验问题。我没有其他数据。",
+      "expected": ["指出仅给定材料无法支持绝对因果结论", "不悄悄收窄结论后称纯润色", "不编造证据", "提供明确标注的保留主张版本或收窄建议并区分授权"]
+    },
+    {
+      "id": "finding-anchor",
+      "type": "should_trigger",
+      "prompt": "只审查，不改原稿。给新同事的部署说明第 2 段：启用本地缓存，也可以启用共享缓存。启用它后重启服务。指出真正的理解问题。",
+      "expected": ["给准确位置与引文", "读者任务是部署", "说明它有两个候选指代及重启条件不清", "不猜作者意思，不修改原稿", "提出最小澄清和验证方法"]
+    },
+    {
+      "id": "short-edit-proportional",
+      "type": "should_trigger",
+      "prompt": "把这句写清楚，只要一句话：用户点保存以后会保存当前文件，不会保存其他打开的文件。",
+      "expected": ["直接给一句改写", "不追问已充分明确的受众", "不强制读取全部 references", "不创建术语表、工作区或测试报告"]
+    },
+    {
+      "id": "format-only",
+      "type": "should_not_trigger",
+      "prompt": "仅把这段 Markdown 的无序列表标记从 * 改成 -，不改文字。\n\n* 保存当前文件\n* 不保存其他文件",
+      "expected": ["机械完成格式修改", "不启动可理解性审查或结构改写"]
+    },
+    {
+      "id": "implementation-only",
+      "type": "should_not_trigger",
+      "prompt": "按已定方案在 sum.py 实现 add(a, b)，返回 a + b，不需要设计、注释或表达审查。",
+      "expected": ["不因出现代码就加载通用写作流程", "按既定方案实现"]
+    },
+    {
+      "id": "clean-reader-body",
+      "type": "should_trigger",
+      "prompt": "改成可直接发布的报告正文：为了避免夸大效果，这里先说明边界。本次灰度观察了 200 人，持续 7 天，错误率从 4% 降至 2%，没有对照组。我们保留这些限制，是为了让表达更严谨。",
+      "expected": ["移除写作策略与严谨性自评", "保留样本、时长、数字和无对照组的限制", "不把观察强化为因果结论", "直接交付正文，不解释删去了哪些编辑话语"]
+    },
+    {
+      "id": "preserve-subject-method",
+      "type": "restraint",
+      "prompt": "清理研究方法段中的编辑口吻，只输出正文：为了让读者更好理解，下面先解释采样选择。由于夜间故障占比低，本研究提高夜间记录的采样比例，并在估计总体故障率时按采样概率加权。",
+      "expected": ["删除为读者安排解释的写作自述", "保留夜间故障占比低这个方法选择依据", "保留采样与加权方法", "不因出现由于、为了或方法理由就机械删除"]
+    },
+    {
+      "id": "separate-editor-note",
+      "type": "should_trigger",
+      "prompt": "把这句改清楚，并另附一句修改说明：用户点保存以后会保存当前文件，不会保存其他打开的文件。",
+      "expected": ["正文只陈述保存行为", "按用户要求在正文外给一句修改摘要", "不展开内部推演或逐步自检", "不以正文纯净为由拒绝用户要求的修改说明"]
+    },
+    {
+      "id": "clean-instructions-body",
+      "type": "should_trigger",
+      "prompt": "把这份 skill 草稿整理成正式执行指令，只输出指令：这份 skill 是我参考某篇官方博客编写的，不是正式标准。为了避免给模型太多负担，我决定让它按需读取参考。部署时读取 deployment.md；发布到生产环境前取得用户确认。",
+      "expected": ["去掉作者来源交代、免责声明与设计辩护", "保留按需读取 deployment.md 的触发条件", "保留生产发布确认边界", "不把编写说明改成另一套免责声明"]
+    },
+    {
+      "id": "clean-code-comment",
+      "type": "should_trigger",
+      "prompt": "整理这两行代码注释，只输出注释：// 为了让代码更容易读，我在这里解释不重试的理由。\n// 网关已负责重试，本层重试会重复发送请求。",
+      "expected": ["删除写注释的自我说明", "保留网关重试责任与重复请求后果", "不把解释 why 的有效技术注释一并删除"]
+    },
+    {
+      "id": "preserve-bug-fix-comment",
+      "type": "should_trigger",
+      "prompt": "给这次 bug 修复补上代码注释，只输出注释：旧实现先向客户端确认成功，再将结果持久化，进程崩溃会丢失已确认的数据；现改为持久化成功后才确认。虽然顺序调整使实现更绕，但后续不能改回去。",
+      "expected": ["主动写出代码维护注释", "保留旧做法、崩溃条件和已确认数据丢失的后果", "说明持久化先于确认的必要顺序", "不以修复经过属于编辑说明为由删除", "不凭空增加新的持久化机制"]
+    },
+    {
+      "id": "preserve-performance-comment",
+      "type": "should_trigger",
+      "prompt": "给这段更复杂的批量解析优化写注释，只用这些已测事实：复用缓冲区避免逐条分配；在同一测试环境的一万条记录批次中，p95 从 86 ms 降到 24 ms；常驻内存增加 2 MiB。说明收益和代价，防止以后为简化代码改回逐条分配。",
+      "expected": ["保留复用缓冲区的技术原因", "收益附带一万条记录与同一测试环境的条件", "准确保留 p95 数字和 2 MiB 内存代价", "指出改回逐条分配会失去优化，不用普通文本去编辑口吻规则删除", "不捏造 benchmark 路径或推广到所有负载"]
+    },
+    {
+      "id": "project-instructions-trigger",
+      "type": "should_trigger",
+      "prompt": "整理 AGENTS.md，让贡献者的 agent 清楚知道授权范围：可改内部实现并跑本地测试，不得改公共 API，不得发布。只输出项目指令。",
+      "expected": ["识别项目指令属于适用范围", "交付执行指令而非写作说明", "保留内部实现、本地测试、公共 API 和发布的不同边界", "不擅自放宽禁止动作"]
+    },
+    {
+      "id": "code-only-validation",
+      "type": "should_trigger",
+      "prompt": "只输出改写后的 Python 代码，不附解释：def total(price, quantity): return price * quantity。任务是让参数名称明确表示单价，函数名和 quantity 不变；这里没有外部调用者，已授权重命名 price。",
+      "expected": ["交付保行为的代码并明确单价名称", "不追加测试状态或验证报告", "不把验证流水写进代码注释", "不编造执行过的测试"]
+    },
+    {
+      "id": "source-pronoun-ambiguity",
+      "type": "restraint",
+      "prompt": "只知道这两句话，不能补充事实。把认证说明写清楚：Running the process configures permissions and generates a user ID. This lets users authenticate to the app.",
+      "expected": ["识别 This 可指权限、ID 或两者", "不擅自把认证能力归给 ID", "提出具体确认问题或按含义标注候选", "不把条件候选当成确定事实"]
+    },
+    {
+      "id": "api-outcome-contract",
+      "type": "should_trigger",
+      "prompt": "为 Django get() 写简短中文查询说明，只用这些事实：返回唯一匹配对象；没有对象抛出 Model.DoesNotExist；超过一个抛出 Model.MultipleObjectsReturned；异常属于相应模型类。",
+      "expected": ["一起呈现结果与两种失败条件", "保留异常标识符和归属", "不将无结果改成返回 None", "不要求读者另找成功和失败规则"]
+    },
+    {
+      "id": "manual-task-routing",
+      "type": "should_trigger",
+      "prompt": "给面向初学者和维护者的框架手册整理入口，已有首次应用教程、模型原理、API 参数和异常参考、部署操作指南。有人第一次做应用，有人只查 API 异常。不要写整本手册。",
+      "expected": ["区分学习、解释、查询与操作任务", "首次应用入口不被参数大全阻断", "异常查询能直达参考", "不复制各入口的全部定义", "不把入口整理说成全书完成"]
+    },
+    {
+      "id": "summary-baseline",
+      "type": "should_trigger",
+      "prompt": "将这项事实缩成报告摘要的一句话：2011—2020 年的全球地表温度比 1850—1900 年高约 1.1°C。不要增加其他结论。",
+      "expected": ["保留全球地表温度对象", "保留观测时期与比较基线", "保留约和 1.1°C", "不改成单年或未来预测", "不引入额外政策结论"]
+    },
+    {
+      "id": "ambiguous-date",
+      "type": "restraint",
+      "prompt": "英文旧文档只写截止日期 03/04/02，没有地区、格式定义或源数据。请转换成明确的中文年月日。",
+      "expected": ["指出日期身份未确定", "不凭英文决定月日顺序", "请求格式或权威日期", "不以改分隔符冒充已消歧"]
+    },
+    {
+      "id": "normative-may",
+      "type": "should_trigger",
+      "prompt": "协议明确采用 BCP 14 的大写关键词。请解释 MUST、SHOULD、MAY 的中文含义，并说明能否把任何小写 may 都译成可选。",
+      "expected": ["区分强制要求、带正当例外的建议与可选性", "不把 MAY 解释成发生概率", "小写 may 按语境和普通含义处理", "不认定没有大写关键词的文字必然无规范约束"]
+    },
+    {
+      "id": "observation-not-finding",
+      "type": "restraint",
+      "prompt": "研究便签只有原话 I don't think it is a problem, I just can't count，以及参与者编号 5。能否报告为五名用户因界面难懂而计算失败？没有其他记录。",
+      "expected": ["不把参与者编号当人数", "区分原话、行为观察和原因推断", "不虚构任务或界面", "指出不足以成立该发现且不等于证明没有问题", "只提出与证据缺口对应的核对方向"]
+    },
+    {
+      "id": "reference-case-sensitive",
+      "type": "should_trigger",
+      "prompt": "审查这个 skill 路由：填写表单时读 FORMS.md，高级处理读 REFERENCE.md。实际目录只有 forms.md 和 reference.md，运行环境区分大小写。不改其他规则。",
+      "expected": ["指出实际引用与文件大小写不符", "按真实文件名做最小修正建议", "保留按任务分支加载", "不要求所有任务读取全部参考", "不声称运行过表单工作流"]
+    },
+    {
+      "id": "readme-task-entry",
+      "type": "should_trigger",
+      "prompt": "整理工具 README 的入口，不运行任何命令。已有普通用户安装和 lint 检查说明、会写回文件的格式化说明、贡献者构建指南、安全漏洞私密报告入口。读者可能只想检查代码。不要把所有命令排成一条必执行流程。",
+      "expected": ["区分检查、格式化和源码贡献任务", "写回影响在操作前可见", "保留已有私密安全报告入口", "不执行安装或构建", "不为了模板齐全虚构命令或联系方式"]
+    },
+    {
+      "id": "guide-production-boundary",
+      "type": "should_trigger",
+      "prompt": "把 Firecracker 入门页缩成一个短段落，只用这些事实：这是演示；需要 Linux/KVM 和 /dev/kvm 读写访问；为简化演示未使用 jailer；生产运行用 jailer 建立执行隔离。不要给操作命令。",
+      "expected": ["保留演示性质", "保留运行前提", "不把演示步骤包装成生产部署", "不擅自提供提权或修改设备权限命令"]
+    },
+    {
+      "id": "diagnostic-known-state",
+      "type": "restraint",
+      "prompt": "改写支付超时消息，只输出用户消息。唯一已知事实是请求超时，扣款结果未知；没有安全重试或回滚保证，没有已知查询按钮。错误码 PAYMENT_TIMEOUT 必须保留。",
+      "expected": ["保留超时与扣款结果未知的区别", "不声称支付失败、未扣款或已回滚", "不建议无条件重试", "不编查询按钮或支持渠道", "保留 PAYMENT_TIMEOUT，不附内部验证过程"]
+    },
+    {
+      "id": "diagnostic-conditional-recovery",
+      "type": "should_trigger",
+      "prompt": "写清资源申请的报错：请求 2.0 CPUs，但 us-central-1 配额为 1.0 CPUs。可以申请提高本区域配额。只有其他区域配额足够且任务允许跨区域时，才能建议换区域。只输出消息。",
+      "expected": ["保留请求量、上限、单位和区域", "保留申请提高配额的动作", "更换区域建议带完整前提", "不编造申请链接或批准保证"]
+    },
+    {
+      "id": "api-docstring-contract",
+      "type": "restraint",
+      "prompt": "公开 Python API 的 docstring 说明参数、返回值和失败条件，help() 与文档生成器依赖它。有人建议为减少重复，将其全部搬成函数外的 # 注释，再从正文删掉 what，只保留 why。评估这个建议，不改代码。",
+      "expected": ["区分 docstring 与普通注释的工具可见性", "保留调用者需要的参数、返回值和失败条件", "不把 API what 当成必须删除的重复", "不因此要求所有私有函数采用完整模板", "遵守只评估不改代码"]
+    },
+    {
+      "id": "requirements-observable",
+      "type": "should_trigger",
+      "prompt": "将以下内容整理成简短需求正文：Job 的普通容器完成后，持续运行的 sidecar 不应单独阻止 Job 完成；不支持任意容器依赖图。没有约定性能指标、工期或具体技术方案。不要补这些事实。",
+      "expected": [
+        "交付目标与非目标的清楚需求",
+        "完成语义可观察，不只说体验更好",
+        "不编 SLO、日期或技术方案",
+        "不将提案写成现有实现"
+      ]
+    },
+    {
+      "id": "spec-state-conflict",
+      "type": "restraint",
+      "prompt": "审查一份 API spec：已批准目标是重复请求返回原结果；当前实现会返回 CONFLICT。文档却说当前版本已返回原结果。只指出问题并建议修正，不替我们改变产品决定，也不改代码。",
+      "expected": [
+        "区分已批准目标与当前实现",
+        "指出文档现状声明不实",
+        "不把实现一律视为正确而改掉批准目标",
+        "不擅改实现或新增失败策略"
+      ]
+    },
+    {
+      "id": "c4-levels",
+      "type": "should_trigger",
+      "prompt": "依据这些事实写一段简短架构说明，使用 C4：客户使用 Shop 系统；Shop 内有浏览器 UI、Backend 应用与 Orders 数据库；UI 请求 Backend，Backend 读写 Orders，Backend 调用外部支付系统；生产 Backend 有三个 Docker 副本。技术栈与协议未知。请让系统边界和部署信息清楚，不必生成图像文件。",
+      "expected": [
+        "用 C1/C2 区分系统外部与内部元素",
+        "将三个 Docker 副本作为生产部署信息，不算三个 C4 逻辑容器",
+        "关系与方向准确",
+        "不编协议或技术栈",
+        "不强制 C3/C4 或假称已渲染图片",
+        "C1 只呈现系统与外部对象的关系，不展开 Backend 等内部容器"
+      ]
+    },
+    {
+      "id": "c4-local-reuse",
+      "type": "restraint",
+      "prompt": "只改写已有 C4 架构文档的一段：本文讨论 Shop 的 Backend 内部重试职责；同一文档上文已完整给出并解释 C1/C2；本段已引用该 Backend。只把『重试由 RetryPolicy 负责，Sender 只发送一次』写清，不改变职责。",
+      "expected": [
+        "只改当前段并保留职责",
+        "可复用已有上层视图，不重画全系统或强制四层",
+        "不新增重试次数与恢复保证",
+        "不将任务变成架构迁移"
+      ]
+    },
+    {
+      "id": "development-plan-dependencies",
+      "type": "should_trigger",
+      "prompt": "仅根据这些事实写开发计划正文：先更新 API schema 并获接口评审通过，再实现 CSV 导出，最后做验收；验收包括空结果、Unicode 字段和无导出权限时拒绝；命令、负责人和日期尚未确定。计划不能授权上线，不要发明命令或测试结果。",
+      "expected": [
+        "交付物及评审通过这一前置依赖清楚",
+        "验收对应三个具体场景",
+        "缺失命令等标待确定，不编造",
+        "计划状态不冒充已完成或通过",
+        "不擅加上线操作或权限"
+      ]
+    },
+    {
+      "id": "execplan-scope",
+      "type": "restraint",
+      "prompt": "我们只想把开发计划里的『测试一下』改为『检查空 CSV 导出是否仍包含约定表头』。项目没有采用 ExecPlans。有人说引用 OpenAI Cookbook 就必须创建 PLANS.md 并填满全部 ExecPlan 栏目。请评估并完成这一句改写，不创建文件。",
+      "expected": [
+        "完成具体改写",
+        "不强加 ExecPlan 模板或 PLANS.md",
+        "不把来源要求当成本项目指令",
+        "不声称已运行验收",
+        "明确评估模板要求：本项目未采用协议，因此仅引用该资料不要求建立 PLANS.md 或填满栏目"
+      ]
+    },
+    {
+      "id": "plan-subject-not-editorial",
+      "type": "should_trigger",
+      "prompt": "清理下面开发计划，只输出正文：『为了让本文显得完整，我增加了进度与决定两节。进度：接口定义已完成，兼容性测试尚未运行。决定：因旧客户端仍依赖 v1，迁移期间保留 v1 入口。下一步：补兼容性测试。』不要删主题需要的事实或理由。",
+      "expected": [
+        "删除写作自评",
+        "保留真实进度、未运行状态、兼容决定及理由、下一步",
+        "不把实施理由当编辑噪声",
+        "不把待办改成已完成"
+      ]
+    },
+    {
+      "id": "software-doc-routing",
+      "type": "restraint",
+      "prompt": "请只判断应按需读取 clarity 的哪份参考，不执行改写：A 修改独立 HTTP API 参考页的超时契约；B 修改 Python 源码里供 help() 使用的 docstring；C 修改一本小说的段落；D 为现有系统写 C4 架构说明。",
+      "expected": [
+        "A 和 D 对应 software-documentation.md",
+        "B 对应 code-readability.md",
+        "C 对应 text-writing.md",
+        "不因都是文字读取全部参考或执行全部流程"
+      ]
+    },
+    {
+      "id": "compatible-not-opposed",
+      "type": "should_trigger",
+      "prompt": "只根据给定语境改写这句话：『排错不是看日志，而是写测试。』实际流程中，日志帮助定位异常路径，测试用于复现并检查修复；两者都需要。只输出一句说明。",
+      "expected": [
+        "保留日志和测试的互补职责",
+        "不以突出测试为由否定日志",
+        "不编成先后顺序或效果数据",
+        "直接交付，不附编辑自评"
+      ]
+    },
+    {
+      "id": "claim-task-match",
+      "type": "restraint",
+      "prompt": "甲说：『这个例子有助于理解幂等键。』乙回应：『这本身不足以证明系统绝不会重复扣款。』只评估乙是否回应了甲的主张；没有提供例子或系统实现，不要评估实际系统可靠性。",
+      "expected": [
+        "区分帮助理解和保证系统不重复扣款",
+        "指出乙升级了被评价的任务或主张强度",
+        "不据此判定甲的例子一定有效或系统可靠",
+        "不新增无关纠偏或伪造技术细节"
+      ]
+    },
+    {
+      "id": "retain-grounded-correction",
+      "type": "restraint",
+      "prompt": "审查这条更正通知，只判断是否需要因含有『不是……而是……』而改写：『此前通知误写周三。会议不是周三，而是周四。』日期已经核实。",
+      "expected": [
+        "认可纠正对象明确且日期差异影响安排",
+        "不按句式禁用或虚假两难判错",
+        "允许原文不改，不编时间地点"
+      ]
+    },
+    {
+      "id": "retain-literary-contrast",
+      "type": "restraint",
+      "prompt": "小说前文已写明主人公盼对方认错。请审查『他等的不是一封信，而是一句道歉。』是否因信与道歉可以共存而必须删去这种表达；不要求重写小说。",
+      "expected": [
+        "结合叙事解释载体与期待内容的重心转移",
+        "不机械要求文学前后项字面互斥",
+        "保留声音和修辞，不强行改成工具性说明",
+        "不额外重写"
+      ]
+    },
+    {
+      "id": "retain-consequential-limit",
+      "type": "should_trigger",
+      "prompt": "有人为去掉『但』『不能』建议删掉下句后半段。请只给出保留必要含义的正文：『本次 200 人、7 天灰度中，错误率从 4% 降到 2%，但未设对照组，不能据此确定下降由新配置造成。』不得补事实。",
+      "expected": [
+        "保留样本、时间、数值、无对照组与因果限制",
+        "不因反对空泛限定而删掉必要证据边界",
+        "不改写成已证明因果或可全面推广",
+        "不附编辑说明"
+      ]
+    },
+    {
+      "id": "paper-abstract-scope",
+      "type": "should_trigger",
+      "prompt": "根据这些材料给论文写标题和简短摘要：两项成人情境判断实验，考察真实否定句的合宜度；提供支持性语境时评分更高。未提供样本数、统计量或中文 AI 数据。不得补数据，不要将结论写成『全面禁用否定句』或『首次证明』。",
+      "expected": [
+        "标题交代研究对象或有边界的发现",
+        "摘要连接研究问题、两项实验、结果与语境条件",
+        "不编样本、显著性、创新优先权或中文AI结论",
+        "不因强调中心贡献而丢语境边界",
+        "直接交付标题摘要而非写作计划"
+      ]
+    },
+    {
+      "id": "paper-structure-proportional",
+      "type": "restraint",
+      "prompt": "审查一项论文改稿建议，不改全文：期刊要求结构化摘要；摘要和讨论为不同跳读者各简述了关键结果与限制，没有矛盾。有人要求所有段落固定三句CCC、结果只出现一次，并因方法读者少而删去复现条件。请判断这三项要求，不假定原稿另有缺陷。",
+      "expected": [
+        "服从期刊结构化摘要约定，不强制所有段落三句CCC",
+        "允许面向不同入口的必要回顾",
+        "保留复现条件，不因阅读量少删方法",
+        "指出具体适用边界，不假定原稿已符合所有质量标准",
+        "只评估，不执行未授权全文重写"
+      ]
+    },
+    {
+      "id": "no-fake-evaluation",
+      "type": "restraint",
+      "prompt": "你觉得改写后更清楚，能否写成『经验证，人类阅读速度提升 30%』？我们只做了模型自查。",
+      "expected": ["拒绝伪造真人测量和数字", "准确描述模型自查的覆盖与局限", "可以建议实际读者任务评估"]
+    }
+  ]
+}
