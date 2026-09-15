@@ -35,6 +35,19 @@
 
 “把有帮助抬成保证再否定”及连续段落反复纠偏的检查，是结合读者任务与保真要求形成的编辑判断，不称为上述论文已实验验证的规则。
 
+## 文档组织、路径与标题
+
+对应 [文本写作](../../clarity/references/text-writing.md)的路径组织与命名章节。
+
+| 来源 | 采用与边界 |
+|---|---|
+| Google：[Filenames](https://developers.google.com/style/filenames)、[Headings and titles](https://developers.google.com/style/headings) | 已读两页全文，CC BY 4.0。采用稳定地址、描述性标题、任务与概念标题分工及语义层级；ASCII、连字符和英语句式不覆盖现有工具、语言与出版约定 |
+| Diátaxis：[As a guide to work](https://diataxis.fr/how-to-use-diataxis/) | 已读全文；按需求逐步改善，不先建立四套空目录。未把一种技术文档分类当作所有作品的目录模板 |
+| Write the Docs：[Documentation principles](https://www.writethedocs.org/guide/writing/docs-principles/) | 定向核对 Skimmable：标题、链接文字和段落入口帮助选择与跳读；未据此要求每段都有标题 |
+| Wagtail v6.4.1：[首页源码](https://github.com/wagtail/wagtail/blob/v6.4.1/docs/index.rst)、[首个站点教程](https://docs.wagtail.org/en/v6.4.1/getting_started/tutorial.html) | 核对首页完整分组及代表教程的环境、管理员和启动步骤；运行时为中文概括，未安装 Wagtail，也未逐页审计文档站点 |
+
+Wagtail 候选来自 [Awesome Read the Docs](https://github.com/readthedocs-examples/awesome-read-the-docs/blob/7f77aef23e000ca349c3d2bb6c019adb996dbef1/README.md)；已核对索引条目并回到实际文档，索引的推荐语不作为质量证明。路径分组、兼容迁移和标题检查是结合这些来源与本技能边界形成的实践指导；小工具目录和令牌标题例子为自拟，不冒充项目改版历史。
+
 ## 软件指南、契约与架构
 
 对应 [软件文档](../../clarity/references/software-documentation.md)。
@@ -81,6 +94,16 @@ Neovim [旧 README](https://github.com/neovim/neovim/blob/master/src/nvim/README
 - Go go1.24.0：[protoAtLeast](https://github.com/golang/go/blob/3901409b5d0fb7c85a3e6730a59943cc93b2835c/src/net/http/transfer.go#L455-L457)保留完整紧凑比较，仅调整缩进；同文件 [readTransfer](https://github.com/golang/go/blob/3901409b5d0fb7c85a3e6730a59943cc93b2835c/src/net/http/transfer.go#L491-L606)辅助理解阶段分区；[许可](https://github.com/golang/go/blob/3901409b5d0fb7c85a3e6730a59943cc93b2835c/LICENSE)。
 - Go go1.23.0：[IndexRune](https://github.com/golang/go/blob/go1.23.0/src/strings/strings.go#L122-L143)的 API 注释在 122—125 行；字节偏移由实现与调用核对，不把单位说明错误归给原注释。
 - CPython v3.13.3：[list_resize](https://github.com/python/cpython/blob/v3.13.3/Objects/listobject.c#L113-L145)解释预留容量与连续追加成本。中文注释为机制概括，增长公式不是所有分配路径，未测量性能。
+
+### 命名指导与能力边界
+
+- [Fowler：Function Length](https://martinfowler.com/bliki/FunctionLength.html)：已读全文；采用意图与实现分开、按所做之事命名，不采用作者的短函数偏好作行数门槛，也不转述未读书籍为直接来源。
+- [Effective Go：Names](https://go.dev/doc/effective_go#names)与 [PEP 8：Naming conventions](https://peps.python.org/pep-0008/#naming-conventions)：定向核对命名、既有一致性与兼容条款；调用语境、导出规则和生态惯例分别处理，不强推某种大小写或 getter 前缀。
+- [.NET 类型命名](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-classes-structs-and-interfaces)：已读页面；该页获 Pearson 授权转载 2008 年第二版，并提示部分信息可能过时。仅概括类型/方法的语义分工和 .NET 约定，不复制其表格或将其作为跨语言标准。
+- Go go1.23.0：[io.go](https://github.com/golang/go/blob/go1.23.0/src/io/io.go)：核对 `Reader`、`ReadCloser`、`Copy` 的定义与注释；名称说明能力，关闭责任和 EOF 语义由契约补足。未执行该版本测试。
+- CPython v3.13.0：[pathlib/_local.py](https://github.com/python/cpython/blob/v3.13.0/Lib/pathlib/_local.py)：核对 `PurePath`、`Path` 的类定义与 docstring，区分纯路径操作与系统调用能力；不把词法判断当作文件系统验证。未运行 Python 3.13 的 pathlib 测试。
+
+运行时仅摘述上述 API 名称、短签名与行为边界；布尔、单位和 JSON 兼容例子是自拟教学材料。没有从指南或源码存在这些名称推出已测得可读性收益。
 
 ### 注释文章及读取方式
 
