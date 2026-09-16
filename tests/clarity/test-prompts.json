@@ -455,6 +455,48 @@
       "expected": ["保留机器识别的SKILL.md名称", "先改善可见标题而不贸然迁移已发布地址", "保留既有锚点或在明确兼容机制后迁移", "不强制翻译中文标题，不机械覆盖既有路径约定", "列出需要核对的导航/构建/加载和外部引用边界，不声称已检查完成"]
     },
     {
+      "id": "inline-unreused-helper",
+      "type": "should_trigger",
+      "prompt": "改善这段 Python 的可读性，只输出代码：def _get_items(payload): return payload['items']\ndef item_names(payload): return [item['name'] for item in _get_items(payload)]。payload 为普通 dict；_get_items 没有其他引用或复用计划，不是回调或注册入口，允许删除。",
+      "expected": ["内联并删除单次使用的取值 helper", "直接取字段或用局部 items 命名，不另造 helper", "保留 item_names 签名、字段键与缺键行为", "只交付代码，不强制说明收益或附检查报告"]
+    },
+    {
+      "id": "helper-reuse-plan",
+      "type": "restraint",
+      "prompt": "只评估两个一行私有取值 helper 是否应默认内联，不改代码。A 当前一个调用方，但已批准的本次实施计划明确还有两个消费者会共同使用；B 当前一个调用方，没有复用计划，作者仅说也许以后有用。两者都没有动态引用或额外机制。",
+      "expected": ["A 不套用无复用的默认内联规则", "B 默认内联，需要名称时用局部变量", "区分明确计划与想象中的未来复用", "不把这次评估变成开发排期或兼容政策"]
+    },
+    {
+      "id": "inline-with-local-concepts",
+      "type": "should_trigger",
+      "prompt": "把这段 Python 计算写清楚，只输出函数：def total(price, quantity, discount_rate, shipping): return price * quantity - price * quantity * discount_rate + shipping。参数为普通有限数值，无副作用。没有其他调用方或复用计划；不改签名或公式。有人建议每一步都提取一行 helper，另一人建议保持单行。",
+      "expected": ["在同一函数内用局部变量显露小计与折扣，再组合结果", "不为各计算步骤新建一行 helper", "不把所有阶段压成一个表达式或仅靠换行处理", "保留计算含义，不附额外流程说明"]
+    },
+    {
+      "id": "authorized-breaking-rename",
+      "type": "should_trigger",
+      "prompt": "早期未发布项目，已批准破坏性改名且不保留旧别名。请为全新 API 建议一个 Python 函数名，只输出名字：get_item 实际执行库存预留并返回凭据。不要实现函数。",
+      "expected": ["名称体现库存预留动作", "不要求保留 get_item 或添加兼容层", "不重复请求已获准的改名授权", "仅交付名称，不把可读性任务变成实现或测试流程"]
+    },
+    {
+      "id": "readability-not-development-process",
+      "type": "restraint",
+      "prompt": "只从 clarity 的职责判断两项建议，不实现代码：项目已选择按行为切片 TDD，但有人说 clarity 要求先写完整主流程再处理错误；另有人说一行 async 包装可能影响同步抛错，因此 clarity 必须指定先加哪种测试。请区分表达风险和开发流程。",
+      "expected": ["不以 clarity 改变项目已定的编写顺序", "可以指出异常传播的具体语义风险", "不由 clarity 决定是否新增测试或指定测试层级与时机", "也不以职责收窄为由免除项目已有测试要求"]
+    },
+    {
+      "id": "local-rename-proportional",
+      "type": "should_trigger",
+      "prompt": "只输出改名后的 Python 代码：def wait_for_job(payload):\n    t = payload['timeout_ms'] / 1000\n    wait_seconds(t)\n任务仅将局部 t 改为表达秒单位的名字。payload 是普通 dict，已确认 t 没有其他引用，签名、调用和缺键行为均不变。不需要全仓库调用图。",
+      "expected": ["只改局部变量为 timeout_seconds 或等价准确名称", "保留签名、协议键、换算与调用", "不要求完整链路追踪、阶段表或额外审批", "不输出收益说明或验证流水"]
+    },
+    {
+      "id": "state-roles-not-redesign",
+      "type": "should_trigger",
+      "prompt": "只给两个变量建议新名字：filterA 是用户当前筛选条件，filterB 是发起请求时保存的筛选条件快照，用于标注该次结果。状态设计已确定，本次仅允许改名。",
+      "expected": ["用名称区分当前条件与请求时快照", "不建议删除其中一份状态或改成派生值", "不重新决定状态所有权、缓存或同步机制", "只交付两个名称映射"]
+    },
+    {
       "id": "no-fake-evaluation",
       "type": "restraint",
       "prompt": "你觉得改写后更清楚，能否写成『经验证，人类阅读速度提升 30%』？我们只做了模型自查。",
