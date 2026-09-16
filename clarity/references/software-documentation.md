@@ -49,7 +49,11 @@ Firecracker 的入门指南先说明演示用途，再列出 Linux/KVM 与 `/dev
 
 反例压缩：“下载镜像，启动 Firecracker，就能部署服务。”它把演示流程包装成生产部署，又删去了决定步骤能否运行的条件。
 
-正面摘要应保留这些边界：在满足 Linux/KVM 和设备访问条件的环境中完成演示；该流程省略了生产运行所需的隔离安排，不能直接当作生产部署指南。具体环境检查和部署细节可通过明确入口展开，不应为了命令块更短而隐藏适用条件。
+正面摘要：
+
+> 本演示需要 Linux/KVM 环境及 /dev/kvm 的读写权限。为简化演示，流程省略了 jailer；生产运行使用 jailer 建立执行隔离。
+
+环境前提和演示与生产的区别直接可见；具体检查与部署细节可通过明确入口展开。
 
 ### 操作与排错指南给出可观察的反馈
 
@@ -71,7 +75,7 @@ Firecracker 的入门指南先说明演示用途，再列出 Linux/KVM 与 `/dev
 
 > Job 中普通容器完成后，持续运行的 sidecar 不应单独阻止 Job 完成。本项能力不提供任意容器依赖图。
 
-这只摘出该提案的一项目标与一项非目标，不冒充完整需求或当前 Kubernetes 行为说明。验收围绕目标行为设计场景，而不是只检查某字段是否存在；具体条件仍须与选定版本的规范一致。
+验收围绕 Job 的完成语义设计场景，具体条件与选定版本的规范对应。
 
 ## Spec 与独立 API 参考：写出可实现的契约
 
@@ -91,7 +95,7 @@ Firecracker 的入门指南先说明演示用途，再列出 Linux/KVM 与 `/dev
 
 > `get()` 返回唯一匹配的对象。没有匹配对象时，抛出 `Model.DoesNotExist`；匹配超过一个对象时，抛出 `Model.MultipleObjectsReturned`。这两个异常类属于相应的模型类。
 
-名称、结果与失败条件共同构成可用解释，不能为了缩短说明而省略失败契约。这是结果数量这一项契约的说明，不替代参数语法和其他使用条件。
+名称、结果与失败条件放在一起，调用者便可按匹配数量确定返回值或异常。
 
 ## 架构文档：使用 C4，按问题选择视图
 
@@ -116,7 +120,7 @@ C4 官方的虚构 Internet Banking System 教学示例（Simon Brown，[系统�
 | C1：系统上下文 | Personal Banking Customer 使用 Internet Banking System 查询余额、支付；该系统向外部 Core Banking System 获取账户信息、发起支付，并通过 AWS Simple Email Service 发送邮件 |
 | C2：放大 Internet Banking System | 系统内有 Static Content、UI、Backend、Statement Store 和 Database；UI 调用 Backend 的 JSON/HTTP API，Backend 访问 Database，并与边界外的 Core Banking System 和邮件系统交互 |
 
-C2 中 UI 是浏览器内的 Angular 应用，Backend 是 Spring Boot 应用，Statement Store 是存储 PDF 的 S3 bucket，Database 是 MySQL schema。它们说明 C4 容器是应用或数据存储的职责边界，而不是统一的部署包装。这里仅摘录部分关系，不声称这是一张完整图或真实银行生产架构。
+C2 中 UI 是浏览器内的 Angular 应用，Backend 是 Spring Boot 应用，Statement Store 是存储 PDF 的 S3 bucket，Database 是 MySQL schema。它们说明 C4 容器是应用或数据存储的职责边界，而不是统一的部署包装。
 
 反例（教学改写）：把用户、整个银行系统、Backend、某个 Java 方法和三个 Pod 平铺在同一张“C4 容器图”上，箭头一律写“调用”。读者需要自己还原包含关系、抽象层级和部署含义。
 
@@ -142,11 +146,11 @@ C2 中 UI 是浏览器内的 Angular 应用，Backend 是 Spring Boot 应用，S
 
 反例概括（教学改写）：“实现 sidecar；写测试；发布。”执行者无法判断需证明哪项行为，也不知道进入下一阶段需要哪些证据。
 
-正面组织是把特性行为与验证相连：明确本阶段要求，再以相应测试或反馈判断是否满足；尚未通过的条件仍是待办。此例展示提案中的历史阶段安排，不是当前 Kubernetes 操作手册，不能把其中的 alpha 开关或升级降级条款复制成当前版本可用的回退命令。
+正面组织是把特性行为与验证相连：明确本阶段要求，再以相应测试或反馈判断是否满足；尚未通过的条件仍是待办。此例展示提案中的历史阶段安排，当前操作命令须查所用版本的指南。
 
 ### 复杂代理任务与 ExecPlan
 
-项目明确采用 OpenAI ExecPlans 协议时，遵守项目的完整约定，包括自包含的任务上下文、可观察里程碑，以及持续更新的 Progress、Surprises & Discoveries、Decision Log、Outcomes & Retrospective 等栏目。自包含意味着恢复工作所需的信息可得，不依赖丢失的会话；不意味着复制整个仓库。
+项目明确采用 OpenAI ExecPlans 协议时，遵守项目的完整约定，包括自包含的任务上下文、可观察里程碑，以及持续更新的 Progress、Surprises & Discoveries、Decision Log、Outcomes & Retrospective 等栏目。计划应包含恢复工作所需的信息，并用明确路径指向相关仓库材料。
 
 普通开发计划可借鉴上下文、依赖、验证与恢复安排，不因看到该资料就创建 `PLANS.md`、套用整套长任务模板，或将发布动作视为已获授权。
 
