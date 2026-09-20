@@ -2,6 +2,17 @@
 
 本页汇总与当前技能有关的验证证据。[测试用例](test-prompts.json)保存 138 个场景的输入与预期；来源和案例版本见 [来源记录](../../docs/clarity/sources.md)。
 
+## 分轮精简：主文件
+
+主文件将重复的共同判断、纠正要求和质量检查归为四个主题：回应当前问题、从已知接到新内容、保留含义并有据纠正、直接交付。直接表达仍在主文件中明确约束各类输出；八个参考入口、C4 要求和条件性的设计讨论保留。代理提示、全部参考及 138 个用例定义未改。
+
+- 主文件从 4387 字符、100 行变为 3974 字符、84 行；这是规模记录，不是理解效果测量。
+- 独立上下文的只读审查未发现 P0/P1/P2 问题，维护者核对了实际差异与回答。
+- 审查者实际回答八项用例：`conversation-progress`、`followup-without-decision`、`preserve-negative-finding`、`retain-permission-denials`、`grounded-anticipatory-clarification`、`preserve-bug-fix-comment`、`authorized-breaking-rename`、`c4-levels`。按可见预期复核均符合；这不是盲测、文件操作执行或真人评估。
+- 静态检查通过：YAML、C4 入口、138 个未变用例、参考文件逐字对比、13 份 Markdown 的 50 个本地链接与锚点、围栏、空白及 `git diff --check`。
+
+审查运行 ID：`7b14e2a3-f0ae-42a8-a747-313eb1b86467`，工作流：`47fb62ff-75ca-48e2-b99b-f84477864d66`；完整回答保存在该工作流的 `round1-review.md` 产物中。此前 `reviewer` 因子进程缺少所需 `grep/find` 工具而未启动，随后使用同一 subagent 机制的 `delegate` 完成只读审查；启动失败不计为审查结果。
+
 ## 会话输出与设计讨论合并
 
 本轮将解释、答疑、进展和调研汇报明确纳入触发范围，同时保留持久化文本与代码表达。主文件强调从读者已知的内容接续，文本参考增加会话回复与理解顺序的指导；短句、摘要和分层本身不作为理解改善的证明。
