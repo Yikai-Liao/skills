@@ -18,13 +18,33 @@
 
 用户提供的两份 ChatGPT 讨论用于明确需求；其中未独立核对的学术名词、中文 AI 句式频率和训练机制解释未作为事实采用。泛称 `technical-writing` 无法唯一定位，不指定任意同名仓库替代。DocWriter 的[模型 eval](https://github.com/docwriter-org/plain-writing-skill/blob/f0d3630983ac7a82aa580f1c1509d72df739ee12/evals/README.md)不证明本技能提高真人阅读速度。
 
+## 会话解释、理解顺序与设计讨论
+
+本轮用户反馈指出：先前的调研汇报和重试设计示例，虽已缩短、分段，仍要求读者理解临时引入的系统与多项抽象关系。按用户要求，共同指导扩展到非持久化的会话回复与持久化文本，设计讨论纳入按需参考。
+
+| 来源 | 实际读取与采用边界 |
+|---|---|
+| Gopen 与 Swan：[The Science of Scientific Writing](https://www.cs.tufts.edu/comp/150FP/archive/george-gopen/sci.html)，1990 | 取得全文，定向读取读者预期、已知与新信息、句间联系及结尾原则。采用从已有背景接续、用动作解释关系；这是写作分析，不是本技能的效果实验，也不把英语句法建议强制套到中文 |
+| Anik 与 Bunt：[Designing Effective Training Dataset Explanations](https://www.umhcilab.com/publications/designing-effective-training-dataset-explanations/)，IUI 2026 | 读取作者实验室的论文摘要：32 名参与者，详细解释增加负担但仍受偏好；分层展开未有效降低认知负担。未读论文全文，不将该结果直接推广为软件设计文档结论；它用于纠正“分层必然减负”的假设 |
+| Song 与 Schwarz：[If It's Hard to Read, It's Hard to Do](https://www.psychologicalscience.org/news/releases/if-its-hard-to-read-its-hard-to-do-study-shows-difficult-to-read-instructions-decrease-motivation.html)，2008 | 读取 APS 对字体实验的报道；难读字体影响预期努力和尝试意愿。未核验原始数据，不据此宣称某种句式、ADHD 模式或本技能已改善情绪 |
+
+运行时例子采用双方已讨论的流程精简任务，说明如何把抽象概括展开为实际动作；它是教学改写，不是已经过真人对照验证的最佳版本。没有从研究导出字数、短句、分层或类比配额，也不根据阅读困难推断用户的诊断或知识水平。
+
+### 设计讨论的迁入
+
+[设计讨论与记录](../../clarity/references/design-discussion.md) 合并了本次会话创建的 `design-align`。其来源是用户提供的 `/home/lyk/code/architecture-workflow/` 0.1.0；原目录未改，路径仅用于来源记录，不是运行依赖。
+
+保留提案、取舍讨论、决定及理由、现状更新、实施交接、偏移处理和未完成工作的连续性。固定目录、阶段状态、审批表、交付模板和多执行者管理不作为必需流程。原先的 19 个验收案例并入本技能的用例文件，未将结构检查计作模型行为通过。
+
+此前“本技能只管表达”的范围在本轮扩展为：共同规则覆盖面向读者的输出，设计协作是条件性分支。普通润色与翻译仍保持既定流程的含义；工具执行、验证和审批权限继续来自任务与项目要求。运行时不依赖或调用其他技能。
+
 ## 文本关系与研究论文
 
 对应 [文本写作](../../clarity/references/text-writing.md)。
 
 | 来源 | 采用与边界 |
 |---|---|
-| [Google：Recognize ambiguous pronouns](https://developers.google.com/tech-writing/one/words#recognize_ambiguous_pronouns) | 原例中的认证能力可能来自 ID、权限或两者；中文候选是条件式教学改写，不代选事实。Google 页面使用 CC BY 4.0 |
+| [Google：Recognize ambiguous pronouns](https://developers.google.com/tech-writing/one/words#recognize_ambiguous_pronouns) | 指代应在语境中可恢复。旧版认证案例曾被改写为机制追问，现已移除；流程层面已清楚的说明可原样保留。Google 页面使用 CC BY 4.0 |
 | [RST：关系定义](https://www.sfu.ca/rst/01intro/definitions.html) | 核对 Contrast、Antithesis、Concession 的定义与示例；不混同传统修辞的同名术语，不按连接词直接判谬误 |
 | [UNC Writing Center：Transitions](https://writingcenter.unc.edu/tips-and-tools/transitions/) | 已读完整正文；连接语表达具体关系，不能补救缺失的组织。运行时采用自主表述，未复制或改编该讲义的案例与表格 |
 | [Silvennoinen：Contrastive negation and register](https://varieng.helsinki.fi/series/volumes/19/silvennoinen/) | 定向读取摘要、分类、方法、频率表与讨论。Table 3 的会话频率为每千词 1.30，报刊为 0.84；形式随语体变化，不能推出“人类日常很少用否定”或中文 AI 比较 |
@@ -35,7 +55,9 @@
 
 “把有帮助抬成保证再否定”及连续段落反复纠偏的检查，是结合读者任务与保真要求形成的编辑判断，不称为上述论文已实验验证的规则。
 
-防御性套话的严格处理来自用户对本技能缓存测试示例的直接反馈：删除空泛降温句，连续设限即使包含真实限制也须重组。它是本项目的写作要求，语境研究用于说明否定的使用条件；两者分别记录。对应回归覆盖具体禁令、否定结论、引语和验证安排的保留。
+用户最初对缓存测试示例的反馈促成了删除空泛降温句、重组连续设限的规则。后续反馈将判断重心改为：避免虚构待反驳的立场，保持原主张的任务、范围与强度。连续否定仅作检查信号；原来的“一律重组”要求已被替代。回归同时覆盖无依据的纠偏、必要排除、证据边界、合理预先澄清及改写后的信息完整性。
+
+用户提供的论述以 Aikin 与 Casey 的《Straw Men, Weak Men, and Hollow Men》解释空心人论证，并附有 [Stanford Encyclopedia of Philosophy：Fallacies](https://plato.stanford.edu/entries/fallacies/)、[Harvard Writing Center：Counterargument](https://writingcenter.fas.harvard.edu/counterargument) 和 [Don’t Feed The Trolls: Straw Men And Iron Men](https://rozenbergquarterly.com/issa-proceedings-2014-dont-feed-the-trolls-straw-men-and-iron-men/) 三项出处。本轮依据用户所给论述调整规则，未独立读取这些原文；术语说明不作为已完成学术核验或效果验证的记录。运行时区分虚构立场与强化已有主张，不将所有预先澄清或否定句统称为空心人论证。
 
 ## 文档组织、路径与标题
 
@@ -68,7 +90,7 @@ Wagtail 候选来自 [Awesome Read the Docs](https://github.com/readthedocs-exam
 
 C4 定义以官方[总览](https://c4model.com/diagrams)、[container 抽象](https://c4model.com/abstractions/container)、[系统上下文](https://c4model.com/diagrams/system-context)、[容器图](https://c4model.com/diagrams/container)、[动态视图](https://c4model.com/diagrams/dynamic)与[部署视图](https://c4model.com/diagrams/deployment)为准。实际查看了 [SystemContext.png](https://c4model.com/images/examples/SystemContext.png) 和 [Containers.png](https://c4model.com/images/examples/Containers.png)：Simon Brown 的虚构 Internet Banking System，CC BY 4.0。运行时是简化文字摘录，不是真实银行方案。C1/C2 的推荐不等于每次局部任务必须重画两图。
 
-[OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)提供复杂长任务的自包含、里程碑与恢复约定。项目采用该协议时遵守完整格式；普通开发计划只借鉴所需信息，不自动创建 PLANS.md 或继承提交、发布权限。
+[OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)曾用于参考复杂长任务的上下文、里程碑与恢复约定。本轮设计讨论未恢复该执行协议；改写已有计划仍保留既定安排，需要从设计交接实施时采用设计讨论参考中的轻量方法。
 
 以下二手来源已读取正文，用于补充文档检查角度，不作为效果证据或新流程授权：
 
@@ -133,10 +155,10 @@ Neovim [旧 README](https://github.com/neovim/neovim/blob/master/src/nvim/README
 
 ## 指令与审查证据
 
-对应 [指令写作](../../clarity/references/instruction-writing.md)与[审查验证](../../clarity/references/review-and-validation.md)。
+对应 [指令写作](../../clarity/references/instruction-writing.md)与[可读性审查](../../clarity/references/readability-review.md)。
 
-- [OpenAI：Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)：触发范围、按需上下文、决策边界与完成条件；模型特定能力判断未纳入通用规则。
-- Anthropic PDF skill 固定提交：[主文件](https://github.com/anthropics/skills/blob/34040c9c568585f6929bedeaad110ad08f079624/skills/pdf/SKILL.md#L7-L11)、[目录](https://github.com/anthropics/skills/tree/34040c9c568585f6929bedeaad110ad08f079624/skills/pdf)、[forms.md](https://github.com/anthropics/skills/blob/34040c9c568585f6929bedeaad110ad08f079624/skills/pdf/forms.md)。主文件的大写引用与实际小写文件不符，大写地址曾返回 404。运行时用自主文字概括分流并校正名称，未复制专有许可下的流程或脚本。
+- [OpenAI：Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)：当前仅借鉴能力描述与要求表达；模型适配、执行流程和检查协议不作为运行时指导。
+- Anthropic PDF skill 固定提交：[主文件](https://github.com/anthropics/skills/blob/34040c9c568585f6929bedeaad110ad08f079624/skills/pdf/SKILL.md#L7-L11)、[目录](https://github.com/anthropics/skills/tree/34040c9c568585f6929bedeaad110ad08f079624/skills/pdf)、[forms.md](https://github.com/anthropics/skills/blob/34040c9c568585f6929bedeaad110ad08f079624/skills/pdf/forms.md)。历史核对发现大写引用与实际文件名不符。文件加载与验证案例已从运行时指导及对应测试中删除，此处只保留来源记录。
 - GDS 的[观察便签](https://userresearch.blog.gov.uk/2014/10/29/anatomy-of-a-good-sticky-note/)、[图片](https://userresearch.blog.gov.uk/wp-content/uploads/sites/102/2014/10/the-perfect-sticky-note-620x417.jpg)及[分析研究过程](https://www.gov.uk/service-manual/user-research/analyse-a-research-session)：已查看原图，`5` 是参与者编号。运行时保留原话，错误人数和界面原因属于教学反例；未取得完整参与者记录。
 - [Sonar Cognitive Complexity](https://www.sonarsource.com/resources/cognitive-complexity/)只读取资源落地页，未读取白皮书，不采用评分公式或将其用于证明真人理解效果。
 
