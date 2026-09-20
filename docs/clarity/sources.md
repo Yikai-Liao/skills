@@ -148,7 +148,7 @@ Neovim [旧 README](https://github.com/neovim/neovim/blob/master/src/nvim/README
 
 对应 [长篇写作](../../clarity/references/long-form-writing.md)与[语言适配](../../clarity/references/language-adaptation.md)。
 
-- Django 5.2 的[文档入口](https://docs.djangoproject.com/en/5.2/#how-the-documentation-is-organized)和[固定目录源码](https://github.com/django/django/blob/9e7cc2b628fe8fd3895986af9b7fc9525034c1b0/docs/index.txt#L49-L69)：真实的教程、概念、参考与任务入口，运行时表格为中文概括；不要求小手册凑齐四类。
+- Django 5.2 的[文档入口](https://docs.djangoproject.com/en/5.2/#how-the-documentation-is-organized)和[固定目录源码](https://github.com/django/django/blob/9e7cc2b628fe8fd3895986af9b7fc9525034c1b0/docs/index.txt#L49-L69)：真实的教程、概念、参考与任务入口，运行时示例为中文概括；不要求小手册凑齐四类。
 - IPCC AR6 [Summary for Policymakers](https://www.ipcc.ch/report/ar6/syr/summary-for-policymakers/)，2023 年 A.1/A.1.1：运行时只摘述 2011—2020 相对 1850—1900 高约 1.1°C 的含义，未核验底层气候数据。
 - [W3C Date formats](https://www.w3.org/International/questions/qa-date-format)：先确认日期身份，再适配显示；不从页面语言推断 `03/04/02` 的年月日，不采用该页旧平台实现代码。
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.txt) 第 1、3、5 节与 [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174.txt) 第 2 节：运行时为中文释义，保留规范强度、大写适用条件及不用大写词仍可能有规范要求的边界。
