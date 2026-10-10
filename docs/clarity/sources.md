@@ -123,6 +123,22 @@ Neovim [旧 README](https://github.com/neovim/neovim/blob/master/src/nvim/README
 - Go go1.23.0：[IndexRune](https://github.com/golang/go/blob/go1.23.0/src/strings/strings.go#L122-L143)的 API 注释在 122—125 行；字节偏移由实现与调用核对，不把单位说明错误归给原注释。
 - CPython v3.13.3：[list_resize](https://github.com/python/cpython/blob/v3.13.3/Objects/listobject.c#L113-L145)解释预留容量与连续追加成本。中文注释为机制概括，增长公式不是所有分配路径，未测量性能。
 
+### 2026-10-10：实现主线与阶段边界
+
+本次以 `dda8bebe7d596959d452e70f5b30befb55283a78` 为仓库基线，采用先显露主路径、再选择完整阶段边界的指导；同时保留薄 helper 默认内联、局部状态机内聚和行为保持。以下固定源码由本次研究读取，本页只记录实际采用，不复制研究全文。
+
+| 固定来源 | 采用与未采用 |
+|---|---|
+| Anthropic [code-simplifier](https://github.com/anthropics/claude-plugins-official/blob/b8e53f1c05dff3b6d751297f6527990ffc81c2f4/plugins/code-simplifier/agents/code-simplifier.md) | 采用当前改动范围、减少无益嵌套且保留有用抽象；不引入专职 agent、React/ES modules 偏好或自动效果保证 |
+| Addy Osmani [code-simplification](https://github.com/addyosmani/agent-skills/blob/3ca2c48a5f2056d7e7aa5d267adb75d29652d702/skills/code-simplification/SKILL.md) | 采用具体障碍对应结构动作；不采用固定行数/层数阈值、可能改语义的示例或改写工作区占位符的 hook |
+| Qwik [控制流与模块化](https://github.com/QwikDev/qwik/blob/936b9ae59f85890880b1a9cbb0908d82f7a73682/AGENTS.md#L227-L255) | 采用从调用处检验提取收益、保持状态和协议边界可见；不把新增函数本身当简化证明 |
+| Ferret [维护指导](https://github.com/MontFerret/ferret/blob/35693eb380d10bd80de76208b95e7598307e34d6/AGENTS.md#L90-L156) | 采用阅读完整受影响实现和直接 helper；不复制固定 helper 排列、完整开发流程或每次审查报告 |
+| NetBird [分支指导](https://github.com/netbirdio/netbird/blob/67c2041fb5534c19d7b2320617cfc3aaab8e7d3d/AGENTS.md#L497-L575) | 保留平坦分派与内聚规则的例外，不因长度强制查表、trait 或模式层 |
+
+单次调用的多步完整阶段和一两行取值/转发 helper 是不同边界；本仓库据此补足选择判据，不采用统一“多拆”或“少拆”的要求。新实现触发与独立安装是本仓库的适用性裁决，不声称来自上游效果实验。
+
+Rust 的 [析构](https://doc.rust-lang.org/reference/destructors.html)、[MutexGuard](https://doc.rust-lang.org/std/sync/struct.MutexGuard.html) 和 [catch_unwind](https://doc.rust-lang.org/std/panic/fn.catch_unwind.html) 为研究时读取的官方滚动说明，读取日期 2026-10-10；用于确定锁、恢复和 unwind 需要单独验证，不把普通压力测试当穷尽证明。自拟夹具不是 Rust 实测结果。来源存在这些规则不能证明技能改善生成代码；实际执行范围见 [本轮验证](../../tests/clarity/readability-validation-2026-10-10.md)。
+
 ### 命名指导与能力边界
 
 - [Fowler：Function Length](https://martinfowler.com/bliki/FunctionLength.html)：已读全文；采用意图与实现分开、按所做之事命名，不采用作者的短函数偏好作行数门槛，也不转述未读书籍为直接来源。
