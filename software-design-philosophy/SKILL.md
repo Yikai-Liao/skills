@@ -1,7 +1,7 @@
 ---
 name: software-design-philosophy
 description: >-
-  审计软件架构，诊断模块间的理解与变更成本，设计或重组模块边界、公共接口与扩展契约，以及比较结构方案和规划遗留系统演化时使用。不用于纯语法或库用法查询、按既定方案机械实现、局部风格修改、生产事故止血或单纯性能排查；性能影响边界或接口取舍时适用。
+  审计软件架构，诊断模块间的理解与变更成本，设计或重组模块边界、公共接口与扩展契约，寻找跨模块的整体简化机会，以及比较结构方案和规划遗留系统演化时使用。不用于纯语法或库用法查询、按既定方案机械实现、局部风格修改、生产事故止血或单纯性能排查；性能影响边界或接口取舍时适用。
 ---
 
 # 软件设计哲学
@@ -23,6 +23,7 @@ description: >-
 | 规则多处解释、理解或修改困难、职责组合与拆分 | [模块与知识边界](references/design-module-boundaries.md) |
 | API、调用者胶水、默认路径与插件扩展 | [深模块与接口](references/design-deep-modules.md) |
 | 正常接口已定，整理异常与恢复责任 | [错误处理边界](references/reduce-exception-surface.md) |
+| 希望减少整体代码与维护负担，寻找可连带删除的表示、转换、状态协调或平行实现 | [全局简化搜索](references/search-global-simplification.md) |
 | 重要结构候选、期限与兼容约束下的演化 | [方案比较与演化](references/evolve-design-strategically.md) |
 | 性能证据影响边界、布局、批量能力或高级接口 | [性能约束下的设计](references/design-measured-critical-paths.md) |
 | 跨进程、异步任务、复制状态与恢复契约 | [系统边界与失败契约](references/design-system-boundaries.md) |
