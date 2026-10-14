@@ -1,4 +1,4 @@
 interface:
   display_name: "软件设计哲学"
-  short_description: "基于真实任务评估软件架构并改进模块边界、接口与演化路径"
-  default_prompt: "使用 $software-design-philosophy 根据真实任务评估当前模块、接口与架构，给出有证据的设计决定和相称验证。"
+  short_description: "从真实用例设计模块、状态与接口，在编码和重构中减少整体机制负担"
+  default_prompt: "使用 $software-design-philosophy 完成当前设计或简化任务，比较直接实现与已有能力，调整责任、表示和调用协议并清理旧机制。"
