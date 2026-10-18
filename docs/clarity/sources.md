@@ -20,6 +20,16 @@
 
 用户提供的两份 ChatGPT 讨论用于明确需求；其中未独立核对的学术名词、中文 AI 句式频率和训练机制解释未作为事实采用。泛称 `technical-writing` 无法唯一定位，不指定任意同名仓库替代。DocWriter 的[模型 eval](https://github.com/docwriter-org/plain-writing-skill/blob/f0d3630983ac7a82aa580f1c1509d72df739ee12/evals/README.md)不证明本技能提高真人阅读速度。
 
+## sloptrim：模板化表达与改写保真
+
+2026-10-18 参考用户指定的 [seyedehsanhadi/sloptrim](https://github.com/seyedehsanhadi/sloptrim)，固定提交 `38dbb7cb4e97de0b9bf157903c95bdcab016dda2`。读取 [SKILL.md](https://github.com/seyedehsanhadi/sloptrim/blob/38dbb7cb4e97de0b9bf157903c95bdcab016dda2/SKILL.md) 与 [patterns.md](https://github.com/seyedehsanhadi/sloptrim/blob/38dbb7cb4e97de0b9bf157903c95bdcab016dda2/references/patterns.md) 的相关章节，采用判断边界并自行表述，未复制示例或引入其代码。
+
+- 采用：检查模板开场、意义拔高、预告和重复收尾是否推进理解；稳定对象名称；按交付物区分独立说明与改动汇报；改写后检查归属、限定、数字对应对象、并行及排名关系；删空话时保留作者声音，具体化须有材料，模板变量保持原样。
+- 沿用 clarity 的语境判断：必要背景、回顾、列表、文学节奏和技术术语可以保留；不能仅凭词语或句式判缺陷、判断作者来源。来源中的保真要求很有价值，但部分 Before/After 补入了 Before 未给出的事实；本技能的替换示例只用题面材料。
+- 未采用：检测器及安装钩子、分数决定改写幅度、固定英语词表和文风档位、句长或标点配额、1.25 倍字数上限、为增加人味而补立场或体验、统一字符清洗。字数变化、文风特征和工具分数均不替代语义判断；现有代码表达职责与工具授权边界保留。
+
+未运行其检测器或复现其 benchmark，也未将该项目的分类表现当作 clarity 的写作效果证据。本轮验证另记于 [验证结果](../../tests/clarity/test-results.md)。
+
 ## 会话解释、理解顺序与设计讨论
 
 会话输出与设计讨论合并时，用户反馈指出：先前的调研汇报和重试设计示例，虽已缩短、分段，仍要求读者理解临时引入的系统与多项抽象关系。按用户要求，共同指导扩展到非持久化的会话回复与持久化文本，设计讨论纳入按需参考。
