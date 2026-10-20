@@ -1,0 +1,4 @@
+interface:
+  display_name: "性能优化"
+  short_description: "剖析、对照验证与局部回退检查，含 perf、toplev、MCA 工具链"
+  default_prompt: "使用 $performance-optimization 分析当前瓶颈，验证候选及局部回退，交付收益可复现且结构清楚的优化。"

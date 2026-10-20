@@ -1,6 +1,6 @@
 # Agent 技能库
 
-用于研究写作、软件设计和清晰表达的可复用技能，通过 [skills CLI](https://skills.sh/) 安装。
+用于研究写作、软件设计、性能优化和清晰表达的可复用技能，通过 [skills CLI](https://skills.sh/) 安装。
 
 ## 选择技能
 
@@ -8,6 +8,7 @@
 |---|---|
 | [`survey-md`](survey-md/SKILL.md) | 起草、修订或审查有来源依据的学术综述与文献回顾。 |
 | [`software-design-philosophy`](software-design-philosophy/SKILL.md) | 分析软件复杂性，设计模块、接口、系统边界与演化方案。 |
+| [`performance-optimization`](performance-optimization/SKILL.md) | 以剖析、对照实验、质量和局部回退检查筛选性能改动；包含 perf、toplev、LLVM-MCA 主线及补充工具用法。 |
 | [`clarity`](clarity/SKILL.md) | 面向用户解释和汇报，起草、改写或审查文本；组织多步代码实现的主流程与细节，支持设计讨论和决定记录。 |
 
 `clarity` 同时用于会话中的答疑、进展与调研汇报，书籍、报告、README、需求、API 规格和架构文档等持久化文本，以及涉及多步流程、分支或状态变化的代码实现。需要讨论设计、记录决定或接续实施反馈时，按需读取设计讨论参考；普通回复和润色无需增加这些步骤。工具执行、验证和审批权限沿用任务与项目要求。技能说明使用中文，交付物遵循用户指定的语言。
