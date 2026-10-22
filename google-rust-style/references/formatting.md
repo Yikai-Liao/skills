@@ -10,7 +10,7 @@ Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1
 
 ### Use the appropriate formatting tool
 
-Use the appropriate formatting tool (e.g., `git cl format` in Chromium).
+Use the appropriate formatting tool.
 
 Configuration (for style guide authors)
 

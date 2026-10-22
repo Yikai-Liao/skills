@@ -32,15 +32,3 @@ If you do have to write unsafe code:
 ### No unstable features
 
 Don't use unstable features.
-
-Exceptions:
-
-*   Android Embedded programming may require the
-    use of certain unstable features. While review will be required to enable
-    them (to help search for alternatives), features absolutely required to
-    build an artifact correctly will generally be approved.
-*   Chrome Style arbiters may blanket-approve a
-    small list of features for the entire codebase. Typically, only features
-    that have a clear path to stabilization will be approved.
-*   Fuchsia See guidance
-    [here](https://fuchsia.dev/fuchsia-src/development/languages/rust/unstable).

@@ -5,8 +5,6 @@ Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1
 ## Contents
 
 - [Code organization](#code-organization)
-- [Prefer small crates [chrome]](#small-crates)
-- [Use flat file layout for `rust_library` sources [chrome]](#structure)
 - [Name source files and leaf modules after the primary user-defined item](#userdefined-item)
 - [Don’t implement APIs in non-leaf modules](#non-leaf-modules)
 - [Don’t use glob imports](#glob-imports)
@@ -14,7 +12,6 @@ Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1
 - [Prefer locally-scoped trait imports](#prefer-local-trait-imports)
 - [Qualify calls to top-level functions with a module name](#toplevel-functions)
 - [Type names should be imported and used unqualified](#type-names)
-- [Use the appropriate import mechanism [chrome]](#import-macro)
 
 <a id="code-organization"></a>
 
@@ -28,74 +25,6 @@ Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1
 *   A Rust *module* is a unit of code organization within a crate. Rust modules
     are used to control visibility of names. Modules can be nested. They can
     also be used to split code across files and directories.
-
-The following sections convey that in Chromium, it is preferable to **not** make
-use of all possibilities of splitting modules across files.
-
-<a id="small-crates"></a>
-
-### Prefer small crates [chrome]
-
-Prefer small crates in Chromium; ideally, but not necessarily, a single file
-(focusing on one abstraction). If your code can be split up into small crates,
-do so.
-
-A crate corresponds to a single `rust_static_library` (chrome) rule, which may
-contain one or more `.rs` files.
-
-Additional considerations:
-
-*   The root module is allowed to `re-export` public APIs from `leaf
-    submodules`, making submodules an implementation detail of the crate (as
-    users don't need to know about these submodules).
-
-*   This rule about small crates applies equally to crates with and without
-    submodules. First, evaluate whether the APIs need to be in the same crate,
-    and only then consider whether submodules could help organize the APIs.
-
-*   If you decide to use submodules, follow the
-    [expected file structure](#structure).
-
-Larger crates are allowed when
-[trait impl coherence rules](https://smallcultfollowing.com/babysteps/blog/2015/01/14/little-orphan-impls/)
-force multiple types and traits to be included in one library, or if you're
-building a large foundational library.
-
-Rationale
-
-Fine-grained library targets are recommended in Chromium due to the massive size
-of our codebase, non-local effects of adding dependencies in the build graph,
-and to improve performance of parallel compilation and build caching.
-
-<a id="structure"></a>
-
-### Use flat file layout for `rust_library` sources [chrome]
-
-In Chromium `.rs` source files belonging to one `rust_library` (one Rust crate)
-must reside in a single directory.
-
-Don't use subdirectories to organize files that belong to a single crate. If
-organizing one crate's files into subdirectories feels necessary, this is a
-strong indication that the crate has grown [too large](#small-crates) and should
-be split.
-
-This crate layout is intentionally different from the conventional Cargo
-directory structure typically used in open-source repositories.
-
-Exception: Rust code in `//third_party` that is also built with
-[Cargo](https://doc.rust-lang.org/cargo/) should follow the conventional Cargo
-directory structure.
-
-Rationale
-
-The approach in Chromium is driven by the following factors:
-
-*   Based on the preference for [small crates](#small-crates), most
-    `rust_library` targets will only contain one source file.
-*   Because of the above point, creating a directory for each `rust_library`
-    target would result in most directories containing only one source file.
-*   Multi-file `rust_library` targets should not create dedicated directories
-    for submodules either; this ensures a consistent approach.
 
 <a id="userdefined-item"></a>
 
@@ -247,8 +176,6 @@ Exceptions:
 *   When importing functions with sufficiently disambiguated names, e.g.,
     functions from C++ (where it is typical to call top-level (free) functions
     directly).
-*   In Chromium, when importing functions from
-    [small, single-purpose first-party crates](#small-crates).
 
 *   When the module name itself is prone to collisions. For example, when the
     module name is a C++ namespace name, and multiple crates define the same
@@ -284,9 +211,3 @@ Exceptions:
 Rationale
 
 This rule largely exists to avoid reviewer disagreements.
-
-<a id="import-macro"></a>
-
-### Use the appropriate import mechanism [chrome]
-
-*   Chrome Use `chromium::import!()`.

@@ -11,24 +11,7 @@ This document is a *style guide* for the usage of the Rust programming language
 at Google. In this context, “style” refers to more than just formatting; it
 includes guidance on API and implementation design.
 
-Rust is used in many places, including
-[google3](https://opensource.google/documentation/reference/glossary#google3),
-Android, ChromeOS, Fuchsia, and Chrome, and we'd like for Rust usage at Google
-to be consistent both within and across codebases. In addition to bringing
-consistency to our Rust code, style guidance also helps establish a standard of
-quality.
-
 ## Background
-
-### Scope
-
-The current scope of authority of the rules outlined in this guide:
-
-*   **In Android, Chromium, and other codebases**: This style guide has been
-    developed in consultation with other codebases, and they intend to start
-    applying it. These codebases may have their own rules about how strictly
-    this is expected to be applied. Expect more information here as these
-    codebases adopt this guide.
 
 ### Goals of the style guide
 
