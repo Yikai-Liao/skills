@@ -1,7 +1,5 @@
 # Crates, modules, and imports
 
-Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1584cd3c9854760f02418ec24687ec1698fb8/rustguide.md#L168-L443); adapted under [CC BY 3.0](../LICENSE).
-
 ## Contents
 
 - [Code organization](#code-organization)

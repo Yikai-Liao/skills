@@ -1,7 +1,5 @@
 # Documentation
 
-Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1584cd3c9854760f02418ec24687ec1698fb8/rustguide.md#L1109-L1205); adapted under [CC BY 3.0](../LICENSE).
-
 <a id="writing-doc"></a>
 
 ## When and how to write documentation

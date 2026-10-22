@@ -1,7 +1,5 @@
 # Function parameters, returns, and errors
 
-Source: [Google Rust Style Guide](https://github.com/google/styleguide/blob/2ac1584cd3c9854760f02418ec24687ec1698fb8/rustguide.md#L530-L722); adapted under [CC BY 3.0](../LICENSE).
-
 ## Contents
 
 - [Function inputs and outputs](#inputs-and-outputs)
