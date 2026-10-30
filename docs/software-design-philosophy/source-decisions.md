@@ -38,7 +38,7 @@
 
 | 旧记录 | 保留的目的 / 本轮处理 | 当前权威位置 |
 |---|---|---|
-| C01 测试与设计 | 保留不默认用 TDD 生成架构、按风险验证；删除每步完成标准与统一测试配额 | [SKILL.md](../../software-design-philosophy/SKILL.md) |
+| C01 测试与设计 | 保留不默认用 TDD 生成架构、按风险验证；删除每步完成标准与统一测试配额 | [测试保护与维护成本](../../software-design-philosophy/references/design-behavioral-tests.md) |
 | C02 有限接口 | 保留共同不变量、完整工作流、长尾归属与逃逸重新汇入；合并重复表格 | [深模块与接口](../../software-design-philosophy/references/design-deep-modules.md) |
 | C03 未来选项 | 保留当前简洁性和有证据、难逆变化的窄接缝 | [SKILL.md](../../software-design-philosophy/SKILL.md) |
 | C04/C06 用例与指标 | 保留知识/变化证据，不按用例、类数或局部依赖指标自动重构 | [模块与知识边界](../../software-design-philosophy/references/design-module-boundaries.md) |
@@ -95,3 +95,24 @@ CRAP 公式与语言统计口径据 [`crapper` 6fd92c4](https://github.com/uncle
 上游单写入者、纯函数及自动造工具的要求均按当前契约改为条件判断；逐动作日志、worktree 和 Git 操作由任务与项目要求承担。独立评估建议保留现有专题结构；已缩短默认启动提示，并删除高级入口归属的同页复述，成立条件和公共治理约束保留。
 
 测试素材更新为 `0.12.0`：原 66 条保持，新增 13 条边界用例。实际验证范围与结论见[测试记录](../../tests/software-design-philosophy/test-results.md)。
+
+## 2026-10-30：测试保护与维护成本
+
+用户提供测试膨胀、套件最小化及探索验证的材料，要求补齐本 skill 的测试判断。现有规则已将 CC/CRAP 用于综合审查、将变异检查限制在受影响范围；缺少的是新增永久测试的准入、支持代码的成本复核与停止条件。本次目标为保护必要行为和历史回归，同时降低长期维护成本。
+
+核查并采用以下一手材料的有限判断：
+
+| 来源 | 采用的依据与边界 |
+|---|---|
+| [Hypothesis 官方 agent 命令，固定提交 3fc38f1](https://github.com/HypothesisWorks/hypothesis/blob/3fc38f1d6a6b1752bf5fad61d44ee79d31d35406/.claude/commands/hypothesis.md) | 选择少量有代码库证据、明显改善检错或表达的性质；没有值得测试的性质可以停止；参考模型避免复制被测逻辑。不引入 Hypothesis 依赖或照搬整套命令流程 |
+| [Google：Practical Mutation Testing at Scale，2021](https://homes.cs.washington.edu/~rjust/publ/practical_mutation_testing_tse_2021.pdf) | 增量分析并过滤低价值变异；内部容量选择的可杀死变异未必值得永久测试。不把其变异报告预算当作测试代码配额 |
+| [Kent Beck：Composable Tests，2025](https://newsletter.kentbeck.com/p/composable-tests) | 组合已确认独立维度的测试，并删去重复保护时保留故障定位；独立性须有设计依据，不能为缩减组合而假定 |
+| [Meta：Just-in-Time Catching Test Generation，2601.22832v1](https://arxiv.org/html/2601.22832v1) | 区分为当前变更找错与长期防回归的目标。探索产物另经永久准入是本次工程取舍，论文不支持默认删除所有探索测试，也未证明套件最小化已解决 |
+
+运行时新增一个按需专题，收拢演化中的替身与定向变异规则；入口和审计链接到该处。新增准入优先复用已有测试，成本包含 fixture、mock、生成器、参考实现、数据、执行与定位；精简核对行为目的及工具未表达的保证，覆盖相同不能直接删除。
+
+用户材料中的测试/生产代码比例按可配置复核线处理，不设置通用数值；最小回归可合理超线。没有引入 test-suite-doctor、覆盖率选择器、固定变异预算或缩减比例。这些规则是综合材料与现有设计原则的工程判断，不称为普遍科学标准或本 skill 的效果实证。
+
+用户随后明确并非所有项目都需要变异测试，工具过重或运行太慢时须灵活选择。运行时将未解风险、工具适配和运行成本放入选用条件；已有断言、边界或差分证据充分时允许不用。独立 clarity 审查用于合并重复准入、清单与来源场景，具体例子留在评估材料。
+
+测试素材更新为 `0.13.0`，新增 8 条具有不同判断目的的边界题，原 79 条不改。文件检查与行为验证的区别见[本轮记录](../../tests/software-design-philosophy/test-results.md#当前修订2026-10-30-测试保护与维护成本0130)。
