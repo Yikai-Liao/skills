@@ -1,29 +1,29 @@
-# 方案比较与演化
+# Comparing and evolving designs
 
-## 比较真正不同的候选
+## Compare genuinely different candidates
 
-重大、昂贵或难逆决定，比较改变权威、表示、生命周期或调用协议的可行方案：新建以直接实现为参照，重构包括现状或局部修正。
+For major, expensive, or hard-to-reverse decisions, compare viable options that change authority, representation, lifecycle, or call protocol: for new work, use a direct implementation as the reference; for a refactor, include the status quo or a local fix.
 
-用相同工作流比较调用者知识、状态、失败、性能、兼容与可逆性。比较力度与决定成本相称。
+Compare caller knowledge, state, failure, performance, compatibility, and reversibility on the same workflow. Match the depth of comparison to the cost of the decision.
 
-## 按完整工作流迁移
+## Migrate by complete workflow
 
-先定规则和状态归属，再切出能交付当前价值、收回责任的最小完整切片。
+Settle rule and state ownership first, then cut the smallest complete slice that delivers current value and takes back responsibility.
 
-- **行为**：区分正式保证、消费者依赖与未知项，核对排序、默认值、错误、时序、并行政策和性能；按目标保留或迁移，交代实际语义变化。
-- **台阶**：完整用例迁移，必要窄接缝与旧入口退出；每步有成功条件和恢复路径，临时双轨明确权威、剩余消费者与退出条件。
-- **数据**：明确切换前后读写权、回填/同步与恢复，分别安排应用与数据回滚。
+- **Behavior**: separate formal guarantees, consumer dependencies, and unknowns; check ordering, defaults, errors, timing, parallelism policy, and performance; keep or migrate per the goal, and report actual semantic changes.
+- **Steps**: migrate complete use cases using narrow seams where needed, retiring old entry points and temporary seams once they no longer serve a purpose; each step has a success condition and a recovery path; temporary dual paths state the authority, remaining consumers, and exit condition.
+- **Data**: define read/write ownership before and after cutover, backfill or sync, and recovery; plan application rollback and data rollback separately.
 
-批量迁移值得自动化时，先完成并独立核对一个代表性完整切片，再让工具复现转换；检查边界、失败和重跑语义后扩大范围。
+When a bulk migration is worth automating, first complete and independently verify one representative complete slice, then have the tool reproduce the transformation; check boundaries, failures, and rerun semantics before widening the scope.
 
-## 退出旧机制
+## Retire old mechanisms
 
-责任或表示改变后，沿旧概念检索调用者、字段、参数、适配、配置、测试与文档，清理已无独立用途的接口、镜像状态和装配要求，同步当前契约说明。
+After a responsibility or representation changes, search along the old concept for callers, fields, parameters, adapters, configuration, tests, and docs; remove interfaces, mirrored state, and assembly requirements that no longer have an independent purpose, and update the current contract description.
 
-## 协作与最终组合
+## Collaboration and final composition
 
-共享契约由明确权威维护。schema、生成物、数据库和生命周期按实际依赖协调，先收敛共享决定，再并行依赖它的实现。
+Shared contracts are maintained by a clear authority. Coordinate schemas, generated artifacts, databases, and lifecycles by actual dependency: converge shared decisions first, then parallelize the implementations that depend on them.
 
-## 验证行为
+## Verify behavior
 
-迁移与最终组合的验证按[测试保护与维护成本](design-behavioral-tests.md)选择检查和验证接缝。
+Choose checks and verification seams for migration and final composition per [test protection and maintenance cost](design-behavioral-tests.md).

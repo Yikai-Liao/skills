@@ -1,34 +1,28 @@
-# 深模块与接口
+# Deep modules and interfaces
 
-## 模块深度与内部组织
+## Module depth and internal organization
 
-完整操作由一个边界对外负责，内部可按输入、输出与效果明确的阶段组织。可将输入到结果明确的业务判断与外部效果分离。拆分保持不变量、事务、锁范围与资源生命周期，状态读取、判断和提交按所需原子性协作。
+One boundary is externally responsible for a complete operation; internally it may be organized into stages with clear inputs, outputs, and effects. Business decisions with clear input-to-result mappings can be separated from external effects. Splitting preserves invariants, transactions, lock scope, and resource lifecycles; state reads, decisions, and commits cooperate with the atomicity they require.
 
-## 用完整工作流检验原语
+## Test primitives against complete workflows
 
-从真实用例检验创建到结果、失败和清理，包括相关长尾。以调用者实际承担的配对、转换、顺序和收尾评价深度。
+Check primitives against real use cases from creation to result, failure, and cleanup, including the relevant long tail. Judge depth by the pairing, conversion, ordering, and cleanup callers actually carry.
 
-按共同对象、范围或状态转换组织原语，让有信息保证它的模块完成操作。有读写阶段约束时，收回必要汇合与失败清理，保证读者结束才写、写者结束才返回。
+Organize primitives around a shared object, range, or state transition, and let the module that has the information to guarantee it complete the operation. Where read/write phase constraints exist, take back the necessary joins and failure cleanup so that writing starts only after all readers finish and the operation returns only after all writers finish.
 
-从调用者视角说清成功、所有权、副作用与失败边界，并随实现核对准备、内部修改、提交和发布的保证。接入项目已有的错误、取消、并行调度和可观测性约定，必要差异做窄适配。
+State success, ownership, side effects, and failure boundaries from the caller's point of view, and check the guarantees for preparation, internal mutation, commit, and publication against the implementation. Plug into the project's existing conventions for errors, cancellation, parallel scheduling, and observability, with narrow adapters for necessary differences.
 
-## 给缺口确定归属
+For complex systems or hard-to-reproduce workflows, follow the [dedicated test / agent debugging surface preference](design-behavioral-tests.md#dedicated-test--agent-debugging-surface).
 
-| 缺口 | 归属 |
+## Assign each gap an owner
+
+| Gap | Owner |
 |---|---|
-| 多个调用者重复需要，属于模块知识 | 核心原语 |
-| 原语已足够，差异属于具体业务 | 上层组合 |
-| 设备、供应商或外部协议差异 | 共同契约后的专用实现或适配器 |
-| 调用者独有的重要选择或对象专用能力 | 窄的类型化高级入口 |
+| Needed repeatedly by several callers and part of the module's knowledge | Core primitive |
+| Primitives suffice; the difference is specific business logic | Composition in an upper layer |
+| Device, vendor, or external protocol differences | Specialized implementation or adapter behind a shared contract |
+| An important choice only the caller can make, or an object-specific capability | Narrow, typed advanced entry point |
 
-普通路径使用模块能可靠决定的默认值。高级入口复用公共身份、生命周期、权限、错误与观测，产物能回到公共句柄和资源治理。
+The ordinary path uses defaults the module can reliably decide. Advanced entry points reuse the shared identity, lifecycle, permissions, errors, and observability, and their artifacts return to shared handles and resource governance.
 
-同一逃逸反复成为常见路径时重评核心原语。必要布局与生命周期语义见[性能约束下的设计](design-measured-critical-paths.md)。
-
-## 独立测试 / Agent 调试面
-
-个人偏好：简单程序沿用现有测试入口；复杂系统或难复现工作流，询问是否考虑独立测试 / Agent 调试面。
-
-接口用类型化 schema 表达操作，可重试操作明确身份与幂等。跨环境或具备特权能力的调试面，采用限环境限能力的短期凭据、审计及自动回收；用独立部署或环境门禁保证生产不可达，检验拒绝路径。
-
-提供可重复起点与必要状态观察，目标转换经过真实公共操作检查。
+When the same escape hatch keeps becoming a common path, re-evaluate the core primitives. For the layout and lifecycle semantics required of advanced entry points, see [design under performance constraints](design-measured-critical-paths.md#advanced-entry-points).

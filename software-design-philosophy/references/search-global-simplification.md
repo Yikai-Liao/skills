@@ -1,35 +1,29 @@
-# 从必要契约反推全局简化
+# Global simplification from necessary contracts
 
-用于整体简化，或编码中发现反复转换、协调与双轨实现时。沿相关工作流理解整体代价，搜索候选；采用与迁移见[方案比较与演化](evolve-design-strategically.md)。
+Use for whole-system simplification, or when repeated conversion, coordination, or dual implementations turn up while coding. Understand the overall cost along the relevant workflows and search for candidates; for adoption and migration, see [comparing and evolving designs](evolve-design-strategically.md).
 
-## 暂时放下现有机制
+## Set existing mechanisms aside
 
-先问：若今天只需满足已知契约，会怎样实现这条工作流？分清三类事实：
+First ask: if today you only had to satisfy the known contracts, how would this workflow be implemented? Separate three kinds of facts:
 
-- **必要契约**：结果、不变量、公开承诺、消费者依赖及权限、持久化、失败与性能要求。
-- **现有机制**：表示、转换、缓存、调度、适配、配置、扩展点及生命周期。
-- **待核实约束**：缺来源或消费者证据的历史假设，核实后决定去留。
+- **Necessary contracts**: results, invariants, public commitments, consumer dependencies, and permission, persistence, failure, and performance requirements.
+- **Existing mechanisms**: representations, conversions, caches, scheduling, adapters, configuration, extension points, and lifecycles.
+- **Constraints to verify**: historical assumptions lacking a source or consumer evidence; verify them, then keep or drop them.
 
-搜索可替换既有机制与分工；采用前核实其承载的契约与外部依赖。
+## Find mechanisms that can disappear together
 
-## 沿工作流寻找可一起消失的机制
+Follow real workflows from input to result, failure, and cleanup, together with callers, runtime configuration, persistence, and external boundaries, looking for opportunities such as:
 
-沿真实工作流从输入追到结果、失败和清理，结合调用方、运行配置、持久化与外部边界，寻找相关机会：
+- Extend the reach of one authoritative representation, removing intermediate models, mappings, duplicate validation, and syncing along with it.
+- Reassign state ownership, retiring mirrors, duplicate bookkeeping, invalidation, or compensation coordination.
+- Take back a complete operation, eliminating external ordering, pairing, cleanup, and manual maintenance or proof obligations.
+- Cover real use cases with complete primitives, retiring parallel entry points, old implementations, and their separate rules.
+- Narrow freedom that has no consumers and is not a public commitment, or move an upstream boundary so a class of downstream branches no longer arises.
 
-- 延长一份权威表示的使用范围，连带删除中间模型、映射、重复校验与同步。
-- 调整状态归属，退出镜像、重复记账、失效或补偿协调。
-- 收回完整操作，消除外部顺序、配对、清理和手工维护或证明义务。
-- 用完整原语覆盖真实用例，退出平行入口、旧实现及各自的规则。
-- 收窄无消费者且非公开承诺的自由度，或改变上游边界，使一类下游分支不再产生。
+Work back from the burden to its upstream cause; compare how much of the old mechanism actually retires against the coordination added. Before adopting a candidate, verify the contracts and external dependencies the replaced mechanism carries.
 
-从负担反推上游原因，比较原机制真正退出的范围与新增协调。
+## Evaluate candidates by net complexity
 
-## 把搜索与接受分开
+Keep searching separate from accepting. A candidate states which decision changes, which mechanisms disappear, and who carries the original guarantees, compared against the status quo or a local fix. Search aims at overall payoff; implementation advances in verifiable, reversible complete slices per the migration rules.
 
-候选说明改变什么决定、哪些机制消失、原保证由谁承接，并与现状或局部修正比较。搜索以整体收益为目标，实施按可验证、可回退的完整切片推进。
-
-## 用净复杂性决定是否采用
-
-比较核心实现、调用方、测试、配置、部署与迁移的总负担：少了哪些概念、状态、同步与失败路径，新增哪些分支、约定或依赖？
-
-采用后完成旧机制和临时双轨退出；净收益不足时保留现状。
+Compare the total burden across core implementation, callers, tests, configuration, deployment, and migration: which concepts, states, syncs, and failure paths go away, and which branches, conventions, or dependencies are added? Keep the status quo when the net payoff is insufficient; after adoption, retire the old mechanism and any temporary dual path per [retire old mechanisms](evolve-design-strategically.md#retire-old-mechanisms).

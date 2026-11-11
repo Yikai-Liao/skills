@@ -1,12 +1,12 @@
-# 错误处理边界
+# Error handling boundaries
 
-减少调用者必须处理的状态与位置，保留诊断信息和必要失败语义。按恢复信息的归属选择：
+Reduce the states and places callers must handle, while keeping diagnostic information and necessary failure semantics. Choose by who owns the recovery information:
 
-- 用户意图允许时，通过定义消除边界错误，如“确保对象不存在”。
-- 本层信息充分、不会重复危险副作用时就地恢复；否则向拥有事务或业务策略的调用者提供稳定、可区分的结果，让其决定如何处理。
-- 调用者处理方式相同时聚合内部失败，保留原因与追踪信息。
-- 不变量破坏、继续执行不安全时终止最小故障域；先判断持久状态和恢复能力。
+- When user intent allows, define errors out of existence, e.g. "ensure the object is absent" instead of "delete the object".
+- Recover locally when this layer has enough information and will not repeat a dangerous side effect; otherwise give the caller that owns the transaction or business policy a stable, distinguishable result and let it decide.
+- Aggregate internal failures when callers would handle them the same way, keeping causes and trace information.
+- When an invariant is broken and continuing is unsafe, terminate the smallest failure domain; first assess persistent state and recovery capability.
 
-超时只代表停止等待。区分永久拒绝、暂态失败、过载和结果未知。
+A timeout only means you stopped waiting. Distinguish permanent rejection, transient failure, overload, and unknown outcome.
 
-由一个主要责任方管理端到端 deadline、重试次数/时间上限及退避抖动。过载靠限流、背压或拒绝。幂等与副作用边界不明时查询/对账；具体协议见[系统边界与失败契约](design-system-boundaries.md)。
+One primary owner manages the end-to-end deadline, retry count and time limits, and backoff with jitter. Handle overload with rate limiting, backpressure, or rejection. When idempotency and side-effect boundaries are unclear, query or reconcile; for the concrete protocol see [system boundaries and failure contracts](design-system-boundaries.md#external-side-effects-and-unknown-outcomes).

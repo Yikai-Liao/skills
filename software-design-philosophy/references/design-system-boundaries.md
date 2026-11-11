@@ -1,51 +1,51 @@
-# 系统边界与失败契约
+# System boundaries and failure contracts
 
-结构建议须对应真实压力、工作流契约及状态/规则权威，比较新增失败成本与更简单候选。
+Structural recommendations must correspond to real pressure, workflow contracts, and state/rule authority, and compare the added failure cost against simpler candidates.
 
-## 从逻辑模块到部署单元
+## From logical modules to deployment units
 
-同进程、同一制品分角色启动和独立部署分别比较。自治收益须支付通信、版本和恢复成本。
+Compare same-process, one artifact started in different roles, and independent deployment separately. Autonomy gains must pay for communication, versioning, and recovery cost.
 
-流水线阶段应各有转换知识。管线拥有顺序、取消、背压和中间产物生命周期。
+Organize pipeline stages around transformation knowledge and necessary isolation boundaries, accounting for coordination cost. The pipeline owns ordering, cancellation, backpressure, and the lifecycle of intermediate artifacts.
 
-API 聚合跟随领域规则与客户端展示的各自权威。
+API aggregation follows whoever owns each part: domain rules stay with the domain authority, presentation shaping stays with the client side.
 
-## 异步任务与事件
+## Async tasks and events
 
-异步接口覆盖任务身份、幂等提交、状态查询/通知、取消、结果权限与保留期。受理必须可靠交接调度，明确受理、执行、结果可见与最终失败。
+Async interfaces cover task identity, idempotent submission, status query/notification, cancellation, result permissions, and retention. Admission must reliably hand over to scheduling, with accepted, executing, result-visible, and final-failure states made explicit.
 
-由唯一状态机裁决取消与完成，迟到消息不让终态倒退。按风险检查未调度、worker 崩溃、重复提交、取消竞态与离线恢复窗口。
+A single state machine decides cancellation and completion; late messages never move a terminal state backward. By risk, check for unscheduled tasks, worker crashes, duplicate submission, cancellation races, and offline recovery windows.
 
-队列和日志明确容量、积压/过期、毒消息及恢复责任。事件明确 schema 权威、兼容、分区顺序、保留期和重复/迟到/重放副作用。
+Queues and logs define capacity, backlog/expiry, poison messages, and recovery responsibility. Events define schema authority, compatibility, per-partition ordering, retention, and the side effects of duplicates, late arrivals, and replay.
 
-编排与协同按流程规则归属及失败恢复选择。跨事务补偿须接受中间状态，明确补偿失败、对账或人工恢复。补偿作为新操作执行。
+Choose orchestration or choreography by where process rules live and how failures recover. Cross-transaction compensation must accept intermediate states and define compensation failure, reconciliation, or manual recovery. Compensation runs as a new operation.
 
-## 外部副作用与未知结果
+## External side effects and unknown outcomes
 
-可重试外部写入在调用前持久记录业务操作 ID、幂等键、请求摘要和状态；恢复时查询或沿原身份重放。
+Before calling, retryable external writes durably record a business operation ID, idempotency key, request digest, and state; on recovery, query or replay under the original identity.
 
-区分确定成功、确定拒绝/未执行与结果未知。未知结果查询外部权威，无法判定则对账或人工处置；不能证明重放窗口仍在下游幂等保留期内时，停止自动重试。
+Distinguish confirmed success, confirmed rejection or non-execution, and an unknown outcome. For an unknown outcome, query the external authority; if it cannot be determined, reconcile or handle manually. Stop automatic retries when you cannot prove the replay window is still within the downstream idempotency retention period.
 
-本地终态与待发布结果可靠提交后才确认输入；发布可重复，消费者仍需幂等。
+Acknowledge input only after the local terminal state and the results to publish are reliably committed; publishing may repeat, so consumers must still be idempotent.
 
-## 多份状态
+## Multiple copies of state
 
-先定权威及写入规则，多个独立可写权威需显式协调。一致性落实到写后可见、会话不倒退、最大陈旧度和失败中间态。
+Settle the authority and write rules first; multiple independently writable authorities need explicit coordination. Ground consistency in read-after-write visibility, no session regression, maximum staleness, and failure intermediate states.
 
-| 候选 | 成立条件与契约 |
+| Candidate | Conditions and contract |
 |---|---|
-| 缓存/预计算 | 有复用、成本、配额或离线压力。明确填充/失效、陈旧度、并发 miss、冷启动和源站保护；离线副本还需冲突/同步 |
-| 读副本 | 按业务新鲜度路由；写后读回主库或等追平，计入延迟和回退负载 |
-| 分片 | 单节点容量或隔离确有约束；用真实键分布检查热点、局部性、跨片事务、路由权威及重分片恢复 |
-| CQRS/投影 | 读写形状确有差异，派生方向、落后检测和重建明确 |
-| 事件溯源/CDC | 历史重放或渐进同步有实际需要；前者以业务事件为权威，后者仍以原状态库为权威。历史 schema 和副作用重放须可控 |
+| Cache / precomputation | Real reuse, cost, quota, or offline pressure. Define fill/invalidation, staleness, concurrent misses, cold start, and origin protection; offline copies also need conflict handling and sync |
+| Read replicas | Route by business freshness; read-after-write goes to the primary or waits to catch up, accounting for latency and fallback load |
+| Sharding | Single-node capacity or isolation is a real constraint; use the real key distribution to check hotspots, locality, cross-shard transactions, routing authority, and resharding recovery |
+| CQRS / projections | Read and write shapes truly differ; derivation direction, lag detection, and rebuild are defined |
+| Event sourcing / CDC | Historical replay or incremental sync is actually needed; the former makes business events the authority, the latter keeps the original state store as authority. Historical schemas and side-effect replay must be controllable |
 
-调用者需遵守的版本、锁或租约属于契约，过期持有者必须被阻止写入。验证相关失效、落后、冲突与重建。
+Versions, locks, or leases that callers must respect are part of the contract; expired holders must be blocked from writing. Verify the relevant invalidation, lag, conflict, and rebuild.
 
-## 故障、容量与交付
+## Failure, capacity, and delivery
 
-重试分类与预算见[错误处理边界](reduce-exception-surface.md)，这里检查跨边界放大：
+Retry classification and budgets are in [error handling boundaries](reduce-exception-surface.md); here, check cross-boundary amplification:
 
-- 队列有界且能向生产者背压，资源隔离覆盖真实共享资源。
-- 可用性取决于故障域、共享数据库/身份/控制面与切换证据，切换须阻止旧主写入。
-- 发布考虑新旧协议/schema 共存、容量、流量证据及撤回速度；影子流量隔离真实副作用。
+- Queues are bounded and can apply backpressure to producers; resource isolation covers the resources actually shared.
+- Availability depends on failure domains, shared databases/identity/control planes, and cutover evidence; cutover must block writes from the old primary.
+- Releases account for old/new protocol and schema coexistence, capacity, traffic evidence, and rollback speed; shadow traffic isolates real side effects.

@@ -1,4 +1,4 @@
 interface:
-  display_name: "软件设计哲学"
-  short_description: "从真实用例设计模块、状态与接口，在编码和重构中减少整体机制负担"
-  default_prompt: "使用 $software-design-philosophy 处理当前设计、审计或简化任务。"
+  display_name: "Software Design Philosophy"
+  short_description: "Design modules, state, and interfaces from real use cases; cut whole-system mechanism burden while coding and refactoring"
+  default_prompt: "Use $software-design-philosophy for the current design, audit, or simplification task."

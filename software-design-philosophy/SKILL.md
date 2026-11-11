@@ -1,43 +1,42 @@
 ---
 name: software-design-philosophy
 description: >-
-  新建或调整模块、数据表示、状态归属、接口与调用协议，审计架构或寻找整体简化机会时使用。覆盖编码中的设计选择与既有系统演化。不用于纯语法或库用法、结构与契约已定的机械实现、局部表达整理、生产事故止血或单纯性能排查；性能影响表示或边界取舍时适用。
+  Use for structural decisions within or across modules: designing modules or interfaces; choosing data representations, state ownership, responsibility, invariant boundaries, call protocols, or error contracts; auditing architecture; or searching for whole-system simplifications. Also use when a minimal change would add a special case, flag parameter, parallel entry point, or second interpretation of a rule. Not for mechanical implementation with structure and contracts already settled, pure syntax or library usage, local tidying, incident mitigation, or performance troubleshooting alone; applies when performance shapes a representation or boundary choice.
 ---
 
-# 软件设计哲学
+# Software Design Philosophy
 
-以《软件设计的哲学》的复杂性、信息隐藏和深模块视角决定软件结构与机制，从第一版编码到既有系统简化都适用。
+Decide software structure and mechanisms through the lens of *A Philosophy of Software Design*: complexity, information hiding, and deep modules. Applies from the first version of the code through simplifying an existing system.
 
-## 共同判断
+## Shared judgments
 
-- 从真实修改或调用任务判断**变更放大、认知负荷和未知依赖**，按任务频率与失败影响权衡。认知负荷与未知依赖按只凭仓库中可达的代码、契约与文档工作的维护者计算；只存在于作者会话或记忆中的约定计为未知依赖。
-- **圈复杂度 > 10 时触发审查**，结合覆盖率和 CRAP 确定重点，再按概念完整性、信息隐藏、不变量、调用负担和可读性判断保留、拆分或重组。
-- 以必要行为和历史回归为约束控制测试维护成本；已有保护充分时允许不新增。
-- 从真实用例辨认概念、基数与不变量，再决定表示和责任；区分身份、实例、当前事实与历史快照。
-- **深模块**用较低的接口负担提供较强能力；**信息泄露**是同一决定需要多处独立解释并保持一致。
-- 新增格式解析与拼接、索引表、阈值或标识规则的使用方前，查明这份知识现有的解释者与权威，并入权威或写明保留理由；review 按全部使用方判断，并列出新增使用方及其权威。
-- 引入抽象、状态或协议前，与直接实现及项目、库的已有能力比较：隐藏哪些知识、维护哪些不变量、减少哪些调用义务？扩展接缝服务于有证据且日后昂贵难逆的变化。
-- 让有信息维护不变量的一方承担完整操作，减少外部配对、装配和收尾。保留调用者独有的正确性、权限、持久化与生命周期选择；常见逃逸先查核心能力缺口。
+- Judge **change amplification, cognitive load, and unknown unknowns** from real modification or call tasks, weighted by task frequency and failure impact. Measure cognitive load and unknown dependencies for a maintainer who works only from the code, contracts, and documents reachable in the repository; a convention that exists only in the author's session or memory counts as an unknown dependency.
+- **Cyclomatic complexity > 10 triggers a review, not a required change.** Use coverage and CRAP to set priorities, then decide whether to keep, split, or reorganize based on conceptual integrity, information hiding, invariants, caller burden, and readability.
+- Bound test maintenance cost by required behavior and past regressions; when existing protection is sufficient, adding no tests is acceptable.
+- Identify concepts, cardinality, and invariants from real use cases before choosing representations and responsibilities; distinguish identity, instance, current fact, and historical snapshot.
+- A **deep module** delivers strong capability for a low interface burden. **Information leakage** is one decision that must be interpreted independently in several places and kept consistent.
+- Before adding a new consumer of format parsing or building, a lookup table, a threshold, or an identifier rule, find that knowledge's existing interpreters and its authority; route through the authority, or keep a copy under [retained copies](references/design-module-boundaries.md#retained-copies). Reviews judge against all consumers and list the new consumers with their authority.
+- Before introducing an abstraction, state, or protocol, compare it with a direct implementation and with what the project and its libraries already provide: which knowledge does it hide, which invariants does it maintain, which caller obligations does it remove? Extension seams serve changes that have evidence and would be expensive or hard to reverse later.
+- Give the complete operation to the party with the information to maintain the invariant, reducing external pairing, assembly, and cleanup. Leave callers the correctness, permission, persistence, and lifecycle choices that only they can make; when callers routinely take an escape hatch, first look for a gap in the core capability.
 
-## 按问题读取
+## Read by problem
 
-| 当前问题 | 参考 |
+| Current problem | Read |
 |---|---|
-| 审计仓库或子系统，区分架构问题与局部缺陷 | [架构审计](references/audit-software-architecture.md) |
-| 圈复杂度、覆盖率与结构重复 | [度量审查](references/audit-software-architecture.md#度量审查) |
-| 验证缺口、测试准入、维护成本与停止条件 | [测试保护与维护成本](references/design-behavioral-tests.md) |
-| 概念、表示、状态权威、职责组合与拆分 | [模块与知识边界](references/design-module-boundaries.md) |
-| 完整操作、调用负担、内部组织与扩展 | [深模块与接口](references/design-deep-modules.md) |
-| 正常接口已定，整理异常与恢复责任 | [错误处理边界](references/reduce-exception-surface.md) |
-| 整体简化，或编码中出现重复表示、转换、协调与平行实现 | [全局简化搜索](references/search-global-simplification.md) |
-| 重要结构候选、期限与兼容约束下的演化 | [方案比较与演化](references/evolve-design-strategically.md) |
-| 工作量、驻留内存、布局、批量能力与高级接口 | [性能约束下的设计](references/design-measured-critical-paths.md) |
-| 跨进程、异步任务、复制状态与恢复契约 | [系统边界与失败契约](references/design-system-boundaries.md) |
+| Auditing a repository or subsystem; separating architectural problems from local defects; cyclomatic complexity, coverage, and structural duplication | [Architecture audit](references/audit-software-architecture.md) |
+| Verification gaps, test admission, maintenance cost, stopping; dedicated test / agent debugging surfaces | [Test protection and maintenance cost](references/design-behavioral-tests.md) |
+| Concepts, representation, state authority, combining or splitting responsibilities, retained copies of a rule | [Module and knowledge boundaries](references/design-module-boundaries.md) |
+| Complete operations, caller burden, internal organization, extension | [Deep modules and interfaces](references/design-deep-modules.md) |
+| Normal interface settled; organizing errors and recovery responsibility | [Error handling boundaries](references/reduce-exception-surface.md) |
+| Whole-system simplification, or repeated representations, conversions, coordination, or parallel implementations found while coding | [Global simplification search](references/search-global-simplification.md) |
+| Structural candidates for important decisions; evolution under deadlines and compatibility constraints | [Comparing and evolving designs](references/evolve-design-strategically.md) |
+| Work volume, resident memory, layout, batch capability, advanced entry points | [Design under performance constraints](references/design-measured-critical-paths.md) |
+| Cross-process work, async tasks, replicated state, recovery contracts | [System boundaries and failure contracts](references/design-system-boundaries.md) |
 
-## 编码与简化
+## Coding and simplification
 
-设计判断随实现使用。沿受影响的完整操作调整责任、表示与协议，接着清理失去用途的旧机制；结构或契约变化时重评相关部分，将范围内的调整做完整。
+Apply design judgment while implementing. When implementing a new design or a requested refactor, carry responsibilities, representations, and protocols through the whole affected operation, then remove old mechanisms that lost their purpose. When structure or contracts change, re-evaluate the affected parts and finish the in-scope adjustments.
 
-- 新模块或公开接口先写接口注释：隐藏的决定、调用者须知的契约与失败语义。注释无法简短写清，或须说明内部步骤才能用对时，先调整设计再实现。
-- 新模块或公开接口至少构思一种改变权威、表示或调用协议的替代，用同一调用任务比较后再定；私有实现细节不要求。
-- 修改既有代码时，若最小改动要新增特例分支、标志参数、平行入口或同一规则的第二份解释，先问这项需求一开始就存在时结构会怎样。差距明显时在本任务内或先行的独立重构中调整；暂不调整的写明理由，按[累积债务](references/audit-software-architecture.md#建议与报告)登记。外部协议差异留在适配边缘即可。
+- For a new module or public interface, write the interface comment first: the decisions it hides, the contract callers must know, and the failure semantics. If the comment cannot be written briefly, or using the interface correctly requires describing internal steps, adjust the design before implementing.
+- For a new module or public interface, sketch at least one alternative that changes the authority, representation, or call protocol, and compare both on the same call task before deciding. Private implementation details are exempt.
+- When modifying existing code, if the minimal change would add a special-case branch, a flag parameter, a parallel entry point, or a second interpretation of the same rule, first ask what the structure would look like had this requirement existed from the start. If the comparison reveals a meaningful structural gap, refactor within this task only when the user asked for a refactor; otherwise stay within the requested work, register the gap as [cumulative debt](references/design-module-boundaries.md#cumulative-debt), and propose the refactor. Differences in external protocols can stay at the adapter edge.

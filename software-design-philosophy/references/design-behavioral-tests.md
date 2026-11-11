@@ -1,33 +1,37 @@
-# 测试保护与维护成本
+# Test protection and maintenance cost
 
-围绕本次变化及实际影响选择验证，不默认用 TDD 生成架构。
+Choose verification around this change and its actual impact; do not use TDD by default to generate architecture.
 
-## 先确认验证缺口
+## Confirm the verification gap first
 
-先检查已有断言；保护充分的纯重构运行相关检查即可。有缺口时优先补强已有断言或参数表，难以清楚承接时再新增测试；准备过程有独立需要再增 fixture。
+Check existing assertions first; a pure refactor that is already well protected only needs the relevant checks run. When there is a gap, prefer strengthening existing assertions or parameter tables; add a new test only when the gap cannot be clearly absorbed there, and add fixtures only when setup has an independent need.
 
-本轮新增或改写测试须有独立价值：真实缺陷回归、契约或消费者依赖、可能产生不同错误的边界或状态转换、已有检查漏掉的合理故障，或以更低成本承接原保证。
+Each test added or rewritten in this round needs independent value: a regression for a real defect, a contract or consumer dependency, a boundary or state transition that can fail differently, a plausible fault existing checks miss, or carrying an existing guarantee at lower cost.
 
-探索可广泛采样，永久入库另按准入筛选；真实缺陷保留适当回归，优先最小复现或紧凑性质。
+Exploration may sample broadly; permanent tests pass admission separately. Keep a proportionate regression for each real defect, preferring a minimal reproduction or a compact property.
 
-## 选择验证方式
+## Choose the verification method
 
-断言使用独立预期，检查行为与不变量；参考模型保持简单独立。
+Assertions use independent expected values and check behavior and invariants; keep reference models simple and independent.
 
-接缝放在真实不可控或昂贵依赖处，优先可控快速的真实实现。
+Place seams at dependencies that are genuinely uncontrollable or expensive, preferring controllable, fast real implementations.
 
-独立维度分别验证并保留连接检查，有交互风险时保留针对性组合。
+Verify independent dimensions separately and keep a connecting check; keep targeted combinations where interaction risk exists.
 
-## 可选变异检查
+## Dedicated test / agent debugging surface
 
-按未解风险、工具适配与运行成本选用定向变异；已有断言、边界或差分证据充分时可不用。采用时区分行为缺口、等价或低价值变异、未覆盖与执行异常，按已确认的行为缺口补强验证。
+Personal preference: simple programs keep the existing test entry points; for complex systems or hard-to-reproduce workflows, ask the user whether to consider a dedicated test / agent debugging surface.
 
-## 精简与成本复核
+The interface expresses operations as typed schemas; retryable operations have explicit identity and idempotency. For debugging surfaces that span environments or carry privileged capabilities, use short-lived credentials scoped to the environment and capability, with auditing and automatic revocation; keep production unreachable through separate deployment or environment gates, and test the rejection path.
 
-成本包括测试、fixture、mock、参考实现、生成器、辅助代码、快照和数据的维护，以及运行、失败定位。引入大量准备或新框架、超出项目预算、运行或定位成本显著上升时，复核重复保护、准备过程与测试层级。
+Provide a repeatable starting point and the state observation needed; drive target transitions through the real public operations.
 
-按行为目的合并或删除，承接原保证，运行相关检查。
+## Optional mutation checks
 
-## 停止
+Use targeted mutation according to unresolved risk, tool fit, and runtime cost; skip it when existing assertions, boundary, or differential evidence suffice. When used, separate behavior gaps, equivalent or low-value mutants, uncovered code, and execution errors, and strengthen verification only for confirmed behavior gaps.
 
-交付前按上述规则精简本轮测试一次。必要行为已验证、真实缺陷有适当回归、必要检查通过后，停止补测。
+## Trim and stop
+
+Cost covers maintaining tests, fixtures, mocks, reference implementations, generators, helpers, snapshots, and data, plus running them and locating failures. When large setup or a new framework is introduced, the project's budget is exceeded, or run or diagnosis cost rises noticeably, review duplicate protection, setup, and test level. Merge or delete by behavioral purpose, carry over the original guarantees, and run the relevant checks.
+
+When this round added or rewrote tests, trim them once by these rules before delivery. Stop adding tests once required behavior is verified, real defects have proportionate regressions, and required checks pass.

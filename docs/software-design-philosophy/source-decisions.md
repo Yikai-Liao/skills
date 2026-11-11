@@ -1,153 +1,119 @@
-# 来源与裁决
+# Sources and decisions
 
-仓库维护记录，不随 skill 安装，也不是运行时前置流程。以下依据是本仓库重构前提交 `1f3d992` 的来源裁决和测试记录；该次重构未重新核验原书、外部材料快照或历史测试原始执行日志；后续定向研究的核查范围见文末增补。原有逐章书摘、问答全文和旧测试报告可从 Git 历史恢复。
+Maintenance record; not installed with the skill and not a runtime step. Runtime rules live only in [SKILL.md](../../software-design-philosophy/SKILL.md) and its references; this page records where they came from and why. Older book notes, Q&A transcripts, full research write-ups, and earlier test reports are in Git history (the pre-refactor source decisions are at `1f3d992`).
 
-## 测试意图复核后的直接确认
+## Source roles
 
-本轮用户直接确认以下规则，优先于旧整理文档及作者从中推导的执行政策：
+- John Ousterhout, *A Philosophy of Software Design* (2nd ed.): the main lens for complexity, information hiding, deep modules, comparing candidates, and performance judgment.
+- Robert C. Martin, *Clean Architecture* and related work: axes of change, dependency direction, system boundaries, lifecycle responsibility. Layers, use cases, or technology labels are not boundary conclusions by themselves.
+- A user-provided discussion of Linux filesystem design: shared resource invariants, complete workflows, advanced capabilities that return to shared governance.
+- `ByteByteGoHq/system-design-101` at `b28380a4`: only judgments about boundaries, state, and failure semantics were kept; no company cases, product catalogs, capacity numbers, or upstream figures.
 
-- 简单小工具、小程序不专门考虑独立测试 / Agent 调试面；复杂度上来后，询问用户是否考虑。询问不等于创建授权。
-- 参考读取按相关性与成本评价，不仅因多读某份文件判任务失败；用户明确的交付范围仍须遵守。
-- “怎样修复并逐步迁移”是咨询请求，完整建议可以交付，不自行升级为实施。
-- 先从用户已有目标和动机推导约束，不让用户替 Agent 推理；仍不确定时快速给出少数关键场景的条件结论，不穷举，只对影响决定且无法可靠推导的信息请求补充或确认。
+Sources do not override explicit user requirements.
 
-历史文件 C08 的“答：”是仓库整理记录，不是本轮取得的原始对话证据；不能据此保证逐字准确，也不能将相邻的“补充裁决”自动归为用户原话。上面的调试政策已有本轮直接答复，不再依赖这项归因。
+## User decisions
 
-以下核心约束精简及研究段落记录此前阶段；本轮用例变更和实际重测范围见[测试记录](../../tests/software-design-philosophy/test-results.md)。
+These come from the user directly and take precedence over earlier summaries or the maintainer's own inferences. Do not remove them merely because a model might infer them.
 
-## 核心约束精简
+- Simple tools and small programs do not get a dedicated test / agent debugging surface; once complexity rises, ask the user. Asking is not authorization to build one.
+- Judge reference reads by relevance and cost; reading an extra file is not a failure. Explicit delivery scope still applies.
+- "How do I fix and migrate this?" is a consultation: a full recommendation is a valid delivery; do not escalate to implementation.
+- Derive constraints from the user's stated goals first. When still unsure, give conditional conclusions for a few key scenarios and ask only about information that changes the decision and cannot be derived.
+- Performance-relevant structure is in scope for an architecture audit of a high-performance library, including measurement, baseline, and optimization recommendations; recommendations do not authorize implementation.
+- Not every project needs mutation testing; choose by risk, tool fit, and runtime cost.
+- No defensive additions in the skill: no reverse inferences, imagined rebuttals, exception lectures, extra proof or reporting duties, or repeated acceptance steps.
+- `software-design-philosophy` and `clarity` may be installed independently; neither references the other at runtime.
+- Cyclomatic complexity > 10 triggers this skill's review, combined with coverage and other design principles; it is a review condition, not a mandate to split or rewrite. It lives in the body, not the description: a model that has not loaded the skill does not measure CC, so it cannot trigger loading.
+- During ordinary coding, strategic modification compares the from-the-start structure; when that comparison reveals a meaningful gap, register it as cumulative debt and propose the refactor. Refactoring existing structure happens in-task only when requested; new designs still use the comment-first and alternative-design rules.
 
-本次以 `0037221` 为基线，按内容是否改变设计判断取舍：删除重复定义、教学步骤、示例铺陈及重复路由；保留个人偏好、易误用的边界与必要反例。未重新研究外部来源，也未新增设计政策。
+## Personal preferences and where they live
 
-入口维护共同判断和任务范围，七份专题保留独立职责。架构审计仍自带发现问题的判据，不要求先猜问题再加载；其简短判据与专题中的具体契约不是同义重复。错误恢复、生命周期、演化和性能不因压缩而合成一项。
-
-独立 review 后补回错误结果可区分性及演化中的调用者知识负担检查。随后用户纠正了评估者对性能审计范围的误解：高性能库的架构审计应检查性能相关结构，可以提出测量、基线和优化建议。已撤销“不得另列基准建设建议”的过度限制和相关失败判分；保留证据强度与实施授权边界。未提供 profile 的题目只验证授权切换，另用带成本材料的正反例及缺少归因数据的场景检验方案选择，不靠追加性能教程修补错误评分。
-
-下文记载先前重构及研究的来源裁决，“本轮”等表述属于当时记录，不是本次效果证据。当前执行规则以运行时文件为准；本次范围与验证见[验证记录](../../tests/software-design-philosophy/test-results.md#核心约束精简基线-0037221)。
-
-## 来源角色
-
-- John Ousterhout《软件设计的哲学（第二版）》：复杂性、信息隐藏、深模块、候选比较和性能判断的主要视角。
-- Robert C. Martin《架构整洁之道》与《架构设计的本质》：补充变化轴、依赖方向、系统边界与生命周期责任；不把层级、用例或技术标签当边界结论。
-- 用户提供的 Linux 文件系统设计讨论：补充共同资源不变量、完整工作流与可重新汇入的高级能力。
-- `ByteByteGoHq/system-design-101`：旧记录使用快照 `b28380a4710c5ec9638ec037d4168e288f334cba` 提取结构候选。现仅保留与边界、状态及失败语义有关的判断，不保留公司案例、产品/协议百科、容量数字或上游图文。
-
-这些来源是设计视角与历史依据，不覆盖当前用户明确要求。具体有效规则只在下列运行时文件维护；本页不再复制一套执行摘要或要求重新裁决已确定的偏好。
-
-## 个人取舍的处理
-
-| 旧记录 | 保留的目的 / 本轮处理 | 当前权威位置 |
+| Old record | Kept intent | Current location |
 |---|---|---|
-| C01 测试与设计 | 保留不默认用 TDD 生成架构、按风险验证；删除每步完成标准与统一测试配额 | [测试保护与维护成本](../../software-design-philosophy/references/design-behavioral-tests.md) |
-| C02 有限接口 | 保留共同不变量、完整工作流、长尾归属与逃逸重新汇入；合并重复表格 | [深模块与接口](../../software-design-philosophy/references/design-deep-modules.md) |
-| C03 未来选项 | 保留当前简洁性和有证据、难逆变化的窄接缝 | [SKILL.md](../../software-design-philosophy/SKILL.md) |
-| C04/C06 用例与指标 | 保留知识/变化证据，不按用例、类数或局部依赖指标自动重构 | [模块与知识边界](../../software-design-philosophy/references/design-module-boundaries.md) |
-| C05 重要性与性能 | 保留先查接口缺口、必要性能入口与首版主流程优先；性能背景不扩展用户目标 | [性能约束下的设计](../../software-design-philosophy/references/design-measured-critical-paths.md)及入口的任务范围规则 |
-| C07 实现继承 | 保留个人明确排斥多基类实现继承的取舍，不推广为语言事实 | [模块与知识边界](../../software-design-philosophy/references/design-module-boundaries.md) |
-| C08 调试面 | 保留易于 Agent 使用及生产隔离；本轮直接确认简单程序不用考虑、复杂度上来后询问，替代此前“未明确要求就不询问”的收窄 | [深模块与接口](../../software-design-philosophy/references/design-deep-modules.md) |
-| C09 架构分类 | 保留相对评价范围、结构机制与局部修复的区别；删除强制双轨等级与报告模板 | [架构审计](../../software-design-philosophy/references/audit-software-architecture.md) |
-| C10–C12 模式补充 | 保留压力、权威、失败和代价；将四类百科合并为条件性系统契约，不保留全量加载要求 | [系统边界与失败契约](../../software-design-philosophy/references/design-system-boundaries.md) |
+| C01 tests and design | Do not generate architecture by TDD by default; verify by risk | [Test protection](../../software-design-philosophy/references/design-behavioral-tests.md) |
+| C02 limited interfaces | Shared invariants, complete workflows, long-tail ownership, escape hatches that return to shared governance | [Deep modules](../../software-design-philosophy/references/design-deep-modules.md) |
+| C03 future options | Current simplicity; narrow seams only for evidenced, hard-to-reverse change | [SKILL.md](../../software-design-philosophy/SKILL.md) |
+| C04/C06 use cases and metrics | Knowledge and change evidence; no automatic refactoring by use-case count, class count, or local dependency metrics | [Module boundaries](../../software-design-philosophy/references/design-module-boundaries.md) |
+| C05 importance and performance | Check interface gaps first; necessary performance entry points; main flow first in v1; performance context does not widen the user's goal | [Performance](../../software-design-philosophy/references/design-measured-critical-paths.md) |
+| C07 implementation inheritance | The user rejects multiple-base implementation inheritance; a preference, not a language fact | [Module boundaries](../../software-design-philosophy/references/design-module-boundaries.md) |
+| C08 debugging surface | Agent-friendly, production-isolated; ask only once complexity rises (see user decisions) | [Test protection](../../software-design-philosophy/references/design-behavioral-tests.md) |
+| C09 architecture classification | Relative scope; structural mechanism versus local fix; no forced dual severity scale or report template | [Architecture audit](../../software-design-philosophy/references/audit-software-architecture.md) |
+| C10–C12 pattern additions | Pressure, authority, failure, and cost as conditional system contracts; no full-catalog loading | [System boundaries](../../software-design-philosophy/references/design-system-boundaries.md) |
 
-这些个人偏好有仓库历史记录，不能仅因模型可能自行推导而删除；但整理者的解释不等于用户直接授权。C08 的当前询问范围以上述本轮直接确认为准，不沿用此前仅凭减少流程噪声作出的收窄。
+## Failures the structure protects against
 
-## 历史失败保留到哪里
+Earlier test records found three behavioral errors: using severity in place of architectural category, letting performance context take over the delivery, and mutually exclusive methods causing omissions. They are covered by the audit admission criterion, the entry's scope rules, and on-demand combined reading. An older "load all 11 methods and four pattern families" fix for a recall blind spot was replaced by putting discovery criteria into the compact audit reference; the recall of that structure still needs behavioral evaluation.
 
-旧测试记录指出三类行为错误：用严重度替代架构类别、让性能背景接管交付、方法互斥导致遗漏。它们分别由审计准入、入口任务范围和按需联合保护。
+## Revision log
 
-旧版本还记录“先发现问题再加载判据”的召回盲区，后续用全读 11 个方法及四个模式家族修补。本轮把具体发现问题、证据与反证放入紧凑的审计 reference，再按需进入设计细节，保留发现能力的目的，删除全量阅读机制。新结构的实际召回效果仍需行为评估，文件校验不能证明它。
+### Core compression (baseline `0037221`)
 
-## 2026-09-08 研究增补
+Removed duplicate definitions, teaching steps, example padding, and duplicate routing; kept personal preferences, easily misused boundaries, and necessary counterexamples. No new research or policy. Review restored distinguishable error results and the check that evolution reduces caller knowledge.
 
-[研究报告](research-2026-09-08.md) 记录经典来源、GPT-5.6/Astra 官方指南、五篇精确版本 arXiv 论文及工程案例的证据与局限。当前来源不覆盖用户明确要求，不把早期案例或旧模型实验提升为普遍规则。
+### 2026-09-08 research additions
 
-- 隐式消费者依赖和测试替身保真度补入演化方法。
-- 权威知识的可达性补入模块方法与审计判据。
-- 独立验收依据、可核对小例子、起始场景与真实操作的区别补入接口方法。
-- 协作写入责任与组合验证补入演化方法；迟到结果和验证停止尺度补入入口。
+See [research summary](research-2026-09-08.md). Added implicit consumer dependencies and test-double fidelity (evolution), reachability of authoritative knowledge (module boundaries, audit), independent acceptance evidence and starting scenarios versus real operations (interfaces), and collaborative write ownership with composition checks (evolution). Kept task-oriented references with no AI-specific branch; did not adopt whole-repo regeneration, fixed role counts, or an optimal instruction length.
 
-维持七份任务导向 references；模型升级后的指令消融属于仓库维护，不单独增加 AI 使用分支。整库重新生成、固定角色数、普适最优指令长度均未作为默认规则采纳。[本轮验证及限制](../../tests/software-design-philosophy/research-validation-2026-09-08.md) 单独记录，不改写前次验证结果。
+### 2026-10-10 deep modules and internal stages
 
-## 2026-10-10：深模块与内部阶段
+Module depth describes public capability versus interface burden; it does not require one long function. Internal stages may hide detail but must not cut through a state, transaction, lock, or resource-recovery invariant. Qwik and Ferret agent guides (pinned commits) supported judging extraction from call sites and reading the full implementation scope; only the boundary judgment was adopted.
 
-补充边界：模块深度描述公共能力与接口负担，不要求内部只有一个长函数。单用多步阶段可以隐藏细节，但不能切散同一状态、事务、锁或资源恢复不变量。沿用现有模块知识与责任视角；没有新增局部 clean-code 流程或扩大架构触发范围。
+### 2026-10-30 ub-mode integration
 
-本次研究读取的 Qwik [固定控制流指导](https://github.com/QwikDev/qwik/blob/936b9ae59f85890880b1a9cbb0908d82f7a73682/AGENTS.md#L227-L255) 支持从调用处而非函数数量判断提取，Ferret [固定维护指导](https://github.com/MontFerret/ferret/blob/35693eb380d10bd80de76208b95e7598307e34d6/AGENTS.md#L90-L156) 支持完整实现范围的阅读。这里只采用边界判断，不照搬项目流程、固定数字或 helper 排序，也不把它们当作对本技能的效果实验。
+Source: [`ub-mode` at 57a8bdd](https://github.com/unclebob/ub-mode/blob/57a8bdd28e45ed41900ace0bafa2ff76dd9ed70f/SKILL.md), with [`crapper`](https://github.com/unclebob/crapper/blob/6fd92c4c9bcc56efb64a2f8743d5a2993bcfd42d/README.md), [`dryer`](https://github.com/unclebob/dryer/blob/66ff6d21a42c04afcad89c78a80066176d1294b0/README.md), [`mutator`](https://github.com/unclebob/mutator/blob/a5a0cb803b66e0cdb8bf471b3b08af701d424a41/README.md), and [PIT concepts](https://pitest.org/quickstart/basic_concepts/).
 
-用户明确两个技能可能独立安装。运行时说明各自完整，不引用另一技能的相对路径，不要求为回答内部阶段问题先安装 clarity；联合安装时，薄 helper 内联与完整阶段提取仍以各自实际责任判断。相关来源与测试材料留在安装目录之外。新增三条回归及本轮验证限制见 [验证记录](../../tests/clarity/readability-validation-2026-10-10.md)，历史结果保持原样。
-
-## 2026-10-30：ub-mode 规则整合
-
-来源为 [`ub-mode` 固定提交 57a8bdd](https://github.com/unclebob/ub-mode/blob/57a8bdd28e45ed41900ace0bafa2ff76dd9ed70f/SKILL.md)。用户明确要求将调研结果落实到技能，并确定指标取向：圈复杂度超过 10 时触发审核，保持软约束，纳入覆盖率，依据其他设计原则综合判断。规则直接并入原有入口与专题，来源和验证记录留在维护目录。
-
-| 采纳内容 | 运行时位置与取舍 |
+| Adopted | Runtime location and trade-off |
 |---|---|
-| CC、覆盖率与 CRAP | 入口规定 `CC > 10` 触发审查；审计解释公式、口径和未知数据，按真实任务判断保留或调整 |
-| 结构重复与验证有效性 | 审计用相似度寻找共同知识，演化方法按风险采用定向变异检查；保留独立语义、等价变异与执行异常的区别 |
-| 有效表示、领域词汇与类型约束 | 模块方法连接入口校验与内部约束，保留可变权限及新信任边界检查，术语和类型绕过问题就近核对契约 |
-| 共享状态与共同前提 | 模块方法先检查共享是否必要，比较有效同步机制；连续修补失败时复核前提与责任，有证据再改变结构 |
-| 判断与效果分离 | 深模块内部阶段可分离确定计算与效果，保持状态读取、判断、提交所需的原子性 |
-| 样本先行的批量自动化 | 演化方法先核对代表性完整切片，再扩大自动转换，保留独立验收依据与失败、重跑语义 |
+| CC, coverage, CRAP | Entry triggers review at `CC > 10`; audit explains the formula and counting rules. `crapper` records missing coverage as 0%, so the runtime requires separating failed measurement from real coverage. At 100% coverage `CRAP = CC`, so no uniform `CRAP < 10` cutoff |
+| Structural duplication, verification effectiveness | Audit uses similarity to find shared knowledge; targeted mutation by risk, separating equivalent mutants and execution errors |
+| Valid representation, domain vocabulary, type constraints | Module boundaries connect boundary validation with internal constraints |
+| Shared state, shared premises | Check whether sharing is needed; re-examine premises when successive patches fail |
+| Separating decisions from effects | Deep-module stages may separate deterministic computation from effects while keeping required atomicity |
+| Sample-first bulk automation | Verify one complete slice before scaling an automated transformation |
 
-CRAP 公式与语言统计口径据 [`crapper` 6fd92c4](https://github.com/unclebob/crapper/blob/6fd92c4c9bcc56efb64a2f8743d5a2993bcfd42d/README.md)。其说明把缺工具或覆盖执行失败计为 0% 后继续输出，运行时据此要求先区分测量失败与实际覆盖。覆盖率为 100% 时仍有 `CRAP = CC`，保留综合审查，不采用统一的 `CRAP < 10` 淘汰线。
+Upstream single-writer, pure-function, and auto-tooling requirements became conditional judgments.
 
-结构相似度的候选语义据 [`dryer` 66ff6d2](https://github.com/unclebob/dryer/blob/66ff6d21a42c04afcad89c78a80066176d1294b0/README.md)。变异结果解释据 [`mutator` a5a0cb8](https://github.com/unclebob/mutator/blob/a5a0cb803b66e0cdb8bf471b3b08af701d424a41/README.md) 与 [PIT 官方说明](https://pitest.org/quickstart/basic_concepts/)。这些工具作为证据来源，运行时优先复用项目已有报告和能力。
+### 2026-10-30 test protection and maintenance cost
 
-上游单写入者、纯函数及自动造工具的要求均按当前契约改为条件判断；逐动作日志、worktree 和 Git 操作由任务与项目要求承担。独立评估建议保留现有专题结构；已缩短默认启动提示，并删除高级入口归属的同页复述，成立条件和公共治理约束保留。
+Added an on-demand test reference covering admission of new permanent tests, support-code cost review, and stopping. Sources, each adopted narrowly:
 
-测试素材更新为 `0.12.0`：原 66 条保持，新增 13 条边界用例。实际验证范围与结论见[测试记录](../../tests/software-design-philosophy/test-results.md)。
-
-## 2026-10-30：测试保护与维护成本
-
-用户提供测试膨胀、套件最小化及探索验证的材料，要求补齐本 skill 的测试判断。现有规则已将 CC/CRAP 用于综合审查、将变异检查限制在受影响范围；缺少的是新增永久测试的准入、支持代码的成本复核与停止条件。本次目标为保护必要行为和历史回归，同时降低长期维护成本。
-
-核查并采用以下一手材料的有限判断：
-
-| 来源 | 采用的依据与边界 |
+| Source | Adopted |
 |---|---|
-| [Hypothesis 官方 agent 命令，固定提交 3fc38f1](https://github.com/HypothesisWorks/hypothesis/blob/3fc38f1d6a6b1752bf5fad61d44ee79d31d35406/.claude/commands/hypothesis.md) | 选择少量有代码库证据、明显改善检错或表达的性质；没有值得测试的性质可以停止；参考模型避免复制被测逻辑。不引入 Hypothesis 依赖或照搬整套命令流程 |
-| [Google：Practical Mutation Testing at Scale，2021](https://homes.cs.washington.edu/~rjust/publ/practical_mutation_testing_tse_2021.pdf) | 增量分析并过滤低价值变异；内部容量选择的可杀死变异未必值得永久测试。不把其变异报告预算当作测试代码配额 |
-| [Kent Beck：Composable Tests，2025](https://newsletter.kentbeck.com/p/composable-tests) | 组合已确认独立维度的测试，并删去重复保护时保留故障定位；独立性须有设计依据，不能为缩减组合而假定 |
-| [Meta：Just-in-Time Catching Test Generation，2601.22832v1](https://arxiv.org/html/2601.22832v1) | 区分为当前变更找错与长期防回归的目标。探索产物另经永久准入是本次工程取舍，论文不支持默认删除所有探索测试，也未证明套件最小化已解决 |
+| [Hypothesis agent command, 3fc38f1](https://github.com/HypothesisWorks/hypothesis/blob/3fc38f1d6a6b1752bf5fad61d44ee79d31d35406/.claude/commands/hypothesis.md) | Few evidence-backed properties; stopping is fine when none is worth testing; reference models must not copy the logic under test |
+| [Google, Practical Mutation Testing at Scale (2021)](https://homes.cs.washington.edu/~rjust/publ/practical_mutation_testing_tse_2021.pdf) | Incremental analysis, filtering low-value mutants; a killable mutant is not automatically worth a permanent test |
+| [Kent Beck, Composable Tests (2025)](https://newsletter.kentbeck.com/p/composable-tests) | Compose tests over dimensions shown to be independent; keep failure localization when removing duplicate protection |
+| [Meta, Just-in-Time Catching Test Generation (2601.22832v1)](https://arxiv.org/html/2601.22832v1) | Separate finding bugs in this change from long-term regression protection |
 
-运行时新增一个按需专题，收拢演化中的替身与定向变异规则；入口和审计链接到该处。新增准入优先复用已有测试，成本包含 fixture、mock、生成器、参考实现、数据、执行与定位；精简按行为目的承接必要保护。
+No fixed test/code ratio, mutation budget, or reduction target. These are engineering judgments, not empirical results for this skill.
 
-用户材料中的测试/生产代码比例按可配置复核线处理，不设置通用数值；最小回归可合理超线。没有引入 test-suite-doctor、覆盖率选择器、固定变异预算或缩减比例。这些规则是综合材料与现有设计原则的工程判断，不称为普遍科学标准或本 skill 的效果实证。
+### 2026-11-09 cumulative knowledge duplication
 
-用户随后明确并非所有项目都需要变异测试，工具过重或运行太慢时须灵活选择。运行时将未解风险、工具适配和运行成本放入选用条件；已有断言、边界或差分证据充分时允许不用。独立 clarity 审查用于合并重复准入、清单与来源场景，具体例子留在评估材料。
+The Tessera audit (PR #68) found duplication accumulated across PRs even though every PR was developed and reviewed with this skill: two case-ID formats parsed by position in several places, Rust and C++ indexing the same records with separate type numbering, a parallel engine copying the probe flow and counting window to protect serial codegen, and stale module names in docs. Each was locally reasonable and below the architectural criterion. The rules allowed retained copies but never required a trackable record. Added: find the existing authority before adding a consumer of shared knowledge; drift detection for retained copies that catches mismatches between copies (from a Tessera bug where a null-pattern check missed swapped columns with identical null patterns); recording the measurement behind performance duplication; registering sub-threshold duplication as cumulative debt. Evidence is one audit; not claimed as a general law.
 
-用户直接审阅后要求删除 skill 中的防御性补充，包括“覆盖率增长不能单独证明价值，也不要求每条测试独占一个变异”。按此取舍逐段通读入口及全部专题，删除反向推论、假想反驳、例外讲解、额外证明与汇报义务、重复验收流程，保留直接判断、操作条件和协议要求。
+### 2026-11-09 maintainers without session context
 
-测试素材更新为 `0.13.0`，新增 8 条具有不同判断目的的边界题，原 79 条不改。文件检查与行为验证的区别见[本轮记录](../../tests/software-design-philosophy/test-results.md#历史修订2026-10-30-测试保护与维护成本0130)。
+Another agent's maintainability analysis proposed a new cost vocabulary; most of it already existed. The one uncovered point: whose cognitive load counts. The authoring agent knows its session's conventions and underrates them. Cognitive load and unknown dependencies are now measured for a maintainer who has only the repository; a paired counterexample prevents flagging conventions that are already in a checked contract.
 
-## 2026-11-09：跨变更累积的知识重复
+### 2026-11-09 coding-time design steps
 
-用户确认，Tessera 的开发与 review 全程都加载并应用了本技能，但审计（Tessera PR #68）仍发现跨 PR 累积的重复：两种 case ID 格式被多处按位置解析，Rust 与 C++ 用两套类型编号索引同一批记录，并行引擎为保护串行代码生成而复制了探测流程和计数窗口，文档中的模块名也已过时。每处单独看都是局部合理的选择，达不到审计的架构问题判据。
+Agent development proceeds by minimal changes per task, which is the book's tactical programming. Added three of the book's practices: write the interface comment first; design it twice (limited to new modules and public interfaces); strategic modification, triggered only when the minimal change would add a special case, flag, parallel entry point, or second interpretation, with external protocol differences excluded. Not yet behavior-tested.
 
-原规则以单次任务为判断范围，允许在信任或协议边界保留多份解释，也允许为性能保留特殊路径，但三者都没有要求留下后续可核对的记录。用户同意将以下四条补入运行时：
+### 2026-11-11 English translation and consolidation
 
-- 入口：新增共享知识的使用方前，先查明现有解释者与权威；review 按全部使用方判断，并列出新增使用方。
-- 模块边界：保留多份解释时，用同源生成、共享 fixture 或契约测试检测分叉，检测要能发现各份之间的错配。这条来自 Tessera 的一个具体缺陷：只检查空值模式的测试发现不了空值模式相同的列互换。
-- 性能：为保护代码生成、内联或布局而复制实现时，写明所依据的测量、约束共同的不变量，并登记合并证据。
-- 审计：未达判据的重复列为累积债务，登记到项目的待办或路线图。
+Runtime files translated to English; maintenance docs translated and condensed. A `/simplify` review with four angles found that the four 2026-11-09 additions were versions of one missing rule filed in four places, and three copies had already drifted (the performance copy dropped mismatch detection; SKILL.md's two triggers disagreed on registering debt). Consolidated:
 
-四条规则沿用现有专题，没有新增专题、报告模板或固定阈值。依据只有这一次审计，没有外部研究，不称为普遍规律。项目层面的对应规则写在 Tessera 自身的 `AGENTS.md`、`CONTRIBUTING.md` 和 benchmark tooling 设计文档中，不复制到本技能。
+- Retained copies and cumulative debt: one rule in [module boundaries](../../software-design-philosophy/references/design-module-boundaries.md#retained-copies); SKILL.md, audit, and performance link to it.
+- Advanced entry point ownership: owned by deep modules; performance keeps only view/span semantics.
+- Debugging surface (C08): moved to the test reference, with a routing row.
+- Unknown-outcome classification: owned by error handling; system boundaries keeps the protocol.
+- Smaller merges: metrics routing row into the audit row; test trim/stop sections (trimming applies only when tests were added or rewritten); the last two sections of global simplification.
 
-## 2026-11-09：没有会话上下文的维护者
+The user then approved narrowing the description from "touching modules" to "deciding structure", with an explicit exception that keeps strategic modification in scope: edits inside an existing structure trigger the skill when they add a special case, flag parameter, parallel entry point, or second copy of a rule. The entry now says `CC > 10` triggers a review, not a required change; it stays out of the description (see user decisions). The user also adopted "record and propose" for coding-time structural gaps, with in-task refactoring only on request.
 
-另一个 Agent 对可维护性的分析建议为本技能新增可维护性定义、六维成本剖面和以局部可推理性为中心的推演方法。核对后，任务推演、指标仅作线索、区分必要分工与重复权威、重构后重放原任务等内容已在入口、架构审计、模块边界与深模块参考中，按原术语保留，不另立一套成本词汇。
+Considered but not applied, because they reverse earlier user decisions: removing `CC > 10` from the entry and limiting design-it-twice to hard-to-reverse decisions. Test prompts remain in Chinese, now exercising Chinese requests against English instructions.
 
-其中一点现有规则没有覆盖：认知负荷按谁的视角计算。写代码的 Agent 掌握会话中的全部约定，容易把只有自己知道的前提判为低负荷；Tessera 各 PR 单独 review 都通过而后来的维护者难以重建知识，这是原因之一。入口第一条因此补充：按只凭仓库中可达的代码、契约与文档工作的维护者计算，作者上下文中的约定计为未知依赖。配套的反例题防止把已写入契约且受检查的约定也判为问题。
+### Translation follow-up: conditional rules and reachability (0.17.1)
 
-依据是 Tessera 的一次审计与一份外部分析，没有独立研究支持，不称为普遍规律。
+The user requested a clarity-based correction after a static review found that some consolidations joined rules with different conditions. Retained copies and cumulative debt now have separate sections: necessary boundary copies can be part of the intended design, while deferred structural improvements need not involve copies. Performance-motivated implementation duplication still records the evidence needed for merging. A special case or flag triggers comparison, not automatic debt; a meaningful gap is required. The coding introduction now scopes complete structural changes to new designs and requested refactors.
 
-## 2026-11-09：编码阶段的设计步骤
-
-本技能的判断大多用于审计和既有系统演化；“编码与简化”只要求设计判断随实现使用，没有说明动手前后各做什么。Agent 开发以单次任务的最小改动推进，正是原书所说的战术式编程：每次改动单独合理，累积后形成需要整体重构的结构。Tessera 审计中的能力例外分散在多处守卫、并行入口复制串行流程，都是这样逐次加出来的。
-
-据原书的三项做法补入编码阶段：
-
-- 先写接口注释（原书“先写注释”）。注释难以简短写清是设计问题的早期信号，须说明内部步骤才能用对说明接口泄露了协议。
-- 设计两次（原书“设计两次”）。对 Agent 而言构思替代的成本低，但范围限于新模块与公开接口，避免私有细节上的空转；重大、难逆的决定仍按方案比较专题处理。
-- 战略式修改（原书“若不在改善设计，多半在使其变差”）。只在最小改动要新增特例、标志、平行入口或第二份解释时触发，用“需求一开始就存在时的结构”作对照；与项目要求重构单独提交的约定相容，暂不调整的接入累积债务登记。外部协议差异明确排除。
-
-依据是原书与 Tessera 的一次审计，未经行为回归验证。
+Restored the external-operation outcome distinction (confirmed success, confirmed rejection/non-execution, unknown), which is separate from error retry classification. Fixed migration wording that retired necessary seams, and removed the automatic merge recommendation for pipeline stages lacking transformations. The description includes internal structural decisions; deep modules links to the debugging-surface preference for complex or hard-to-reproduce workflows. These are static corrections, not observed behavior improvements; verification is recorded in the test results.

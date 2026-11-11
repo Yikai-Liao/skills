@@ -1,39 +1,37 @@
-# 架构审计
+# Architecture audit
 
-固定范围，沿真实调用、修改或恢复路径追踪入口、使用者、状态与运行配置。结合实际定义和用法核对实体、基数、权威与时态。
+Fix the scope, then trace entry points, users, state, and runtime configuration along real call, modification, or recovery paths, checking only the boundaries relevant to the chosen tasks. Verify entities, cardinality, authority, and temporal meaning (current versus historical) against actual definitions and usage.
 
-## 什么算架构问题
+## What counts as an architectural problem
 
-架构规定单元、知识与不变量归属、协作契约及生命周期责任。
+Architecture assigns units, ownership of knowledge and invariants, collaboration contracts, and lifecycle responsibility.
 
-确认架构问题须有三项：**具体结构对象、导致一类任务受损的因果机制、能切断因果链的结构调整**。
+An architectural problem needs all three: **a concrete structural object, a causal mechanism that damages a class of tasks, and a structural change that cuts the causal chain**.
 
-## 度量审查
+## Metrics review
 
-优先复用项目已有报告，按当前问题做相称测量，核对源码版本和统计口径。覆盖率缺失或测量失败记为未知。
+Prefer the project's existing reports, measure in proportion to the question, and confirm source revision and counting rules. Record missing coverage or a failed measurement as unknown, not as zero.
 
-`CRAP = CC² × (1 − c)³ + CC`，其中 `CC` 是圈复杂度，`c` 是 0 到 1 的覆盖率比例。用它定位复杂且覆盖薄弱的函数、安排审查重点，沿用项目有效关注线；超线后按真实维护任务判断结构与验证收益。
+`CRAP = CC² × (1 − c)³ + CC`, where `CC` is cyclomatic complexity and `c` is coverage as a ratio from 0 to 1. Use it to locate complex, thinly covered functions and order the review, following the project's effective threshold; past the threshold, judge structural and verification payoff against real maintenance tasks.
 
-核对关键边界、失败和状态转换的断言，按[测试保护与维护成本](design-behavioral-tests.md)选择验证方式。
+Check assertions on key boundaries, failures, and state transitions; choose verification per [test protection and maintenance cost](design-behavioral-tests.md).
 
-## 直接发现问题
+## Inspection checklist
 
-沿所选任务检查相关边界。
-
-| 观察对象 | 检查 |
+| Object | Check |
 |---|---|
-| 变化与知识 | 一项高频或高后果修改需要谁同步解释哪些规则？契约是否可达？结构相似度达到项目关注线时，核对是否在独立解释同一规则及共享后的协调成本 |
-| 模块与接口 | 创建到结果、失败和清理是否有归属？输入在哪里成为有效表示，其约束如何保持？调用者还需哪些配对、转换、顺序与恢复？共同责任是否分散、独立责任是否绑死？高级入口能否回到公共资源治理，常见逃逸是否反映原语缺口 |
-| 错误与恢复 | 恢复信息归谁？是否重复 catch、包装或重试，把未知当失败或成功？聚合错误保留哪些调用者决策所需的语义？ |
-| 生命周期 | 启动、受理、关闭、清理、扩容副作用和恢复是否责任冲突？ |
-| 演化 | 临时旁路是否成为永久权威？难逆建议是否有结构不同的可行替代？ |
-| 性能 | 布局、转换、复制、跨边界调用和资源竞争怎样影响目标？中间态、scratch 与失效载荷何时同时驻留？区分可推导工作量与待测瓶颈，可以建议基线和结构调整 |
-| 异步与事件（存在时） | 受理能否可靠进入调度，终态、取消与恢复由谁裁决？事件 schema、顺序、重放和副作用由谁治理？ |
-| 共享或多份状态（存在时） | 哪些状态确需共享可变，独立状态能否分离？谁可写、谁是权威？新鲜度、写后读、失效、重建及分区不变量由谁维护？ |
-| 故障与交付（存在时） | deadline、重试、队列上限和背压是否一致？可选依赖能否阻断核心能力？副本是否共享故障域？新旧版本、切换和数据恢复归谁？ |
+| Change and knowledge | For a frequent or high-consequence change, who must interpret which rules in sync? Are the contracts reachable? Where structural similarity reaches the project's threshold, are copies independently interpreting one rule, and what would sharing cost in coordination? Are retained copies handled per [retained copies](design-module-boundaries.md#retained-copies)? |
+| Modules and interfaces | Does the path from creation to result, failure, and cleanup have an owner? Where does input become a valid representation, and how are its constraints kept? What pairing, conversion, ordering, and recovery remain with callers? Is shared responsibility scattered, or are independent responsibilities bound together? Do artifacts of advanced entry points return to shared handle and resource governance? Do common escape hatches reveal a primitive gap? |
+| Errors and recovery | Who owns the recovery information? Are there repeated catches, wrapping, or retries? Is unknown treated as failure or success? Does an aggregated error keep the semantics callers need to decide? |
+| Lifecycle | Do startup, admission, shutdown, cleanup, scaling side effects, and recovery have conflicting owners? |
+| Evolution | Has a temporary bypass become a permanent authority? Does a hard-to-reverse recommendation have a structurally different viable alternative? |
+| Performance | How do layout, conversions, copies, cross-boundary calls, and resource contention affect the goal? When do intermediates, scratch space, and stale payloads reside at the same time? Separate derivable work from bottlenecks that need measurement; baselines and structural changes may be recommended |
+| Async and events (when present) | Does admission reliably reach scheduling? Who decides terminal state, cancellation, and recovery? Who governs event schemas, ordering, replay, and side effects? |
+| Shared or multiple copies of state (when present) | Which state truly needs to be shared and mutable, and can independent state be separated? Who may write, and who is authoritative? Who maintains freshness, read-after-write, invalidation, rebuild, and partition invariants? |
+| Failure and delivery (when present) | Are deadlines, retries, queue bounds, and backpressure consistent? Can an optional dependency block core capability? Do replicas share a failure domain? Who owns old/new version coexistence, cutover, and data recovery? |
 
-## 建议与报告
+## Recommendations and report
 
-发现交代边界、任务证据、因果链、影响、相称调整与验证；按频率、后果和证据强度排序，沿用项目等级。
+Each finding states the boundary, task evidence, causal chain, impact, a proportionate change, and verification; order by frequency, consequence, and strength of evidence, using the project's severity levels.
 
-未达架构问题判据的重复解释、缺少分叉检测的副本和待合并实现，列为累积债务，写明使用方与权威，登记到项目的待办或路线图。
+Record deferred improvements below the architectural criterion under [cumulative debt](design-module-boundaries.md#cumulative-debt); assess necessary boundary copies under [retained copies](design-module-boundaries.md#retained-copies).

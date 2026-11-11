@@ -1,224 +1,193 @@
-# software-design-philosophy 审计与验证
+# software-design-philosophy: validation records
 
-## 当前修订：2026-11-09 编码阶段的设计步骤（0.16.0）
+One section per revision, newest first. Each records what changed in the runtime, how the test set changed, and what was actually verified. Raw outputs, workflow IDs, file hashes, byte tables, and the earlier standalone pages (`luna-simplification-validation.md`, `research-validation-2026-09-08.md`) are in Git history. Sources and decisions are in [source decisions](../../docs/software-design-philosophy/source-decisions.md).
 
-运行时在“编码与简化”补充三条：新模块或公开接口先写接口注释，写不简短或须说明内部步骤时先调整设计；新模块或公开接口至少构思一种结构不同的替代；修改既有代码时，最小改动若要新增特例、标志、平行入口或第二份解释，先比较需求一开始就存在时的结构，暂不调整的登记为累积债务。
+"Not verified" means not verified: a test case's prompt and expected behavior existing is not a pass, and static checks are not evidence of behavior.
 
-测试素材由 93 条增至 97 条，原 93 条及执行协议不变。新增 4 条边界题，每条规则配正反情形：泄露协议的接口注释、替代方案只要求公开接口、标志参数式改动、外部协议特判不算债务。这些是待执行的行为素材，不以题面或预期存在宣称通过。
+## Current revision: translation follow-up (0.17.1)
 
-已执行 skill-creator 的 quick_validate.py、测试 JSON 解析、本地链接与锚点和 git diff --check。未运行独立模型试答或行为回归。来源与裁决见[来源与裁决](../../docs/software-design-philosophy/source-decisions.md#2026-11-09编码阶段的设计步骤)。
+Runtime: separated retained copies from cumulative debt; preserved the performance-copy merge-evidence requirement; made a meaningful structural gap the condition for debt registration. Scoped complete structural implementation to new designs and requested refactors. Restored internal design decisions to the trigger and added a deep-module route to the debugging-surface preference. Restored confirmed-success / confirmed-non-execution / unknown outcomes separately from error classification. Fixed the migration-seam lifecycle and the automatic pipeline-stage merge recommendation; clarified joining writers before the operation returns.
 
-## 历史修订：2026-11-09 没有会话上下文的维护者（0.15.0）
+Tests: 98 → 103. Added adjacent cases for necessary boundary copies, external outcome versus retry classification, migration-seam lifetime, pipeline isolation, and a flag with no structural gap. The existing private-stage case now also tests triggering. The dry-run consultation expectation explicitly stays a consultation and distinguishes structural debt from copy checks. Existing performance-copy, external-adapter, debugging-surface, local-readability, and explicit-refactor cases remain as controls.
 
-运行时在入口第一条补充：认知负荷与未知依赖按只凭仓库中可达的代码、契约与文档工作的维护者计算，只存在于作者会话或记忆中的约定计为未知依赖。
+Verified: JSON parsing and unique test IDs, local Markdown links and anchors, runtime reference reachability, English-only runtime text, `git diff --check`, and manual comparison of the affected rules and adjacent expectations. Not run: independent model answers or natural-trigger behavior. The five new cases are evaluation material, not passing behavior results.
 
-测试素材由 91 条增至 93 条，原 91 条及执行协议不变。新增一对边界题：约定只在作者上下文中时应判为未知依赖；同一约定已写入契约并受断言和测试检查时不应判为未知依赖，也不要求新增抽象。这些是待执行的行为素材，不以题面或预期存在宣称通过。
+## 2026-11-11 English translation and consolidation (0.17.0)
 
-已执行 skill-creator 的 quick_validate.py、测试 JSON 解析、本地链接与锚点和 git diff --check。未运行独立模型试答或行为回归。来源与裁决见[来源与裁决](../../docs/software-design-philosophy/source-decisions.md#2026-11-09没有会话上下文的维护者)。
+Runtime changes:
 
-## 历史修订：2026-11-09 跨变更累积的知识重复（0.14.0）
+- `SKILL.md`, `agents/openai.yaml`, and all 9 references translated to English.
+- The retained-copies rule now lives in one place, `design-module-boundaries.md#retained-copies`. `SKILL.md`, the audit, and the performance reference link to it. The performance copy had dropped the requirement that the check catch mismatches between copies.
+- Ownership of advanced entry points is defined in `design-deep-modules.md`; the performance reference keeps only view/span ownership and lifetime.
+- The debugging-surface preference moved from `design-deep-modules.md` to `design-behavioral-tests.md`, with a routing row in `SKILL.md`.
+- The metrics routing row merged into the audit row.
+- In the tests reference, the trim and stop sections merged; trimming applies only when this round added or rewrote tests.
+- In `search-global-simplification.md`, the last two sections merged and now link to the retire-old-mechanisms section of the evolution reference.
+- The unknown-outcome classification is owned by `reduce-exception-surface.md`; system boundaries keeps the unknown-outcome protocol.
+- The description now triggers on structural decisions rather than any module edit; edits inside an existing structure still trigger when they add a special case, flag parameter, parallel entry point, or second copy of a rule. `CC > 10` stays in the body only (a model that has not loaded the skill does not measure CC), and the entry states it triggers a review, not a required change. Existing trigger cases (error contracts in case 6, cross-module understanding cost in case 46) were checked against the new wording by reading only; natural-trigger behavior was not run.
+- Strategic modification during ordinary coding now registers the gap as cumulative debt and proposes the refactor; structural adjustment happens in-task only when the user asked for a refactor.
 
-运行时新增四条规则：入口要求先查明现有解释者，并在 review 中列出新增使用方；模块边界要求保留多份解释时检测分叉；性能专题要求为代码生成而复制的实现写明测量并登记合并证据；审计要求把未达判据的重复列为累积债务。
+Tests: 97 → 98, version 0.17.0. Case 96 (`edge-tactical-flag`) expectation updated to recommend rather than perform the refactor; new case 98 (`edge-tactical-refactor-requested`) covers an explicit refactor request. Other cases unchanged.
 
-测试素材由 87 条增至 91 条，原 87 条及执行协议不变。新增 4 条边界题分别对应四条规则，题面取自 Tessera 审计中的真实情形（按位置解析 ID、C++/Rust 类型编号、并行入口复制探测流程、低于判据的小重复）。这些是待执行的行为素材，不以题面或预期存在宣称通过。
+The test prompts stay in Chinese; they now act as Chinese user requests against English instructions.
 
-已执行 skill-creator 的 quick_validate.py、测试 JSON 解析、本地链接与锚点和 git diff --check。未运行独立模型试答或行为回归，也未证明新规则能减少实际项目中的重复。来源与裁决见[来源与裁决](../../docs/software-design-philosophy/source-decisions.md#2026-11-09跨变更累积的知识重复)。
+Verified: skill-creator `quick_validate.py`, local links and anchors, `git diff --check`, no CJK left in runtime files. Not run: model behavior regression, so translation fidelity and the consolidations are not behavior-tested.
 
-## 历史修订：2026-10-30 测试保护与维护成本（0.13.0）
+## 2026-11-09 coding-time design steps (0.16.0)
 
-新增按需测试专题，入口、审计和演化统一引用，覆盖测试准入、复用顺序、成本复核、探索筛选、可选变异与停止条件。
+Runtime: three additions to "Coding and simplification". Write the interface comment first for new modules or public interfaces, and adjust the design if it cannot be written briefly or needs internal steps. Sketch at least one structurally different alternative for new modules or public interfaces. When a minimal change would add a special case, flag, parallel entry point, or second interpretation, compare against the structure the requirement would have produced from the start; register deferrals as cumulative debt.
 
-测试素材由 79 条增至 87 条，原 79 条完整保留，执行协议与触发描述不变。新增 8 条分别检查：充分保护后的停止、已有参数表补强、最小回归的预算例外、覆盖/变异签名不足以删除、独立维度与交互、低价值/未知变异、探索与永久准入、按项目收益和成本选用变异。这些是待执行的行为素材，不以题面或预期存在宣称通过。
+Tests: 93 → 97. Four boundary cases, a positive and negative case per rule: an interface comment that leaks protocol, alternatives required only for public interfaces, a flag-parameter change, and external-protocol special cases that are not debt.
 
-前轮独立 subagent 按 clarity 审查后，补齐变异检查的工具适配与运行成本准入，并合并重复的精简清单、成本口径和停止要求。当时复审无必须修项，新专题由初稿 1,644 字符减至 1,220 字符。
+Verified: `quick_validate.py`, JSON parsing, local links and anchors, `git diff --check`. Not run: independent model answers or behavior regression.
 
-用户随后要求删除运行时的防御性补充，并指出首轮筛选过窄。本次逐段通读入口和全部 9 份 references，删除反向推论、假想反驳、例外讲解、额外证明和汇报义务、重复验收流程；运行时 Markdown 从 12,236 字符减至 8,534 字符，测试专题从 1,220 字符减至 650 字符。独立 subagent 按最新取舍通读正文和删减差异，复审无必须修项。现有 87 条评估素材与执行协议不变；未测量 token 或行为效果。
+## 2026-11-09 maintainers without session context (0.15.0)
 
-本轮核对规则、题面与来源的关系，并执行 skill-creator 的 quick_validate.py、YAML/JSON 解析、本地链接与锚点、运行时参考可达性、原用例与执行协议保留、git diff --check。未运行独立模型试答或全量行为回归，不声称已证明能减少实际项目测试成本；来源核查范围见[来源与裁决](../../docs/software-design-philosophy/source-decisions.md#2026-10-30测试保护与维护成本)。
+Runtime: the first shared judgment now measures cognitive load and unknown dependencies for a maintainer who works only from what the repository contains; conventions that exist only in the author's session or memory count as unknown dependencies.
 
-## 历史修订：2026-10-30 ub-mode 规则整合（0.12.0）
+Tests: 91 → 93. A pair: a convention that exists only in the author's context is an unknown dependency; the same convention written into a contract and checked by assertions and tests is not, and needs no new abstraction.
 
-调研结果已并入运行时：入口的圈复杂度软性审查、审计的 CRAP 与覆盖率口径、模块的有效表示与状态归属、深模块的判断和效果分离、演化中的样本先行与定向变异检查。沿用原有专题，默认启动提示和同页重复的两处精简保留。
+Verified: same static checks as above. Not run: model answers or regression.
 
-测试素材由 66 条增至 79 条，原 66 条对象和执行协议保持不变。新增 13 条覆盖指标、信任边界、共享状态、变异结果及迁移边界。独立审查指出一条变异题面尚未证明行为差异，预期却认定断言缺口；已补充合法输入上存在可观察错误的事实，保持测试预期与“按已确认的缺口补验证”一致。
+## 2026-11-09 cumulative knowledge duplication (0.14.0)
 
-静态校验通过：skill-creator 的 quick_validate.py、UI YAML、测试 JSON、本地链接和新增锚点、描述及原用例保留、git diff --check。运行时 Markdown 从前次提交的 9,915 字符增至 11,033 字符；这是文本体量，不是 token 或效果测量。
+Runtime: four rules. Find existing interpreters before adding a consumer and list new consumers in review; detect drift when keeping multiple interpretations; record the measurement and register merge evidence for implementations duplicated for code generation; list sub-threshold duplication as cumulative debt. (Consolidated into one rule in the 2026-11-11 revision.)
 
-另由新建独立执行者仅使用当前技能与原始题面，在同一上下文完成 9 个定向咨询任务；未提供测试预期、研究材料或旧结论。维护者核对实际答复，观察如下：
+Tests: 87 → 91, one case per rule, taken from real situations in the Tessera audit: positional ID parsing, C++/Rust type numbering, a parallel entry point copying a probe flow, and small sub-threshold duplicates.
 
-| 原始条件 | 实际答复要点 |
-|---|---|
-| A：CC=14、覆盖率90%；B：CC=8、覆盖率20%，权限边界缺断言 | 计算 CRAP 为 14.196 与 40.768，优先审查 B；A 超线仍审查，可有据保留完整算法 |
-| 覆盖命令依赖冲突，工具仍输出 0% | 标为测量失败/未知，保留有效复杂度结果，重新取得匹配口径的覆盖率 |
-| 受控不可变价格记录，另有可撤销权限与插件可变字典 | 内部复用有效表示，权限在操作处检查，插件修改重新进入校验边界 |
-| 任务独立统计，32MiB scratch，队列可积压数百任务 | 局部统计后汇合，按实际活动任务核算驻留，避免排队即分配 scratch |
-| 数据库事务覆盖所有合法库存写入，多进程并发 | 保留有效事务方案，区分单一权威与单执行者，新增 actor 需实际收益依据 |
-| 100% 行覆盖下边界变异存活、合法域等价变异、编译失败被计作 killed | 先确认可观察行为差异，再补边界预期；分别解释等价变异与编译异常 |
-| 多次调大退避仍重复扣款，每次生成新业务 ID | 复核共同前提，收拢稳定操作身份、幂等键与未知结果恢复责任 |
-| 迁移 30 个适配器，保留外部字段和错误码，只有一个旧样例 | 比较自动化成本，先核对完整切片，再按独立预期检验转换、边界和重跑 |
-| 库存判断拟移出事务，事务内只扣减 | 保留读取、判断、写入所需原子性，允许独立验证确定输入下的费用计算 |
+Verified: same static checks. Not run: model answers or regression; not shown to reduce duplication in real projects.
 
-这些任务是另行提供的咨询题，并非测试 JSON 新增 13 条的逐题执行；本轮没有全量运行 79 条素材、建立实施夹具或运行上游度量工具。结果支持上述定向判断，未测量新旧版本的效果差异。
+## 2026-10-30 test protection and maintenance cost (0.13.0)
 
-## 历史修订：2026-10-14 自主设计与简化（0.11.0）
+Runtime: a new on-demand tests reference, linked from the entry, the audit, and evolution. It covers test admission, reuse order, cost review, filtering exploratory tests, optional mutation checks, and when to stop.
 
-当前 66 条素材，新增首次模块设计、派生缓存/历史快照与任务驻留成本三例；这三例尚未逐题试跑。运行时保留完整操作、信息隐藏和内部阶段组织，补充状态来源、生命周期成本及沿旧概念清理，收掉通用任务纪律。
+Tests: 79 → 87. Eight cases: stopping once protection is sufficient, strengthening an existing parameter table, the budget exception for minimal regressions, coverage/mutation signatures not being enough to delete a test, independent dimensions versus interactions, low-value or unknown mutants, exploration versus permanent admission, and choosing mutation by project payoff and cost.
 
-独立执行者只收到本 skill 与私有包装较多的导出模块及公开契约，直接完成代码简化，退出编码器、任务记录、状态对象和阶段协议，保留宿主 `executor.map` 与编码选项。维护者核对产物，并对改前、改后运行独立字面值与契约检查：编码、顺序与重复项、输入保持、单次消费、空输入、原异常及错误一致性均通过。执行者自建的 5 项测试另行通过，其结果与维护者检查分开记录。
+User corrections: mutation testing is not needed in every project, so tool fit and runtime cost became selection conditions. The user then asked for defensive additions to be removed across the runtime: reverse inferences, imagined objections, exception walkthroughs, extra proof or reporting duties, and repeated acceptance steps. Runtime Markdown went from 12,236 to 8,534 characters. Independent subagent reviews found nothing that had to be fixed.
 
-格式与全文件独立审查记录见 [clarity 本轮结果](../clarity/test-results.md#历史修订2026-10-14-职责边界与精简)。两项 skill 分开使用；本轮未做新旧配对或自然触发评估，下文结果仍归各自历史版本。
+Verified: `quick_validate.py`, YAML/JSON parsing, local links and anchors, runtime reference reachability, preservation of the original cases and execution protocol, `git diff --check`. Not run: model answers or full regression; no claim that it reduces real test cost.
 
-## 历史增补：2026-10-10 内部阶段边界（0.10.0）
+## 2026-10-30 ub-mode integration (0.12.0)
 
-原 58 条用例保留，新增深模块内部单用阶段、锁内不变量反例与局部整理不触发架构三条，合计 61 条。两技能独立安装与联合规则相容分别核对；没有把公共 API 不变视为内部行为等价。实际检查、独立模型烟雾及其限制见 [本轮验证](../clarity/readability-validation-2026-10-10.md)。历史验证不计入新增用例结果。
+Runtime: a soft cyclomatic-complexity review trigger in the entry; CRAP and coverage counting rules in the audit; valid representations and state ownership in module boundaries; separating decisions from effects in deep modules; sample-first automation and targeted mutation in evolution.
 
-## 历史题面与作答要求调整（0.9.1）
+Tests: 66 → 79, with 13 cases covering metrics, trust boundaries, shared state, mutation results, and migration boundaries. One mutation case's expected behavior assumed an assertion gap the prompt had not established. The prompt now states the observable error on legal input.
 
-用户要求先提交，不再因这轮答题表现继续修改 skill。新增仅供执行评估使用的简答要求：判断题给结论与关键理由，设计题给必要接口/契约/取舍，明确要求报告或路线图的题目才展开；不是所有题都套用完整项目交付。评分不奖励篇幅或术语覆盖，默认只验证受改动影响的用例和必要对照，纯问答不搭建代码夹具。
+Verified: static checks. A fresh independent executor answered 9 targeted consultation tasks (not the 13 new JSON cases) using only the skill and the raw prompts. Its answers matched the intended judgments:
 
-第 2 条将“一行绕过”改为“临时补丁”，避免被理解成权限绕过；第 8 条明确先简答；第 14 条去掉旧负例遗留的“我没有提调试入口”排除暗示，不在题面提示应否询问；第 48 条明确只分析风险和迁移，不要求在缺少代码时实施。第 28 条明确测量结果稍后提供、当前只问如何开始，不要求完整优化方案；评分回到原有的目标切换，而非额外检查一个材料不全的完整方案。
+- It computed CRAP and prioritized the thinly covered permission boundary.
+- It treated a failed coverage run reporting 0% as unknown.
+- It reused a protected valid representation while checking revocable permissions where they are used.
+- It accounted residency by active tasks.
+- It kept an existing transaction instead of adding an actor.
+- It separated equivalent mutants and compile errors from behavior gaps.
+- It traced repeated charges to a fresh business ID on each retry.
+- It verified one complete slice before automating an adapter migration.
+- It kept the atomicity needed when moving an inventory check.
 
-本次仅做文件格式、差异和链接检查，不追加模型重测。下节结果来自 0.9.0 的冻结输入，不代表这些题面调整已经通过行为验证。第 14 条的漏问有实际记录，但旧题面含干扰，不能据此单独证明 skill 普遍失效。第 28 条按原有目标切换判据通过：此前一边不给 profile 材料、一边按完整方案的证据要求判为部分失败，混淆了评估层次，撤销这项判分；无条件优先批量化只保留为答复质量观察，不能据此归因于 skill 缺陷。具体方案选择留给第 54/55 条的成本材料，不增加运行时禁令。
+Not run: the full 79-case set, implementation fixtures, or upstream metric tools. No measurement of old versus new.
 
-## 测试意图修订与 Luna 实际重测（已停止，部分覆盖）
+## 2026-10-14 autonomous design and simplification (0.11.0)
 
-基线为 `459cfe7`。逐条复核原 56 个用例后，用户直接确认：简单程序不专门考虑调试面，复杂系统应询问；参考读取按相关性与成本评价；咨询不自动授权实施；先从目标和动机推导约束，只对无法可靠推导的关键缺口确认，不穷举条件。
+Runtime: kept complete operations, information hiding, and internal stage organization; added state origin, lifecycle cost, and cleanup along the old concept; removed generic task discipline.
 
-测试版本更新为 0.9.0：修订第 2/3/8/12/14/22/30/38/39 条预期，补充第 14 条的复杂度材料，明确第 27 条十倍收益仅作用于往返开销；增加第 57 条简单程序调试负例和第 58 条从离线目标推导本地副本的用例，共 58 条。第 38 条补充冗余可用性模型的计算检查。执行者与评分者的角色也已区分：执行者不可见预期，评分者不得用错误预期反向收窄用户意图。
+Tests: 61 → 66. Three new cases (first-time module design, derived cache vs. historical snapshot, per-task residency cost) were not run individually.
 
-用户要求 Luna 实际做题，而非审计题目。作者将其安排成全部 58 题逐题独立上下文、隔离目录及同一冻结 skill，最多 6 题并行，不提供预期或旧评分；这一范围和执行方式造成不必要的长耗时。第 11/12/40/44 条增加本地迁移、改名、排序与架构审计夹具，以支持实际操作；这些是本轮补充材料，不能宣称与旧轮输入完全相同。
+Verified: an independent executor given only the skill and an over-wrapped exported module with its public contract simplified the code directly. It retired the encoder, task records, state objects, and stage protocol, and kept the host `executor.map` and encoding options. The maintainer ran independent literal and contract checks before and after: encoding, order and duplicates, input preservation, single consumption, empty input, and original exceptions all passed. The executor's own 5 tests are recorded separately. Format and full-file review are in the [clarity results](../clarity/test-results.md#历史修订2026-10-14-职责边界与精简). No paired old/new or natural-trigger evaluation.
 
-Workflow：`29ee3197-f31b-4e9f-b777-115a63cb4212`。用户质疑耗时后已停止，运行状态确认 `stopped`：第 1–48 题完成，第 49–54 题中止，第 55–58 题未启动；没有全量通过结论，也没有追加重跑。
+## 2026-10-10 internal stage boundaries (0.10.0)
 
-已观察到的答复问题：第 14 题实际读到了新的复杂度询问规则，却仍未询问独立 Agent 调试能力（题面干扰见上节）；第 27 题正确算出剩余耗时 33.4%，却误写加速 2.2 倍（应约 3 倍）；第 42 题签名与正文共 272 字符，超过此前采用的 200 字符计数口径。第 28 题的评分纠正见上节。原始答复、工具记录及其他待复核项保留在本次 workflow 产物中，不以执行完成或子代理自评代替通过。
+Tests: 58 → 61. New cases: single-use internal stages of a deep module, a lock-held invariant counterexample, and local tidying that should not trigger architecture review. Independent installation of the two skills and compatibility of their rules were checked separately; an unchanged public API was not taken as proof of internal behavioral equivalence. Checks and the model smoke test are in [that round's validation](../clarity/readability-validation-2026-10-10.md).
 
-第 11/12/40 题确实完成隔离夹具中的迁移、改名和排序实现修改，作者复验相应已有检查通过；这些夹具修改不进入 skill 仓库。旧轮结果及摘要均属于下面标明的历史版本，不覆盖本轮改动。
+## 0.9.1 prompt and answer-format adjustments
 
-## 核心约束精简（基线 0037221）
+The user asked to commit without further skill changes based on that round's answers. Added execution-only answer instructions: judgment questions get a conclusion and key reasons; design questions get the necessary interface, contract, and trade-offs; only prompts that ask for a report or roadmap get one. Grading does not reward length or term coverage.
 
-**历史快照：交付提交 `459cfe7`、测试版本 0.8.0。以下“本次”“最终”等表述限于该阶段，文件大小、哈希、题面保留及试跑结论不代表当前工作树。**
+Prompt fixes:
 
-本次修改 `SKILL.md` 及全部七份 references；触发描述、UI 元数据保持不变。删除重复定义、教学步骤、可选表格说明与重复路由，保留判断条件、反例、权限和个人取舍，未把专题变成必经流程。首轮使用原有 53 条测试；随后根据用户对性能审计范围的澄清，修订第 26/28 条预期并增加 3 条证据用例，现共 56 条，原 53 条题目文字未改。
+- Case 2: "one-line bypass" became "temporary patch", so it is not read as a permission bypass.
+- Case 8: asks for a short answer.
+- Case 14: removed a leftover hint about the debugging surface.
+- Case 48: risk and migration analysis only, no implementation without code.
+- Case 28: says measurements will come later and only asks how to start.
 
-运行时 Markdown 共 8 份，从 13,408 字符 / 35,946 UTF-8 字节减为 8,911 字符 / 23,865 字节，字符数减少约 33.5%；入口从 1,804 减至 1,435 字符。不是 token 或效果测量。
+Grading correction on case 28: the earlier run was failed for not meeting full-solution evidence standards on a prompt that gave no profile data. That penalty was withdrawn; the case tests the authorization switch, and cases 54/55 test solution choice with cost data. Only format, diff, and link checks were run; the 0.9.0 results below do not validate these prompt changes.
 
-作者对照原文及既有用例做语义自查，重点核对：
+## 0.9.0 test-intent revision and partial Luna rerun (stopped)
 
-- 薄适配器、同源生成和语义独立的相似代码可保留；重复解释规则或调用顺序仍可构成结构问题。
-- 高危局部错误、静态形状与验证缺口不自动成为架构缺陷；审计仍直接检查关键模块深度、知识、接口、恢复及相关系统边界。
-- 架构审计覆盖相关性能问题，并可提出测量、基线与优化建议，但建议不自动授权实施；有证据的批量/零拷贝接口不被封装偏好否决。
-- 默认不增加调试面；明确要求时保留自动化可用性、生产隔离及拒绝验证。不采用多基类实现继承、不默认用 TDD 生成架构等个人取舍仍在。
-- 受理不等于完成、超时不等于未执行、取消不等于撤销；幂等身份、未知结果对账和崩溃窗口未被普通重试替代。
-- 隐式消费者依赖须处理但不永久冻结；用户拒绝兼容层时不擅留。不同 worktree 和替身测试通过不能证明最终组合成立。
+Baseline `459cfe7`. After reviewing all 56 cases, the user confirmed four rules:
 
-也按 clarity 检查成品组织，拆开压缩时混在一起的错误/生命周期、演化/性能判据，以及协作/验证段落，保留必要分组而不追求最少行数。
+- Simple programs do not need a debugging surface; for complex systems, ask the user.
+- Reference reading is judged by relevance and cost.
+- A consultation does not authorize implementation.
+- Infer constraints from goals and motives, and confirm only critical gaps that cannot be inferred.
 
-最终文件检查：YAML 可解析；触发 frontmatter 与 UI 文件未变；七份 references 均从入口可达，10 条运行时链接均在安装目录内；56 条用例唯一，原 53 条题目/ID/类型保持不变；Markdown 本地链接、代码围栏、行尾空白及 `git diff --check` 通过。运行时文件与最新模型试跑快照一致。
+Expected behavior was revised for cases 2/3/8/12/14/22/30/38/39, and cases 57 (simple program, no debugging surface) and 58 (infer a local copy from an offline goal) were added, for 58 in total. Executor and grader roles were separated.
 
-随后按用户要求由 `openai-codex/gpt-5.6-luna:high` 独立 review，并盲跑全部 53 条素材：18 条触发判断、35 条实际设计答复。首轮 49 条未标记问题，4 条进入复核；后续发现作者把合理性能建议误判为审计越界，已撤销这项判分，并与真实的事实强度错误分开处理。定向复跑、旧版对照、测试修订和最新结果见 [Luna 验证记录](luna-simplification-validation.md)。
+The author ran all 58 cases in isolated contexts, at most 6 in parallel. This scope made the run unnecessarily slow, and it was stopped at the user's request: cases 1–48 completed, 49–54 were aborted, and 55–58 never started. There is no full-pass result.
 
-修正后的 3 条性能证据用例与审计范围正反例共 5 条，均由 Luna 独立新上下文运行并符合当前判据；独立规则/测试复审无 P0/P1/P2。没有在最终版本重跑全部 56 条，不把多轮记录合成一次全量通过。
+Observed problems:
 
-根据 review 补回稳定、可区分的错误结果，并明确演化后调用者应更少依赖内部约定。此前因错误判分增加的“审计不得另列基准建设建议”限制已撤销，改为区分审计建议与实施授权。未重做安装实验，也不据有限模型试跑宣称召回率或效果等价。以下各节以及另页研究验证均为历史快照，其行为结果不计入本次验证。
+- Case 14 read the new ask-the-user rule but still did not ask about a debugging surface; the prompt had a distractor, fixed in 0.9.1.
+- Case 27 correctly computed 33.4% remaining time but wrote a 2.2× speedup instead of about 3×.
+- Case 42 ran 272 characters against a 200-character limit.
 
-## 先前重构记录
+Cases 11/12/40 made the requested fixture changes, and the existing checks passed.
 
-日期：2026-09-08。基线：`1f3d992`；本轮工作树版本：0.6.0。范围仅为本 skill 的入口、references、UI 元数据及已有评估材料。
+## 2026-09 Luna review of the compression (0.8.0, baseline 0037221, delivered at 459cfe7)
 
-依据用户指定的《GPT-6 Astra 仓库指令系统审计与重构提示词》，并实际读取了 [OpenAI 官方 Prompting Best Practices](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices)。官方提示了持久指令敏感性、用户要求与 skill 工作流冲突、不必要停顿及验证范围问题；本轮据当前文件和历史记录裁决，不将一般模型建议覆盖个人设计偏好。
+Runtime: compressed `SKILL.md` and all seven references by removing duplicated definitions, teaching steps, and duplicate routing, while keeping conditions, counterexamples, permissions, and personal choices. Runtime Markdown shrank about 33.5% by character count.
 
-## 修改前的判断
+Tests: 53 → 56. Cases 26/28 had their expected behavior revised, and cases 54–56 were added as performance-evidence cases.
 
-当前仓库及适用父目录未发现 AGENTS.md / AGENTS.override.md；未发现本 skill 的 CI、脚本或额外 agent 配置。有效入口为 description 与 agents/openai.yaml，随后加载 SKILL.md 和它引用的 20 份 references。README 只负责技能介绍与安装；另一 skill survey-md 用于学术综述，不与软件结构设计合并。
+Luna (`gpt-5.6-luna:high`) ran blind on the frozen skill:
 
-没有证据表明需要新增仓库级操作规则。问题主要在 skill 自身的重复层级、跨题内容和默认流程。
+- Triggering: 18/18 trigger cases matched (12 positive, 6 negative).
+- Boundary cases: 35 answered in batches; 31 were unflagged and 4 went to review. Because grading was later corrected, the 49/53 is not a stable success rate.
+- Static review: two points accepted (restore stable, distinguishable error results; check that callers depend on fewer internal conventions after evolution). Two rejected, because existing rules already covered them.
 
-| 原文件与具体规则 | 原目的 / 当前副作用 | 本轮决定 |
-|---|---|---|
-| SKILL.md 的执行流程、协作、输出及完成检查；audit-software-architecture.md 的“完整方法与 pattern 加载合同” | 防止发现遗漏，却反复要求全读 11 方法、选择器、四家族；局部库也加载分布式百科 | 将具体发现问题与反证集中到审计 reference，详细设计按需读 |
-| SKILL.md 与各方法的完成标准、判停条件、固定多表产物 | 让结果可核验，却把可选分析工具变成交付义务；难以遵守简短直接回答 | 保留证据链与关键验证，取消固定表数、顺序、详细计划及普遍判停 |
-| design-deep-modules.md 与 source-decisions.md C08 的“主动询问” | 防止擅加高权限接口，却在普通 API 设计中引入无关确认 | 保留显式需求与生产隔离，只在实际设计此能力且范围缺失时澄清 |
-| design-it-twice.md 强制第二候选，make-code-obvious-to-readers.md 每轮安排读者重读 | 防止首案偏见、作者盲点，却扩大小决定并产生外部参与依赖 | 比较限定为重要/难逆决定；读者任务保留为检验方式，不强制找人或多轮审查 |
-| audit-software-architecture.md 自建 A0/A1/A2 与 P0/P1/P2 及完整报告模板 | 区分类别与严重度，却增加重复定级和输出负担 | 保留分类与因果准入，沿用目标项目等级 |
-| 11 方法重复的 R/I/A/E/B 模板、glossary.md、四模式家族及来源索引 | 书籍蒸馏和知识收集变成百科；大量案例、邻接方法和裁决重复 | 按任务合并；删除书摘、公司案例、产品/协议/部署目录与重复术语 |
-| test-prompts.json 中完整加载及固定产物的 expected_behavior、darwin_compatible | 旧评估鼓励被删除的流程，兼容标志没有当前实现依据 | 改为行为结果评估，保留代表性失败边界，删掉无对应工具的标志及虚设通过率门槛 |
+User correction to grading (case 26): an architecture audit of a high-performance library should examine performance-relevant structure and may recommend measurements, baselines, and optimizations. Failing answers for proposing baselines was the evaluator's error, so the "no baseline-building recommendations" restriction added for it was withdrawn. What still counts is accurate evidence strength and not treating a recommendation as authorization to implement. Separate real issues were kept on record:
 
-未发现本 skill 强制使用 subagent 或全量集成测试的要求；不新增这类运行规则。来源材料中的旧编排说明不是当前执行协议。
+- A possible shared protocol was stated as confirmed (case 26).
+- A "confirmed fine-grained boundary call" was not in the material (case 28).
 
-## 保留的约束与迁移
+Final targeted reruns, each in a fresh context, all passed under the corrected criteria:
 
-保留深模块、共同知识权威、完整工作流和逃逸治理；这些是 skill 的设计视角。特别保留有明确个人答复记录的当前简单性、不默认用 TDD 生成架构、多基类实现继承取舍、必要性能入口、调试面可用性与生产隔离。它们并非仅凭一般模型能力就应删除的常识。
+- Case 26 audited with baselines and did not claim unmeasured regressions.
+- Case 39 respected "no performance plan".
+- Case 54 chose batching from the boundary-cost data.
+- Case 55 chose consolidating copy responsibility once copying dominated.
+- Case 56 refused to name a root cause from a total timing alone.
 
-历史测试记录描述了严重度误分类、性能背景扩题和发现判据不可达；保留其保护目的，重做造成负担的全量加载机制。历史原始日志未复验，旧通过率不作为新版证据。没有因证据不足而继续强制保留的旧流程；个人偏好的记录依据与适用位置保存在 [来源与裁决](../../docs/software-design-philosophy/source-decisions.md)。
+Not run: a full 56-case regression on the final version. No end-to-end business-system tests.
 
-- 复杂性诊断、信息泄露、重要性及组合/拆分合并进 design-module-boundaries.md；读者理解压缩为检验任务。
-- 注释优先的契约内容合入 design-deep-modules.md；错误处理保留独立 reference，方便正常接口已定时直接进入。
-- 设计两次合入 evolve-design-strategically.md，与迁移取舍共用证据。
-- 模式选择器及四类模式合为 design-system-boundaries.md，仅保留边界、状态与失败契约；不新建泛系统设计 skill。
-- 来源问答、书目和历史失败依据压缩后移入仓库级 docs/software-design-philosophy/source-decisions.md；通用词典、详细来源路径目录不再加载。
-- 未向 AGENTS.md 迁入方法论，也未新增脚本：结构判断无法可靠编码为检查器；文件格式等确定性部分使用已有 skill validator 和一次性链接/元数据检查。
+## 2026-09-08 research addendum (0.7.0, baseline 35f754a)
 
-原 11 个方法的具体去向如下。它们保留为判断与验证方法，不再各自要求一套完整流程：
+Runtime: practices from the [research report](../../docs/software-design-philosophy/research-2026-09-08.md) were folded into the entry and the module, interface, evolution, and audit references. The seven references were kept, with no AI-specific routing.
 
-| 原方法 | 保留的判断 | 当前位置 |
-|---|---|---|
-| 复杂性加权诊断 | 从真实任务发现变更放大、认知负荷与未知依赖，按频率和后果确定重点 | [模块与知识边界](../../software-design-philosophy/references/design-module-boundaries.md) |
-| 信息泄露审计 | 追踪必须同步解释的知识，区分单一权威、派生表示与表面重复 | 同上 |
-| 组合或拆分 | 比较共享知识、独立变化原因、接口和生命周期成本 | 同上 |
-| 围绕重要性设计 | 找能支撑多个当前用例的核心概念，区分模块可推导与调用者独有的决定 | 同上 |
-| 读者易理解性 | 以真实阅读任务检验入口、契约和修改点，先减少隐藏约定再改名称与说明 | 同上；入口显式涵盖理解成本 |
-| 深模块设计 | 用完整工作流检验有限原语、默认路径、长尾归属与受控逃逸 | [深模块与接口](../../software-design-philosophy/references/design-deep-modules.md) |
-| 注释优先的抽象设计 | 在实现前以调用者契约检验抽象，让实现反馈修正契约 | 同上 |
-| 缩减异常处理面 | 根据意图与恢复信息选择定义消除、就地恢复、聚合、上报或明确失败 | [错误处理边界](../../software-design-philosophy/references/reduce-exception-surface.md) |
-| 设计两次 | 重要决定比较结构不同的候选，用相同用例检验取舍 | [方案比较与演化](../../software-design-philosophy/references/evolve-design-strategically.md) |
-| 战略式演化设计 | 明确目标权威，切出完整工作流增量，保护行为并退出临时机制 | 同上 |
-| 证据驱动的关键路径设计 | 用目标、代表性负载和基线比较根本成本、性能入口与新增复杂性 | [性能约束下的设计](../../software-design-philosophy/references/design-measured-critical-paths.md) |
+Tests: 46 → 53.
 
-skill 名称保持 software-design-philosophy，自动发现仍启用。description 缩窄到架构审计、模块间理解与变更成本、边界/API/扩展契约、结构比较及演化；排除纯用法、机械实现、局部风格、事故止血和不涉及结构取舍的性能排查。明确用户任务优先，解决固定流程与交付格式、已定方案、授权范围的冲突。
+Verified: an independent evaluator got only the skill and three raw scenarios, read four relevant references, and did not load every file:
 
-## 最终层级与体量
+- Reservation and release built in separate worktrees, verified only with dicts and mocks: it flagged the composition gap and suggested idempotency and recovery checks on a real test database, without forcing whole-batch atomicity.
+- A sort-order change that a consumer depends on, where the user wants a direct switch: it moved the consumer to an explicit fact and added no compatibility path.
+- Stale PASS results and side effects still in flight after a mid-run requirement change: it re-evaluated them proportionately.
 
-`description / UI 元数据 → SKILL.md 判断尺度与路由 → 当前任务需要的 reference`。
+Final wording about checkable small examples and starting scenarios was checked textually only. `skills@1.5.24` local copy install produced 9 files, identical byte for byte to the skill, with no research or test material. Not measured: success rate, latency, token use, or cost versus the old version.
 
-审计 reference 自带发现判据；其余专题负责深入设计。维护评估材料放在仓库级 tests/software-design-philosophy/，来源记录放在 docs/software-design-philosophy/；它们位于可安装 skill 目录之外，入口不向外引用。
+## 2026-09-08 refactor (0.6.0, baseline 1f3d992)
 
-| 度量 | 修改前 | 修改后 |
-|---|---:|---:|
-| SKILL.md | 165 行 / 20,311 字节 | 40 行 / 3,866 字节 |
-| references 数 | 20 | 7 |
-| SKILL.md + 全部 references | 4,425 行 / 283,615 字节 | 302 行 / 32,042 字节 |
+Runtime: `SKILL.md` went from 165 to 40 lines, and references from 20 to 7, cutting runtime text by about 89% in bytes. Several mandatory processes were removed:
 
-字节数为 UTF-8，运行时文本总量减少约 88.7%；不是 token 测量，也不代表每个任务的实际加载量。
+- Full loading of 11 methods and four pattern families.
+- Fixed multi-table outputs and completion criteria.
+- Proactive questions about debugging surfaces.
+- A forced second design candidate and repeated reader passes.
+- A custom A0–A2/P0–P2 grading scheme.
+- A glossary and pattern encyclopedias.
 
-## 已执行验证
+The 11 methods were merged by task into the current references. The audit reference keeps its own discovery criteria; the other references are read on demand. The description was narrowed and explicit user tasks take precedence. The test set was rewritten around behavioral outcomes (46 cases), dropping expectations that rewarded the removed processes.
 
-- skill-creator 的 quick_validate.py：通过。
-- 运行时 Markdown 的 17 条本地链接：目标全部存在；所有 reference 均可从入口到达。
-- 收尾核对补足“模块间理解成本”的触发与路由，保留局部风格修改负例；新增对应理解任务正例供后续评估。
-- UI YAML：字段可解析，简介长度有效，默认提示包含 skill 名，自动发现策略保持默认。
-- 评估 JSON：46 个唯一用例，11 个触发正例、6 个负例、29 个边界例；格式与字段检查通过。
-- git diff --check：通过。旧全量加载、主动询问与编排要求的搜索结果仅剩历史说明或明确否定，不再作为有效要求。
+Verified: `quick_validate.py`, links, YAML, and JSON. An independent agent with only the skill, raw tasks, and isolated fixtures completed three tasks without extra clarification or loading every reference: a record-library audit, an editor primitive design, and a resumable file-conversion job. This does not show all 46 cases pass or prove equivalence with the old version. No evaluation harness or CI was added.
 
-按 skill-creator 对复杂 skill 的独立前向验证建议，另用一个独立 agent 仅提供当前 skill、原始任务及隔离夹具，不提供预期答案，不允许读取测试文件、历史或旧报告。实际完成三个任务：
-
-| 原始任务与材料 | 实际观察 | 判断 |
-|---|---|---|
-| 本地记录库：codec/editor/export 各解释 R1 格式，历史记载格式变更曾漏改；有批量视图基准、薄适配器和公开关闭契约 | 确认格式知识多权威；把旧记录兼容列缺口；运行只读演练发现视图退出后仍可读，并分类为实现缺陷；保留批量边界和薄适配器。只读审计与模块边界两份 references | 满足结构发现、分类和范围边界 |
-| 本地编辑器：三种删除与插件范围替换，要求共用 undo/通知，只要签名与必要契约 | 给出统一 replace、版本/范围语义及 undo/通知契约；未询问或创建调试面。只读深模块 reference | 满足直接交付与扩展不变量 |
-| 几分钟文件转换任务：可断线查询/取消，已有 SQLite 和扫描 worker | 以事务记录受理，worker 认领；覆盖幂等、取消竞态、租约恢复、产物与索引提交、终态和清理，没有强加消息队列。只读系统边界与错误处理两份 references | 满足具体方案与失败契约 |
-
-三个执行样例没有因 skill 要求产生额外澄清或停止，也没有加载全部 references。它们支持当前结构可用，但不等于 46 个用例全部经过独立执行，更不证明与旧版全面等价。
-
-## 暂不扩大处理的事项
-
-- 尚无自动运行整套行为用例的评估 harness；当前不为这次文档重构引入模型调用平台或 CI。
-- 有限样例不能证明所有领域的召回率。后续真实使用如出现遗漏，应补相应发现判据或边界示例，不直接恢复全量阅读。
-- 原书与上游材料、历史测试原始证据未重新审计；保留来源角色和不可变快照线索，不宣称已验证其当前内容。
-
-## 安装边界修正
-
-原目录虽未默认加载测试材料，但它们仍会作为安装内容分发：核对 [skills 安装器源码](https://github.com/vercel-labs/skills/blob/main/src/installer.ts) 的 copyDirectory，发现它递归复制目录，只排除少数固定文件/缓存目录；本机已安装旧副本也确实包含 test-results.md 与 test-prompts.json。
-
-现将测试用例和报告移入仓库级 tests/software-design-philosophy/，来源裁决移入 docs/software-design-philosophy/，同步修复维护文档链接并移除入口的来源记录链接。必要个人取舍已保留在执行文件中。安装目录只含 SKILL.md、agents/ 与按需方法 references/；不依赖未验证的忽略文件规则。
-
-隔离安装实测：使用 npm 当前发布的 skills@1.5.24，在临时项目中执行 `skills add <仓库路径> --skill software-design-philosophy --agent codex --copy --yes`。工具发现 2 个 skill，仅安装指定的 1 个；安装目录共 9 个文件，与当前 skill 目录逐文件字节一致，不含测试、报告或来源裁决。全仓相关本地链接有效，7 份运行时 reference 均可从入口到达，17 条运行时链接全部留在安装目录内。
+Installation boundary: the [skills installer](https://github.com/vercel-labs/skills/blob/main/src/installer.ts) copies the skill directory recursively, and an installed copy did contain the test files. Tests therefore live in `tests/software-design-philosophy/` and sources in `docs/software-design-philosophy/`, outside the installable directory. A `skills@1.5.24` isolated install produced only the 9 runtime files.

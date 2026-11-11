@@ -1,33 +1,46 @@
-# 模块与知识边界
+# Module and knowledge boundaries
 
-## 从语义与知识开始
+## Start from semantics and knowledge
 
-沿真实用例辨认数据单位、基数和时间关系，区分身份、历史实例、当前值、快照与派生量，据此决定类型和边界。
+Identify data units, cardinality, and temporal relationships along real use cases; distinguish identity, historical instance, current value, snapshot, and derived value, and choose types and boundaries accordingly.
 
-沿代表性修改追踪须共同解释的规则，优先高频或高后果任务。
+Trace the rules that must be interpreted together along representative modifications, prioritizing frequent or high-consequence tasks.
 
-权威交给有信息维护不变量的一方，明确状态的产生、修改、移交、失效与释放。新增派生状态或删状态、参数前，核对合法调用与状态变化中的可推导性及成本。
+Give authority to the party with the information to maintain the invariant, and make explicit how state is created, modified, handed over, invalidated, and released. Before adding derived state, or removing state or parameters, check whether the value is derivable on every legal call and state change, and at what cost.
 
-并发设计先核对是否需要同一份可变状态；独立状态可分离。必须共享时，按共同不变量确定写入范围，用现有事务、锁、所有权或单写入者机制覆盖全部合法写入路径；计入分离后的复制、内存与汇合成本。
+For concurrency, first check whether one mutable state really needs to be shared; independent state can be separated. When sharing is required, set the write scope by the shared invariant and cover every legal write path with an existing transaction, lock, ownership, or single-writer mechanism; account for the copying, memory, and join cost after separation.
 
-连续修补在同一条件下失败时，核对共同前提与责任分配。区分知识不可达、契约不足、实现错误与验证遗漏；有证据表明前提错误时再调整权威、表示或协议。
+When successive patches fail under the same condition, check the shared premise and the assignment of responsibility. Distinguish unreachable knowledge, an insufficient contract, an implementation error, and a verification gap; adjust authority, representation, or protocol only when evidence shows the premise is wrong.
 
-## 选择边界
+## Choose a boundary
 
-- **合并**：同一规则或状态机总需共同理解、修改，合并能消除中间表示或重复恢复；同时检查是否引入无关依赖、共同发布或权限扩大。
-- **拆分**：责任有独立变化原因，拆后可以独立理解；计入新接口、状态传递、导航与协调成本。
-- **保留**：薄边界确实翻译外部协议、隔离信任或故障、保护稳定契约。跨语言、跨进程或信任边界须保留多份解释时，用同源生成、共享 fixture 或契约测试检测分叉，检测要能发现各份之间的错配。
+- **Merge**: one rule or state machine always has to be understood and changed together, and merging removes an intermediate representation or duplicated recovery; also check whether it introduces unrelated dependencies, coupled releases, or wider permissions.
+- **Split**: responsibilities have independent reasons to change and can be understood separately after the split; account for the new interface, state passing, navigation, and coordination cost.
+- **Keep**: a thin boundary genuinely translates an external protocol, isolates trust or failure, or protects a stable contract.
 
-用命名记录表达共同成立的字段关系，变体表达真实互斥选择，各支只承担必要数据与处理。标准容器或迭代器满足消费契约时直接使用。按真实增长上限和生命周期选表示。
+Use named records for fields that hold together and variants for genuinely exclusive choices, with each branch carrying only the data and handling it needs. Use standard containers or iterators directly when they satisfy the consumer contract. Choose representations by real growth limits and lifecycles.
 
-模块可可靠决定的选项收回内部，调用者独有的选择留在契约。
+Options the module can reliably decide move inside; choices only the caller can make stay in the contract.
 
-个人取舍：**不采用多基类实现继承**。插件优先组合、接口、trait 或 concept。
+Personal choice: **no multiple-base implementation inheritance**. For plugins, prefer composition, interfaces, traits, or concepts.
 
-## 检验实际收益
+## Retained copies
 
-走通代表性调用或重放原任务，看权威是否收拢、必要适配是否留在边缘、调用者是否少学内部知识。
+When a second interpretation of the same knowledge is kept, whether for a cross-language, cross-process, or trust boundary, for performance, or because an adjustment is deferred:
 
-在实际信任边界解析并校验外部数据，用已有类型、schema 或受控写入口保护可表达的不变量。已验证事实仍受约束保护时，内部直接使用有效表示；新信任边界、可变权限或并发状态在相应操作处检查。
+- Name the authority and the reason the copy is kept.
+- Detect drift with generation from one source, shared fixtures, or contract tests; the check must catch mismatches between the copies, not only each copy's own validity.
 
-类型断言、强转或忽略检查反复穿过边界时，核对接口是否漏表达契约。
+## Cumulative debt
+
+Register deferred structural improvements, avoidable duplicate interpretations, and missing mismatch checks in the project's backlog or roadmap, even when they fall short of the architectural problem criterion. Record the affected callers or consumers, the responsible authority, the reason for deferral, and the evidence or condition for revisiting the adjustment.
+
+Necessary boundary copies with a clear authority and effective mismatch checks can remain part of the intended design.
+
+## Check the actual payoff
+
+Walk a representative call or replay the original task: is authority consolidated, do necessary adapters stay at the edge, do callers need less internal knowledge?
+
+Parse and validate external data at the actual trust boundary, and protect expressible invariants with existing types, schemas, or controlled write entry points. While validated facts remain protected by those constraints, use the valid representation directly inside; check new trust boundaries, mutable permissions, or concurrent state at the operations where they arise.
+
+When type assertions, casts, or ignored checks repeatedly cross a boundary, check whether the interface fails to express the contract.

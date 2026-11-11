@@ -1,23 +1,23 @@
-# 性能约束下的设计
+# Design under performance constraints
 
-按工作量与资源生命周期比较表示和边界，分别评价运行成本与维护收益。
+Compare representations and boundaries by work volume and resource lifecycle; assess runtime cost and maintenance payoff separately.
 
-## 工作量与驻留成本
+## Work volume and residency cost
 
-按预期规模粗估完整路径的扫描、复制、编码、分配及同时驻留；缺规模时标明假设。比较算法、布局、批量、共置与消除转换，再考虑缓存、并行或特殊路径。关键取舍和硬门槛做相称测量。
+Estimate, at the expected scale, the scanning, copying, encoding, allocation, and simultaneous residency along the full path; state assumptions when scale is unknown. Compare algorithms, layout, batching, co-location, and eliminating conversions before considering caching, parallelism, or special paths. Measure key trade-offs and hard thresholds in proportion.
 
-首版优先主流程。优化前估可省工作的比例及新增维护成本。
+The first version prioritizes the main flow. Before optimizing, estimate the share of work saved and the added maintenance cost.
 
-沿产生、移交、最后使用到释放比较输入、中间态、最终表示、scratch 与失效但仍持有的载荷。计入对象数量、inline 预留、堆容量、子数组和同时活动任务。
+Follow inputs, intermediates, final representations, scratch space, and stale-but-held payloads from creation and handover through last use to release. Count object counts, inline reservations, heap capacity, slices that keep a parent buffer alive, and concurrently active tasks.
 
-## 约束高级入口
+## Advanced entry points
 
-通用接口缺少批量或一致性原语时先补能力；调用者必须控制且模块无法推断的选择才进入窄的类型化接口。
+Ownership of capability gaps follows [deep modules and interfaces](design-deep-modules.md#assign-each-gap-an-owner): when a general interface lacks a batch or consistency primitive, add the capability first.
 
-view/span、共享缓冲等须明确所有权、生命周期、引用失效、可变性、线程安全及普通/复制路径回退。
+Views/spans, shared buffers, and similar must state ownership, lifetime, reference invalidation, mutability, thread safety, and the fallback to the ordinary or copying path.
 
-## 裁决取舍
+## Decide the trade-off
 
-性能结论需代表性负载、当前基线与可比环境，核对实际并行资源，计入波动、冷启动、尾延迟、内存及维护成本。快慢路径须守住共同不变量。为保护代码生成、内联或布局而复制实现时，就近写明所依据的测量，用测试约束两份共同的不变量，并在项目待办中登记合并所需的证据。
+Performance conclusions need representative load, a current baseline, and a comparable environment; check the parallel resources actually available, and account for variance, cold start, tail latency, memory, and maintenance cost. Fast and slow paths must uphold shared invariants. When an implementation is duplicated to protect code generation, inlining, or layout, record the measurement it rests on next to it, check shared invariants under [retained copies](design-module-boundaries.md#retained-copies), and register the evidence needed for merging under [cumulative debt](design-module-boundaries.md#cumulative-debt).
 
-缺测量时区分可推导成本、疑似瓶颈与未决收益，选能裁决取舍的最小测量；现有机制核实作用后决定去留。
+Without measurements, distinguish derivable cost, suspected bottlenecks, and undecided payoff, and pick the smallest measurement that can decide the trade-off; verify what an existing mechanism actually does before keeping or removing it.
