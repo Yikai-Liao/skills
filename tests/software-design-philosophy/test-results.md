@@ -4,7 +4,15 @@ One section per revision, newest first. Each records what changed in the runtime
 
 "Not verified" means not verified: a test case's prompt and expected behavior existing is not a pass, and static checks are not evidence of behavior.
 
-## Current revision: translation follow-up (0.17.1)
+## Current revision: Tessera simplification rework (0.18.0)
+
+Runtime: the evolution reference requires settling the target structure when several known candidates reshape one contract or area, and makes one decision the acceptance unit of a migration step. The global-simplification reference requires naming the fact a retired specialization carries, writing the cost model before measuring, separating a mechanism's purposes, and keeping rejected or shelved candidates as repository records with a reopen condition. Two SKILL.md routing rows name these triggers. Evidence: [source decisions](../../docs/software-design-philosophy/source-decisions.md#2026-11-12-tessera-simplification-rework-0180).
+
+Tests: 103 → 108. Paired cases for target structure (four candidates on one trait) against an independent local cleanup that needs no end-state planning; bundled acceptance; a specialization flag whose removal is predictable from its carried fact; a rejection recorded only in a PR comment.
+
+Verified: JSON parsing and unique test IDs, local Markdown links and anchors, English-only runtime text, `git diff --check`. Not run: independent model answers or natural-trigger behavior; the five new cases are evaluation material, not passing results.
+
+## Translation follow-up (0.17.1)
 
 Runtime: separated retained copies from cumulative debt; preserved the performance-copy merge-evidence requirement; made a meaningful structural gap the condition for debt registration. Scoped complete structural implementation to new designs and requested refactors. Restored internal design decisions to the trigger and added a deep-module route to the debugging-surface preference. Restored confirmed-success / confirmed-non-execution / unknown outcomes separately from error classification. Fixed the migration-seam lifecycle and the automatic pipeline-stage merge recommendation; clarified joining writers before the operation returns.
 

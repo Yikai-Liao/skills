@@ -10,6 +10,9 @@ Compare caller knowledge, state, failure, performance, compatibility, and revers
 
 Settle rule and state ownership first, then cut the smallest complete slice that delivers current value and takes back responsibility.
 
+When several known candidates reshape the same contract, representation, or area, settle its target structure from all of them before landing slices, so each slice moves toward that end state instead of a local optimum the next slice reshapes. Local cleanups inside an area awaiting such a change wait for it or fold into it.
+
+- **Acceptance unit**: each step replaces one mechanism or changes one behavior or routing choice, evaluated against the preceding head; structural and behavior-changing steps stay separate. A step that bundles several replacements cannot attribute a failed check, so it can be neither accepted nor partially reverted.
 - **Behavior**: separate formal guarantees, consumer dependencies, and unknowns; check ordering, defaults, errors, timing, parallelism policy, and performance; keep or migrate per the goal, and report actual semantic changes.
 - **Steps**: migrate complete use cases using narrow seams where needed, retiring old entry points and temporary seams once they no longer serve a purpose; each step has a success condition and a recovery path; temporary dual paths state the authority, remaining consumers, and exit condition.
 - **Data**: define read/write ownership before and after cutover, backfill or sync, and recovery; plan application rollback and data rollback separately.

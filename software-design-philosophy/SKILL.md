@@ -28,8 +28,8 @@ Decide software structure and mechanisms through the lens of *A Philosophy of So
 | Concepts, representation, state authority, combining or splitting responsibilities, retained copies of a rule | [Module and knowledge boundaries](references/design-module-boundaries.md) |
 | Complete operations, caller burden, internal organization, extension | [Deep modules and interfaces](references/design-deep-modules.md) |
 | Normal interface settled; organizing errors and recovery responsibility | [Error handling boundaries](references/reduce-exception-surface.md) |
-| Whole-system simplification, or repeated representations, conversions, coordination, or parallel implementations found while coding | [Global simplification search](references/search-global-simplification.md) |
-| Structural candidates for important decisions; evolution under deadlines and compatibility constraints | [Comparing and evolving designs](references/evolve-design-strategically.md) |
+| Whole-system simplification, or repeated representations, conversions, coordination, or parallel implementations found while coding; retiring a specialized path, flag, or state; recording rejected candidates | [Global simplification search](references/search-global-simplification.md) |
+| Structural candidates for important decisions; evolution under deadlines and compatibility constraints; sequencing a multi-step simplification or migration | [Comparing and evolving designs](references/evolve-design-strategically.md) |
 | Work volume, resident memory, layout, batch capability, advanced entry points | [Design under performance constraints](references/design-measured-critical-paths.md) |
 | Cross-process work, async tasks, replicated state, recovery contracts | [System boundaries and failure contracts](references/design-system-boundaries.md) |
 
