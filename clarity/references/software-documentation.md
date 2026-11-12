@@ -1,24 +1,24 @@
-# 软件文档的重点边界
+# Software Documentation
 
-复用项目布局，区分**当前行为、批准目标、待评审提案与未知项**，标明版本与实现/spec 差异。
+Reuse the project's layout. Separate **current behavior, approved goals, proposals under review, and unknowns**, and mark versions and differences between implementation and spec.
 
-- README 分开使用者与贡献者路径，替代安装方案按选项组织；演示与生产的隔离、权限等前提分别说明。
-- 操作前就近交代权限、写回或破坏性影响及备份回退要求；安全报告沿用项目的私密入口。
-- API 和 spec 保留失败、副作用、单位与保证强度；独立参考与源码 docstring 各留在读者和工具能找到的位置。
-- 计划保留依赖、验证、回退和发布要求，以及真实进度、未决项与执行发现。
+- A README separates user and contributor paths and organizes alternative installation methods as options; state preconditions such as demo/production isolation and permissions separately.
+- Before an operation, state nearby the permissions, write-back or destructive effects, and backup and rollback requirements. Security reports use the project's private channel.
+- APIs and specs keep failures, side effects, units, and strength of guarantees. Standalone references and source docstrings each live where their readers and tools find them.
+- Plans keep dependencies, verification, rollback, and release requirements, plus actual progress, open items, and findings from execution.
 
-## 按理解问题选择视图
+## Choosing a view by question
 
-系统边界、应用与存储、组件和部署关系优先用 C4 的相应视图，避免混合层级：
+For system boundaries, applications and storage, components, and deployment, prefer the matching C4 view and do not mix levels:
 
-- **系统上下文（C1）**定位系统、使用者和直接交互的外部系统。
-- **容器（C2）**展开系统内部应用与数据存储。逻辑 container 不等于 Docker 容器、Pod 或部署副本。
-- **组件（C3）与代码（C4）**按内部职责或实现的解释需要下钻。
-- **动态视图**解释协作顺序，与静态依赖区分。
-- **部署视图**说明实际环境、实例及基础设施映射，副本数、隔离与故障保证依实际部署材料说明。
+- **System context (C1)** places the system, its users, and the external systems it interacts with directly.
+- **Container (C2)** opens up the applications and data stores inside the system. A logical container is not a Docker container, Pod, or deployment replica.
+- **Component (C3) and code (C4)** drill down as far as explaining internal responsibilities or the implementation requires.
+- **Dynamic views** explain the order of collaboration, kept distinct from static dependencies.
+- **Deployment views** map to real environments, instances, and infrastructure. Replica counts, isolation, and failure guarantees come from actual deployment material.
 
-局部算法可用短文、数据流或状态表解释阶段、数据生命周期与不变量；局部讨论复用已有上层说明。
+A local algorithm can be explained with short prose, a data flow, or a state table covering phases, data lifecycle, and invariants; local discussion reuses the higher-level explanation that exists.
 
-各视图中的对象与名称能对应，职责和关系明确。更新契约说明时核对相关示例和旧术语；图配合选择理由与代价，决定记录见[设计讨论](design-discussion.md)。
+Objects and names correspond across views, with clear responsibilities and relations. When updating a contract description, check related examples and old terms. Pair diagrams with the reasons for the choice and its costs; for decision records see [design discussion](design-discussion.md).
 
-源码命名、注释及单条报错见[代码表达](code-readability.md)。
+For source naming, comments, and individual error messages, see [code expression](code-readability.md).

@@ -1,39 +1,39 @@
-# 代码表达的重点边界
+# Code Expression
 
-新写与改写代码都用主流程、名称和局部组织表达需求与有效契约。保行为重构保持约定行为；功能修改及破坏性迭代按目标需求处理。
+New and rewritten code both express the requirement and its effective contract through the main flow, names, and local organization. Behavior-preserving refactors keep the agreed behavior; feature changes and breaking iterations follow the target requirement.
 
-## 主流程与局部细节
+## Main flow and local detail
 
-让读者看清操作阶段、状态变化和外部效果，将低层细节放在合适的局部。名称结合定义、类型和调用语境，准确体现对象、粒度、单位与时态；职责改变后核对旧名。短作用域中的清楚惯用名可以保留。
+Let the reader see operation phases, state changes, and external effects, and keep low-level detail local. Read together with its definition, type, and call context, a name states the object, granularity, unit, and tense accurately; when a responsibility changes, recheck the old name. Clear idiomatic names in short scopes can stay.
 
-成功路径埋在多层分支里、阶段交错或临时状态需跨很远追踪时，按具体障碍选择提前返回、局部变量或阶段提取，保留分支优先级、短路与清理关系。
+When the success path is buried in nested branches, phases interleave, or temporary state must be tracked across a long distance, pick early returns, local variables, or phase extraction to fit the specific obstacle. Preserve branch priority, short-circuiting, and cleanup relations.
 
-**完整阶段即使只调用一次，也可提取。** 输入、输出与效果边界须清楚，调用处能凭名称和契约理解主流程。相关 helper 就近组织；提取若增加大量共享可变状态、万能上下文、模式开关或分散不变量，应重选边界，让阶段承担可辨认的完整职责。
+**A complete phase can be extracted even if it is called once.** Its input, output, and effect boundaries must be clear, and the call site must read as the main flow from the name and contract. Keep related helpers nearby. If extraction adds much shared mutable state, a catch-all context, mode switches, or scattered invariants, choose another boundary so each phase owns a recognizable, complete responsibility.
 
-短函数若表达稳定概念、隔离约束或隐藏实现选择，可以保留。只换名取值或转发、增加跳转却未减少理解负担的 helper，可内联；只需命名一步计算时用局部变量。依据概念和阅读成本取舍，内联后保留有意义的中间值；完整判断、查表或惯用法可紧凑保留。
+A short function that expresses a stable concept, isolates a constraint, or hides an implementation choice can stay. Inline a helper that only renames, fetches, or forwards, adding a jump without reducing understanding; to name a single computation step, use a local variable. Decide by concept and reading cost, and keep meaningful intermediate values after inlining. A complete predicate, lookup, or idiom can stay compact.
 
-函数长、缩进深只是检查信号。规则表、连贯算法和需一起审计的状态转换可以保持完整。改名时核对公开参数、协议键、反射与动态引用的契约。
+Function length and indentation depth are only signals. Rule tables, coherent algorithms, and state transitions that must be audited together can stay whole. When renaming, check the contracts of public parameters, protocol keys, reflection, and dynamic references.
 
-完成改动后，连同受影响函数、helper 与调用处试读一个维护任务，如定位首次写入或修改失败条件。主路径、状态变化和失败出口若仍需逐层拼装，应调整局部组织。
+After the change, read the affected functions, helpers, and call sites together for one maintenance task, such as finding the first write or changing a failure condition. If the main path, state changes, and failure exits still have to be assembled layer by layer, adjust the local organization.
 
-## 改写的行为边界
+## Behavior boundaries when rewriting
 
-追踪当前理解问题所需的关系，保持有效的求值次数与顺序、短路、副作用、同步/异步异常、数值与 Unicode 语义、资源清理及锁范围。例如 async 包装可能将同步抛错转为 Promise 拒绝，去掉包装会改变契约。
+Trace the relations the current reading problem depends on. Preserve effective evaluation count and order, short-circuiting, side effects, synchronous and asynchronous exceptions, numeric and Unicode semantics, resource cleanup, and lock scope. For example, an async wrapper may turn a synchronous throw into a Promise rejection; removing it changes the contract.
 
-澄清当前值、快照与更新关系；状态、缓存或同步机制的去留依据其设计作用。局部整理针对具体阅读问题。
+Make the relation between a current value, a snapshot, and an update clear. Keep or remove state, caches, and synchronization according to their design role; local tidying targets a specific reading problem.
 
-整理测试时保留各自的回归目的与必要覆盖，可删除只重复验证依赖库、且未验证本项目契约的脚手架。
+When tidying tests, keep each test's regression purpose and the necessary coverage. Scaffolding that only re-verifies a dependency library, without checking this project's contract, can go.
 
-## 注释与文档工具
+## Comments and documentation tools
 
-非显然实现就近说明成立条件与原因，如回退、哨兵、回撤或跳过逻辑。bug 修复保留触发条件、旧问题与防回退依据；性能取舍说明节省的工作、适用条件与代价。原因未明时查实现、测试或历史，注释采用可确认的事实。
+Next to non-obvious code, state why it holds and under what conditions, such as for fallbacks, sentinels, rollbacks, or skips. A bug fix keeps the trigger, the old problem, and what prevents regression; a performance trade-off states the work saved, where it applies, and its cost. If the reason is unclear, check the implementation, tests, or history, and write only facts that can be confirmed.
 
-保留有技术信息的历史，删聊天流水与自评。长报告可外链，防误改的关键原因留在代码旁；收益数字附实际测量条件，行为变化时同步更新说明。
+Keep history that carries technical information; delete chat logs and self-assessment. A long report can be linked, but the key reason that prevents a mistaken edit stays beside the code. Performance numbers come with their measurement conditions; when behavior changes, update the explanation.
 
-API 文档注释交代行为与失败语义，放在文档工具或 `help()` 能读取的位置；私有注释按实际需要写。
+API doc comments describe behavior and failure semantics, placed where documentation tools or `help()` can read them. Write private comments as actually needed.
 
-## 报错与诊断信息
+## Error and diagnostic messages
 
-区分操作结果、已知原因、候选原因与未知；超时表达停止等待，操作终态按实际保证说明。
+Separate the operation outcome, known causes, candidate causes, and unknowns. A timeout means waiting stopped; describe the operation's final state only as far as it is actually guaranteed.
 
-保留必要位置、标识与条件。人类消息可改写，机器依赖的错误码、异常、退出状态、通道、字段及消息原文按兼容约定处理。
+Keep the needed location, identifiers, and conditions. Human-facing wording can change; error codes, exception types, exit statuses, output channels, fields, and message text that machines depend on follow their compatibility agreements.

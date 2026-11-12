@@ -1,23 +1,23 @@
-# 设计讨论与记录
+# Design Discussion and Records
 
-用于表达设计取舍、记录决定与交接。结构说明按问题选择[视图](software-documentation.md#按理解问题选择视图)，复用已有内容。
+For expressing design trade-offs, recording decisions, and handing off. For structural explanations, choose a [view](software-documentation.md#choosing-a-view-by-question) by question and reuse existing content.
 
-## 记录与讨论
+## Recording and discussing
 
-持续审阅、交给实现或跨会话接续的设计，及时回写现有架构说明、RFC、ADR 或计划，区分现状、提案和有效决定。保留有依据的理由、代价、范围、条件与来源；可在同文分节组织。
+When a design is under ongoing review, handed to implementation, or continued across sessions, write it back promptly into the existing architecture notes, RFC, ADR, or plan, separating current state, proposals, and decisions in force. Keep grounded reasons, costs, scope, conditions, and sources; sections in one document are fine.
 
-沿当前场景解释变化，重要选择交代推荐、可行替代与代价。用户说看不懂时，先把相关关系解释清楚。
+Explain changes from the current scenario. For important choices, give the recommendation, viable alternatives, and costs. When the user says they cannot follow, first explain the relevant relations.
 
-## 继承决定
+## Inheriting decisions
 
-接续讨论突出新事实及局部影响，沿用有效决定并保留重要来由。契约或假设改变时复核受影响部分；重审看语义影响，不看提交数量或文件冲突。
+When continuing a discussion, foreground new facts and their local impact; carry over decisions in force with their important reasons. When a contract or assumption changes, re-examine the affected parts. Whether to revisit depends on semantic impact, not on commit count or file conflicts.
 
-部分决定保留其范围；“条件满足即可继续”与“结果出来后再由人决定”分别记录，接续时沿用。
+A partial decision keeps its scope. "Proceed once the condition is met" and "a person decides after the result is in" are recorded as different decisions and followed as such when continuing.
 
-## 实施反馈与交接
+## Implementation feedback and handoff
 
-交接保留版本、原目标、有效决定、进展与阻塞，说明下一步能力、依赖和完成依据，必要时交代过渡与回退。
+A handoff keeps the version, original goal, decisions in force, progress, and blockers, and states the next step's capabilities, dependencies, and completion criteria, with transition and rollback when needed.
 
-实现与设计不一致时区分：约定内的实现自由可以保留；描述过时则更新文档；违约则修正实现或提出设计修订。新事实推翻依据时返回取舍讨论，不用改文档消除实际违约。
+When implementation and design disagree, distinguish: implementation freedom within the agreement stays; an outdated description gets the document updated; a violation gets the implementation fixed or a design revision proposed. When new facts undermine a decision's basis, return to the trade-off discussion; do not edit the document to hide an actual violation.
 
-现状随落地更新，包括默认行为和过渡状态；按证据区分实现、验证与上线。接续、缩减或结束时留下已完成范围，以及未决、延期或取消事项的去向。
+Update the current state as work lands, including default behavior and transitional states, and use evidence to separate implemented, verified, and released. When continuing, scaling back, or ending, record the completed scope and where open, deferred, or cancelled items went.

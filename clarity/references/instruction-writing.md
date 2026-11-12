@@ -1,21 +1,21 @@
-# 指令写作的重点边界
+# Instruction Writing
 
-## 保留有效要求
+## Keep effective requirements
 
-改写 skill、项目指令和提示词时保留目标、条件、权限、交付及停止要求，以及“必须”“可以”“禁止”的强度与动作先后关系。实质要求的调整依据本次修订目标。
+When rewriting skills, project instructions, or prompts, keep goals, conditions, permissions, deliverables, and stopping requirements, along with the strength of "must", "may", and "must not" and the order of actions. Change a substantive requirement only when this revision's goal calls for it.
 
-分清授权、禁令与交付；冲突指出原句及影响。
+Keep authorizations, prohibitions, and deliverables distinct; for a conflict, quote the original sentences and state the impact.
 
-## 内容按行为作用取舍
+## Keep content by its effect on behavior
 
-Skill 保留会改变模型默认行为的判断、易误用的边界与必要短例。通用任务纪律由已有环境要求承担。判断删留要问：少了这段，哪种选择或输出容易出错？有实际作用的偏差纠正应保留。
+A skill keeps judgments that change the model's default behavior, boundaries that are easy to misapply, and necessary short examples. General task discipline belongs to the existing environment instructions. To decide whether to keep a passage, ask: without it, which choice or output is likely to go wrong? A correction that changes behavior stays.
 
-先合并重复规则，再删去没有独立作用的解释和例子，保留有作用的条件、例外、权限与职责分组。直接说明判断、动作和成立条件；反例用于澄清具体易混边界，例子兼顾应改与应保留的情况。
+First merge duplicate rules, then remove explanations and examples with no independent effect, keeping the conditions, exceptions, permissions, and responsibility groupings that do work. State the judgment, action, and when it applies directly. Use a counterexample to clarify a specific, easily confused boundary, and pair cases that should change with cases that should stay.
 
-描述负责触发，共用判断放主文件，专题细节按需读取。技术依据在使用处可得，来源、改版历史和验证记录留维护资料；`AGENTS.md` 保留持续有效的项目要求。
+The description handles triggering; shared judgments go in the main file and topic details in on-demand references. Technical grounds are available where used; sources, revision history, and validation records stay in maintenance material. `AGENTS.md` keeps project requirements that remain in force.
 
-## 用实际缺口修订
+## Revise from real gaps
 
-模型出错时，先区分规则缺失、表述含混或冲突，以及已有规则未执行。修订针对可复用的判断边界，单次事件留在测试或维护记录中。
+When the model errs, first distinguish a missing rule, an ambiguous or conflicting rule, and an existing rule that was not followed. Revise reusable judgment boundaries; keep one-off incidents in tests or maintenance records.
 
-精简后核对触发范围、条件、例外和要求强度，用相邻的应改、应保留场景检查误伤，并通读指令关系。分别记录静态检查、行为试跑与实际反馈，用观察到的效果评价修订。
+After condensing, check trigger scope, conditions, exceptions, and requirement strength; test adjacent should-change and should-keep scenarios for collateral damage, and read the instructions through as a whole. Record static checks, behavior runs, and real feedback separately, and judge a revision by observed effects.

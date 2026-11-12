@@ -1,4 +1,4 @@
 interface:
-  display_name: "面向读者的清晰表达"
-  short_description: "改善会话、文稿、软件文档与代码的理解路径，组织主线与必要细节"
-  default_prompt: "使用 $clarity 改善当前文本或代码的理解路径，组织主线、名称与局部细节；多步实现读取代码表达参考，保持主张与有效契约。"
+  display_name: "Reader-Focused Clarity"
+  short_description: "Improve the path of understanding in replies, documents, software docs, and code by organizing the main line and necessary detail"
+  default_prompt: "Use $clarity to improve how the current text or code reads: organize the main line, names, and local detail; read the code reference for multi-step implementations; keep claims and effective contracts."

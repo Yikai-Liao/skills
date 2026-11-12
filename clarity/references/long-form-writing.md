@@ -1,7 +1,7 @@
-# 长篇中的理解连续性
+# Continuity in Long-Form Writing
 
-围绕跨章依赖与覆盖缺口修订，每章推进新的理解；定义有权威位置，术语、编号和已有事实能接续。
+Revise around cross-chapter dependencies and coverage gaps. Each chapter advances new understanding; definitions have an authoritative location, and terms, numbering, and established facts carry through.
 
-必要定义就近可得，独立阅读所需的短回顾可以重复。摘要保留决定结论含义的对象、时期、比较基线、条件与负面结果。
+Keep necessary definitions close at hand; a short recap needed for standalone reading may repeat. Summaries keep the objects, periods, comparison baselines, conditions, and negative results that determine what a conclusion means.
 
-栏目与章节结构服从读者任务，续写沿用视角与作者声音。需保存时留读者、术语、章节状态和接续点等必要信息，进度另行记录。
+Column and chapter structure serves the reader's task; continuations keep the perspective and the author's voice. When state must be saved, keep the reader, terminology, chapter status, and resume point; track progress separately.

@@ -1,15 +1,15 @@
-# 可读性审查的准入
+# Readability Review
 
-发现须有具体位置、读者任务与可避免的阅读阻力：在猜什么、回查什么、拼接什么，或怎样被无关纠偏带离问题。给出保留含义的修复；清楚的原文可以保留。
+A finding needs a concrete location, a reader task, and avoidable reading friction: what the reader must guess, look back for, or piece together, or how an irrelevant correction pulls them off the question. Give a fix that keeps the meaning.
 
-审查代码时，以理解当前操作、定位状态变化或完成一次合理修改为读者任务，结合完整函数与直接调用关系判断。指出主线被什么细节遮住、哪个状态需要跨处追踪，或哪个 helper 没有提供足够概念。行数和嵌套只用于定位候选；提取后也要检查阅读跳转和不变量是否更难追踪。
+For code, take the reader task to be understanding the current operation, locating a state change, or making one reasonable modification, and judge from the whole function and its direct calls. Say what detail hides the main line, which state must be tracked across places, or which helper fails to provide a sufficient concept. Line counts and nesting only locate candidates; after extraction, check whether jumps and invariants became harder to follow.
 
-大纲顺畅不代表正文连贯。结合实际段落检查标题承诺是否兑现，以及跨节关系是否仍需读者自行拼接。
+A smooth outline does not mean coherent prose. Check against the actual paragraphs whether headings deliver what they promise and whether cross-section relations still have to be pieced together by the reader.
 
-词汇、标点、句长和重复句式仅用于定位候选。指出它们在本段造成的空转、歧义或文体偏移，再决定是否改写；不能仅凭这些特征判断文本来源。改写后对照原文核对主张归属、限定和数量关系，再连读成品，检查是否删掉必要承接、磨平作者声音或补入材料外的细节。
+Vocabulary, punctuation, sentence length, and repeated sentence patterns only locate candidates. Name the filler, ambiguity, or genre drift they cause in this passage before rewriting; never use them to judge where a text came from. After a rewrite, check attribution, qualifications, and quantities against the original, then read the result through for lost transitions, a flattened voice, or details from outside the material.
 
-主张替换对照原观点，指出任务、范围或强度如何变化。合理预澄清看具体语境；文学悬念、专家术语与稳定契约隐藏的实现按读者任务评价。
+For a replaced claim, compare it with the original view and state how its task, scope, or strength changed. Judge a pre-emptive clarification by its concrete context; judge literary suspense, expert terminology, and implementation hidden behind a stable contract by the reader's task.
 
-事实错误、行为缺陷与理解问题分别给依据，区分文本推断与实际读者观察；参与者编号、样本数量、自述和行为证据各按其含义使用。
+Give separate grounds for factual errors, behavior defects, and comprehension problems, and separate inferences from the text from observations of real readers. Use participant IDs, sample sizes, self-reports, and behavioral evidence each for what it means.
 
-同根问题合并，按实际影响排序，交付问题、依据与有用修复。
+Merge findings with the same root cause, rank by actual impact, and deliver the problem, its grounds, and a useful fix.

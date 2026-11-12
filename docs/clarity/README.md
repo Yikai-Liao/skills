@@ -1,42 +1,42 @@
-# clarity 维护入口
+# clarity maintenance
 
-`clarity/` 保存可安装的技能指令；本目录保存来源依据，验证材料位于 `tests/clarity/`。
+`clarity/` holds the installable skill; this directory holds source records, and validation material is in `tests/clarity/`. Neither is installed or needed at runtime.
 
-技能面向会话回复、持久化文本与代码表达，解释、答疑、汇报和多步代码实现不以用户明确要求润色为前提。设计讨论作为按需参考纳入同一入口，保留提案、决定记录和实施反馈，不再单独安装。
+The skill covers conversational replies, persistent text, and code expression. Explaining, answering, reporting, and multi-step implementation trigger it without an explicit request to polish. Design discussion is an on-demand reference inside the same skill, covering proposals, decision records, and implementation feedback; it is not installed separately.
 
-## 从维护任务进入
+## Where to start
 
-| 要做什么 | 入口 |
+| Task | Entry |
 |---|---|
-| 查看能力范围、交付边界与参考分工 | [技能主文件](../../clarity/SKILL.md) |
-| 修改某类写作指导 | 主文件的[按问题选择参考](../../clarity/SKILL.md#按问题选择参考) |
-| 核对案例原文、版本、署名与采用范围 | [来源与采用边界](sources.md) |
-| 查看已验证内容及仍存在的限制 | [验证结果](../../tests/clarity/test-results.md) |
-| 选择或补充可重复使用的验收场景 | [测试用例](../../tests/clarity/test-prompts.json) |
-| 检查代码产物、隔离执行者和裁判输入 | [代码夹具](../../tests/clarity/fixtures/README.md) |
+| Scope, delivery boundaries, division of references | [Skill main file](../../clarity/SKILL.md) |
+| Changing one kind of writing guidance | [Read references by problem](../../clarity/SKILL.md#read-references-by-problem) |
+| Checking source text, versions, attribution, and adoption scope | [Sources and adoption boundaries](sources.md) |
+| What has been verified and what limits remain | [Validation results](../../tests/clarity/test-results.md) |
+| Choosing or adding reusable acceptance scenarios | [Test cases](../../tests/clarity/test-prompts.json) |
+| Checking code outputs, isolated solvers, and judge inputs | [Code fixtures](../../tests/clarity/fixtures/README.md) |
 
-## 文档职责
+## Document responsibilities
 
-- `sources.md` 按指导主题记录实际来源、案例版本和影响使用的限定，不复制运行时规则全文。
-- `tests/clarity/test-results.md` 汇总验证覆盖、发现与结果，可保留选定用例的实际答句及核对依据；用例定义只在 `test-prompts.json` 维护。
-- 原始 agent 回复、临时下载、逐轮修改流水和未采用的研究草稿不作为仓库维护文档保存。
+- `sources.md` records actual sources, case versions, and limits that affect use, by guidance topic; it does not copy runtime rules.
+- `tests/clarity/test-results.md` summarizes coverage, findings, and results, and may keep actual answers to selected cases with the grounds for checking them. Case definitions live only in `test-prompts.json`.
+- Raw agent replies, temporary downloads, round-by-round edit logs, and unused research drafts are not kept as maintenance documents.
 
-运行时参考不依赖本目录完成用户任务。维护者需要追溯来源或检查证据时，再从这里进入。
+## Admitting runtime content
 
-## 运行时内容的准入
+Keep constraints that change the model's default behavior, boundaries that are easy to misapply, and the short examples needed to explain them. General writing knowledge, genre tutorials, and long case studies stay out; importance or a reliable source alone is not a reason to add something.
 
-保留会改变模型默认行为的约束、容易误用的边界，以及解释这些边界所必需的短例。模型通常具备的写作知识、文体教程和长篇案例分析不重复收入；不能仅因主题重要或有可靠来源就加入。
+Over-compression, straw-man corrections, substantive semantic fidelity, code inlining, and maintenance comments keep explicit principles even though models have heard of them. For a new failure, first decide whether an existing rule was not followed or a rule is actually missing; do not turn every deviation into a patch instruction.
 
-过度压缩、空心人式纠偏、实质语义保真、代码内联与维护注释等即使模型听过，也需保留明确原则。新增失败先判断是已有规则未执行，还是确有规则缺口，不把每次偏差都扩写成补丁指令。
+Runtime files are written in English. Deliverables follow the language the user asks for or the existing work uses.
 
-## 修改后的自洽检查
+## Self-consistency check after changes
 
-逐一核对主文件、参考、正反例与测试预期。正例要作为成品独立阅读：即使符合已有规则，表达仍可能冗余、训诫或含混。发现这种问题时同时修正规则与示例；准备应改写和应保留的相邻场景，检查修复是否误伤语义。
+Check the main file, references, positive and negative examples, and test expectations against each other. Read each positive example as a finished product: even when it follows the rules, it can still be redundant, preachy, or vague. When it is, fix the rule and the example together, and prepare adjacent should-change and should-keep scenarios to confirm the fix does not damage meaning.
 
-同时检查职责：共同规则适用于会话回复和持久化文本；设计讨论参考只在任务需要方案讨论或记录维护时使用。普通润色不新增调查、审批或工作区，设计讨论也不扩大工具与执行权限。已有的流程要求作为原稿内容保留，不能为了精简 skill 而删掉用户要求。
+Check responsibilities too. Shared rules apply to conversational replies and persistent text; the design discussion reference is used only when the task needs design discussion or record maintenance. Ordinary polishing adds no investigation, approval, or workspace, and design discussion does not widen tool or execution permissions. Process requirements already in a source text are content to keep; do not delete user requirements to make the skill shorter.
 
-验收既检查语义是否保留，也检查读者是否需要自行补出关系。短句、表格、摘要和更少字数本身不算改进证据；检查示例是否承接已有背景，追问是否得到直接回应。真人理解与感受只能通过实际反馈评估，作者自查不写成已测得的效果。
+Acceptance checks both whether meaning is preserved and whether readers must supply relations themselves. Short sentences, tables, summaries, and fewer words are not evidence of improvement by themselves; check that examples build on established context and that follow-up questions get a direct answer. Real readers' understanding and impressions can only be judged from real feedback; the author's own review is not reported as a measured effect.
 
-技能维护中的静态检查、场景自答与试跑在测试记录中分别注明。维护活动不作为用户每次使用 clarity 的必经流程。
+In test records, keep static checks, self-answered scenarios, and trial runs separate. Maintenance activities are not a required step each time someone uses clarity.
 
-代码实现回归先核对实际产物的行为，再按读者任务评价主线、状态与阶段边界。完整单用阶段、薄 helper 默认内联和内聚状态机保留必须一起检查。两技能分别隔离安装，运行时不能依赖另一技能路径；联合使用也不把普通局部整理升级为架构设计。
+For code implementation regressions, check the actual output's behavior first, then judge the main line, state, and phase boundaries by reader task. Check together that complete single-use phases are kept, thin helpers are inlined by default, and cohesive state machines stay whole. Install the two skills in isolation from each other; at runtime neither may depend on the other's path, and using both does not turn ordinary local tidying into architecture design.

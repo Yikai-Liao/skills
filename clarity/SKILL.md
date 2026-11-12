@@ -1,57 +1,57 @@
 ---
 name: clarity
 description: >-
-  解释、答疑、汇报，或起草、改写、翻译和审查文本时使用，覆盖软件文档、设计记录、skill 与项目指令的表达。新增或修改多步流程、分支或状态变化的代码时，指导主流程、命名、局部结构与注释；纯格式修正和无需表达判断的机械实现不额外触发。
+  Use when explaining, answering questions, or reporting, and when drafting, rewriting, translating, or reviewing text, including software documentation, design records, skills, and project instructions. Also use when adding or changing code with multi-step flows, branches, or state changes, to guide the main flow, naming, local structure, and comments. Not triggered by pure formatting fixes or mechanical implementation that needs no judgment about expression.
 ---
 
-# 面向读者的清晰表达
+# Reader-Focused Clarity
 
-以读者理解成本判断表达和局部代码组织，减少猜测、回查与拼装。领域建模、状态归属、数据表示与模块契约的取舍按设计任务处理。
+Judge wording and local code organization by what it costs the reader to understand: less guessing, looking back, and piecing together. Choices about domain modeling, state ownership, data representation, and module contracts are design tasks.
 
-## 保留理解路径与概念结构
+## Keep the path of understanding and the concept structure
 
-从读者已知的对象或场景接着讲，让动作、原因与结果承接。连续文章先组织整篇的推进，使章节归属与关系可辨认。优先用当前材料解释，补齐读者缺少的项目背景。
+Start from objects or scenarios the reader already knows, and connect actions to their causes and results. For continuous prose, first organize how the whole piece advances, so each section's place and relations are recognizable. Explain with the material at hand, and supply project background the reader lacks.
 
-必要条件、依据和概念区别在使用处可得；主阅读路径保留关系，摘要、术语与链接用于辅助。用分组、名称与抽象显露结构，使每个概念完整，关系就近可读。
+Make necessary conditions, evidence, and conceptual distinctions available where they are used. The main reading path carries the relations; summaries, glossaries, and links assist. Show structure through grouping, names, and abstractions, so each concept is complete and its relations are readable nearby.
 
-按理解成本选择表达，保留有作用的术语、紧凑规则、必要重复、推导与文学节奏。局部问题局部改，清楚的原文可以保留。
+Choose expression by understanding cost. Keep useful terms, compact rules, necessary repetition, derivations, and literary rhythm. Fix local problems locally; clear original text can stay.
 
-检查套用模板造成的空转：开头复述任务、段段重申意义、结尾重复结论，却没有推进理解。保留承担解释、导航或强调作用的结构；按具体表达问题修改，文风、词语和句长本身不构成缺陷。
+Look for template-driven filler that advances nothing: an opening that restates the task, paragraphs that each reassert significance, an ending that repeats the conclusion. Keep structure that explains, navigates, or emphasizes. Revise for a specific expression problem; style, word choice, and sentence length are not defects by themselves.
 
-## 保持主张，纠正有据
+## Keep the claim; correct only with grounds
 
-回应实际主张，保持其**任务、范围与强度**。反驳对准材料中的原立场；“已有进展”与“全部交付”、“部分证据”与“能够确证”分别评价。
+Respond to the actual claim and keep its **task, scope, and strength**. Aim rebuttals at the position the material takes; judge "some progress" and "fully delivered", or "partial evidence" and "conclusive", as different claims.
 
-纠正和预澄清须有原主张或具体误解语境；教学假设交代用途。比较、转折与限定按实际关系组织，解释须切题。
+A correction or pre-emptive clarification needs the original claim or a concrete context for the misunderstanding; a teaching assumption states its purpose. Organize comparisons, contrasts, and qualifications by their actual relation, and keep explanations on topic.
 
-**直接表达适用于正文、审查、交付说明和代码注释：**
+**Directness applies to body text, reviews, delivery notes, and code comments:**
 
-- 直说结果、条件和具体缺口，使读者直接获得事实；保留有作用的职责排除与安全禁令。
-- 删除无贡献的降温、纠偏和提醒。后续安排依据已有事实；内容交付完整即可结束。
-- 分别保留真实限制、否定结论、未知状态与已有安排。例如“单机已通过，多节点未测”两项都要保留。
-- 发现改写擅自改变了原主张时，恢复其任务、范围与强度；润色与翻译保留实质论点，审查指出具体问题。
+- State results, conditions, and concrete gaps directly. Keep exclusions of responsibility and safety prohibitions that do work.
+- Delete softening, corrective asides, and reminders that contribute nothing. Base follow-up plans on established facts; once the content is complete, stop.
+- Keep real limits, negative conclusions, unknown states, and existing plans as separate items. "Passed on a single machine; multi-node untested" keeps both halves.
+- If a rewrite changed the original claim without authorization, restore its task, scope, and strength. Polishing and translation keep the substantive argument; reviews name concrete problems.
 
-## 基于材料交付
+## Deliver from the material
 
-直接交付所需正文、修订或审查，语言沿用用户要求或已有作品。
+Deliver the requested text, revision, or review directly, in the language the user asked for or the existing work uses, not the language of this skill.
 
-保留事实、数字、条件、引用归属、证据强度与作者声音。核对数字对应的对象、每项主张的限定，以及先后、并行和排名关系；把“厂家称”改成直接断言，或把“可能略有改善”改成“已有改善”，都改变了主张。实质内容变更交代其真实性质，说明依据已有材料。
+Keep facts, numbers, conditions, attribution, strength of evidence, and the author's voice. Check which object each number belongs to, each claim's qualifications, and sequence, parallel, and ranking relations. Turning "the vendor says" into a direct assertion, or "may slightly improve" into "has improved", changes the claim. Describe any substantive change as what it is, based on the available material.
 
-删去空话后，用材料已有的动作和关系组织表达。具体化须有材料支持；润色不新增数据、来源、因果、体验或立场。文风依据任务和原稿，保留自然节奏；事实介绍不添加个人态度，第一人称文本也只表达已有的经历和判断。模板变量与待填字段按原样保留。
+After removing empty phrasing, build sentences from the actions and relations the material already has. Concrete detail needs support in the material: polishing adds no data, sources, causes, experiences, or positions. Style follows the task and the original, with natural rhythm. Factual introductions add no personal attitude; first-person text expresses only experiences and judgments already present. Keep template variables and placeholders as they are.
 
-删除编辑自述、写作策略、自评和遵循规范的宣告；保留主题论证、研究方法、必要警告与出处。代码的非显然原因、bug 历史、优化代价与防误改约束就近注释。
+Delete editing narration, writing strategy, self-assessment, and announcements of following guidelines. Keep the topic's own argument, research methods, necessary warnings, and citations. In code, put non-obvious reasons, bug history, optimization costs, and guards against mistaken edits in comments next to the code.
 
-## 按问题选择参考
+## Read references by problem
 
-普通短回复依据本页即可；以下问题按需读取参考。新增或修改多步流程、分支或状态变化的实现时，直接读取代码表达参考；简单机械修改只处理相关部分。
+This page is enough for short ordinary replies; read references when the problem calls for them. For new or changed implementations with multi-step flows, branches, or state changes, read the code reference; for simple mechanical edits, read only the relevant part.
 
-| 问题 | 参考 |
+| Problem | Reference |
 |---|---|
-| 文章主线、标题层级、追问、主张改写、模板化表达与文体边界 | [文本写作](references/text-writing.md) |
-| 软件契约、现状与提案；架构、状态与数据视图 | [软件文档](references/software-documentation.md) |
-| 设计讨论与决定的表达、继承与交接 | [设计讨论](references/design-discussion.md) |
-| 跨章依赖、摘要与续写 | [长篇组织](references/long-form-writing.md) |
-| 新增或修改多步实现；主流程、嵌套、阶段提取、命名、注释与诊断 | [代码表达](references/code-readability.md) |
-| 翻译与地区适配的语义边界 | [语言适配](references/language-adaptation.md) |
-| 可读性发现是否成立 | [可读性审查](references/readability-review.md) |
-| skill、项目指令与提示词的要求保真 | [指令写作](references/instruction-writing.md) |
+| Article throughline, heading hierarchy, follow-up questions, claim drift in rewrites, template prose, genre boundaries | [Text writing](references/text-writing.md) |
+| Software contracts, current state versus proposals; architecture, state, and data views | [Software documentation](references/software-documentation.md) |
+| Expressing, inheriting, and handing off design discussions and decisions | [Design discussion](references/design-discussion.md) |
+| Cross-chapter dependencies, summaries, continuations | [Long-form writing](references/long-form-writing.md) |
+| New or changed multi-step implementations; main flow, nesting, phase extraction, naming, comments, diagnostics | [Code expression](references/code-readability.md) |
+| Semantic boundaries of translation and localization | [Language adaptation](references/language-adaptation.md) |
+| Whether a readability finding holds | [Readability review](references/readability-review.md) |
+| Preserving requirements in skills, project instructions, and prompts | [Instruction writing](references/instruction-writing.md) |

@@ -1,53 +1,53 @@
-# 文本写作的重点边界
+# Text Writing
 
-## 整篇推进与标题归属
+## How the whole piece advances, and where content belongs
 
-文章按读者要理解的整体问题组织，每节推进一部分理解，段落与整篇的关系清楚。
+Organize an article around the overall question the reader needs to understand. Each section advances part of that understanding, and each paragraph's relation to the whole is clear.
 
-同级标题显露并列或递进，子标题展开父题。段落按论述作用归属，分清阶段、选择依据、横向约束和未决事项。同一对象可在多节承担不同任务；先调整内容归属，再定标题层级，保留实质内容。
+Sibling headings show parallel or progressive relations; subheadings develop their parent. Place each paragraph by its role in the argument, separating phases, reasons for choices, cross-cutting constraints, and open items. One object may serve different tasks in different sections. Settle where content belongs before choosing heading levels, and keep the substance.
 
-一个论点有主要展开位置，概览预告、后文回扣各有作用。切换角度时交代它如何接续前文，因果、先后与共识依材料说明，未决问题保留其状态。
+Each point has one main place where it is developed; an overview's preview and a later callback each do their own work. When switching angle, say how it continues what came before. State causation, sequence, and consensus as the material supports them, and keep open questions open.
 
-FAQ、查询手册与独立会议议题可按条目组织；结构依据读者需要连续理解还是独立查阅。
+FAQs, lookup manuals, and independent meeting items can be organized as entries; choose the structure by whether the reader reads continuously or looks things up.
 
-## 会话与阅读困难
+## Conversation and reading difficulty
 
-先回答这一轮的问题，沿用已建立的名称和结论；局部追问聚焦受影响部分。用户说难读时，调整内容与解释顺序，保留适合读者的专业程度。
+Answer this turn's question first, reusing names and conclusions already established; a narrow follow-up focuses on the affected part. When the user says something is hard to read, change the content and the order of explanation while keeping a level of expertise that suits the reader.
 
-用动作与关系展开抽象词。例如双方讨论设计流程时，“决策连续性、偏移处置”可写为：“决定仍记入现有文档；代码与设计不一致时，查清原因再决定改哪边。”
+Unpack abstract words into actions and relations. In a discussion of a design process, for example, "decision continuity and drift handling" can become: "Decisions still go into the existing documents; when code and design disagree, find out why before deciding which one to change."
 
-会话解释保存为文档时，补齐脱离对话所需的背景与来源，主阅读路径保留必要原因和条件。
+When a conversational explanation is saved as a document, add the background and sources needed to read it outside the conversation.
 
-## 修复模板造成的空转
+## Fixing template-driven filler
 
-检查句段是否提供新信息：泛泛铺陈时代背景、预告“下面深入探讨”、重复标题、每段追加重要性判断、末尾换词再总结，都可能推迟读者要找的内容。删去无贡献的部分，让已有事实、动作或关系承接；必要定义、概览与长篇回顾按其实际作用保留。
+Check whether each passage adds information. Generic scene-setting about the era, previews such as "let us now dive deeper", restated headings, a significance verdict tacked onto every paragraph, and a reworded summary at the end can all delay what the reader is looking for. Delete what contributes nothing and let existing facts, actions, or relations carry the text; keep definitions, overviews, and long-form recaps that do real work.
 
-“全面赋能”“具有里程碑意义”等评价若未说明实际作用，按改写目标删减或指出缺口；用具体内容替换时只用已有材料。例如“导出更快了，耗时由 8 秒缩短到 5 秒”可收为“导出耗时由 8 秒缩短到 5 秒”，不能再补一个未提供的满意度数字。审查或保留原主张的润色，仍需区分措辞调整与实质删改。
+Praise such as "comprehensive empowerment" or "a milestone" that does not state an actual effect is cut, or flagged as a gap, according to the rewrite goal. Replace it with specifics only from the existing material. "Export is faster: it went from 8 seconds to 5" can become "Export time went from 8 seconds to 5", but must not gain a satisfaction figure that was never given. Reviews and polishing that keep the original claim still distinguish rewording from substantive deletion.
 
-同一对象用稳定名称，指代明确时可以省略；不同概念保留各自名称。段段套用“观点—例子—意义”时，检查例子与意义是否各有贡献。
+Use a stable name for each object; omit it when the reference is clear, and keep distinct names for distinct concepts. When every paragraph follows "point, example, significance", check that the example and the significance each contribute.
 
-独立指南直接说明当前行为，补齐读者需要的上下文。发布说明、迁移指南和改动汇报保留相关的前后差异与版本条件。
+A standalone guide states the current behavior directly and supplies the context its reader needs. Release notes, migration guides, and change reports keep the relevant before/after differences and version conditions.
 
-## 直接陈述边界，清除防御性套话
+## State boundaries directly; drop defensive boilerplate
 
-按语境评价纠正与限定：
+Judge corrections and qualifications by context:
 
-| 应改 | 有据时怎样写 |
+| Should change | How to write it when grounded |
 |---|---|
-| 例子只用于帮助理解，却批评它“不能证明普遍规律” | 例子确实被用于过度概括时，指出越界结论 |
-| 把已知结果改成“这不能说明……仍需验证” | 直接保留结果、未测范围与已有验证安排 |
+| An example offered only to aid understanding is criticized because it "cannot prove a general rule" | When an example really is used to overgeneralize, name the conclusion that oversteps |
+| A known result is rewritten as "this does not show…; further validation is needed" | Keep the result, the untested scope, and any validation already planned |
 
-检查新增立场或问题偏移，保留逐字引语与有意的文学对比。
+Check for newly added positions or a shifted question. Keep verbatim quotations and deliberate literary contrasts.
 
-## 正文、改写与文体
+## Body text, rewrites, and genre
 
-- 保留主题的研究方法、修复原因和决定依据；删除“为了使本文清晰”等写作自述，包括脚注或隐藏注释中的编辑材料。
-- 润色保留作者结论；主张删除按修订目标处理。歧义指代指出缺口，改写采用有依据的含义。
-- 描述性报告可停在结果；研究摘要保留影响解释的条件与负面结果，内容来自给定材料。
-- 论文组织服从学科与题目，叙事保留声音、悬念与节奏；操作警告在危险动作前。
+- Keep the topic's research methods, reasons for fixes, and grounds for decisions. Delete writing narration such as "to make this article clear", including editorial material in footnotes or hidden comments.
+- Polishing keeps the author's conclusions; deleting a claim follows the revision goal. For an ambiguous reference, point out the gap; a rewrite uses the meaning the material supports.
+- A descriptive report can stop at the results. A research summary keeps the conditions and negative results that affect interpretation, drawn from the given material.
+- Paper structure follows the discipline and topic; narrative keeps voice, suspense, and rhythm; operational warnings come before the dangerous action.
 
-## 路径、标题与阅读入口
+## Paths, headings, and entry points
 
-按读者任务与维护边界组织，多个入口链接同一权威内容。
+Organize by reader task and maintenance boundary; several entry points link to the same authoritative content.
 
-名称在导航语境中足够辨识即可；保留机器文件名、版本边界及 URL/锚点兼容要求。标题准确承诺实际内容，连续正文由内容关系自然推进。
+A name needs only to be distinguishable in its navigation context. Keep machine file names, version boundaries, and URL/anchor compatibility requirements. A heading promises exactly what follows; continuous prose advances through the relations in its content.

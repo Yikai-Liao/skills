@@ -1,9 +1,9 @@
-# 语言适配的保真边界
+# Language Adaptation
 
-自然调整句段，保留主张强度、否定、条件、量词、数字与作者声音。术语区分不同概念；本地化保留真实数据、言论、法域事实与证据，机器标识符按契约处理。
+Adjust sentences naturally while keeping claim strength, negations, conditions, quantifiers, numbers, and the author's voice. Use distinct terms for distinct concepts. Localization keeps real data, statements, jurisdiction-specific facts, and evidence; machine identifiers follow their contracts.
 
-技能、会话与交付物分别采用所需语言的表达习惯。日期先确认含义再改显示，例如 `03/04/02` 需明确年月日次序。
+The skill, the conversation, and the deliverable each use the conventions of their own language. Confirm what a date means before changing its display; `03/04/02`, for example, needs a known year-month-day order.
 
-规范词依定义翻译：采用 BCP 14 时，全大写 `MAY` 表示许可，`SHOULD` 保留建议强度；普通小写按上下文与整句契约理解。
+Translate normative words by definition: under BCP 14, uppercase `MAY` is a permission and `SHOULD` keeps the strength of a recommendation; ordinary lowercase words are read from context and the contract of the whole sentence.
 
-译文交付正文，需要的译注另列；保留主题注释、出处与限制，区分意译、逐字引语和实际审校状态。
+Deliver the translated text itself, with any translator's notes kept separate. Keep topical notes, citations, and limitations, and distinguish paraphrase, verbatim quotation, and the actual review status.
